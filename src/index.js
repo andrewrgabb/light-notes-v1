@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import initialData from './initial-data';
+// import initialData from './initial-data';
+import initialDataEmpty from './initial-data-empty';
 
 import Board from './board';
 
@@ -18,8 +19,9 @@ const Header = styled.div`
 
 function App() {
 
-  const [state, setState] = useState(initialData);
-  const [columnCount, setColumnCount] = useState(4);
+  const [state, setState] = useState(initialDataEmpty);
+  const [columnCount, setColumnCount] = useState(1);
+  const [noteCount, setNoteCount] = useState(1);
 
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
@@ -115,24 +117,56 @@ function App() {
     const newColumnOrder = state.columnOrder;
     newColumnOrder.push(newColumnName);
 
-    console.log(newColumn);
-
     const newColumns = {
       ...state.columns,
       [newColumnName]: newColumn,
     }
 
-    console.log(newColumns);
-
     const newState = {
       ...state,
       columns: newColumns,
-      newColumnOrder,
+      columnOrder: newColumnOrder,
     }
-    console.log("hello")
 
     setState(newState);
-    console.log(state);
+  }
+
+  let addNote = (columnId) => {
+
+    let newNoteCount = noteCount + 1;
+    setNoteCount(newNoteCount);
+    let newNoteId = "note-" + newNoteCount;
+    const newNote = {
+      id: newNoteId,
+      content: ['notable' + newNoteCount]
+    };
+    
+    const columnToAppend = state.columns[columnId];
+    const columnToAppendNoteIds = columnToAppend.noteIds;
+    columnToAppendNoteIds.push(newNoteId);
+    
+    const newColumnToAppend = {
+      ...columnToAppend,
+      noteIds: columnToAppendNoteIds,
+    }
+
+    const newColumns = {
+      ...state.columns,
+      [columnId]: newColumnToAppend,
+    }
+
+    const newNotes = {
+      ...state.notes,
+      [newNoteId]: newNote,
+    }
+
+    const newState = {
+      ...state,
+      notes: newNotes,
+      columns: newColumns,
+    }
+
+    setState(newState);
   }
 
   return (
@@ -145,7 +179,7 @@ function App() {
           Add a Column!
         </button>
       </Header>
-      <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd}/>
+      <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
     </Structure>
   );
 }

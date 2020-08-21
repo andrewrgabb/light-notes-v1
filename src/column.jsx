@@ -12,6 +12,7 @@ const Container = styled.div`
   border-radius: 2px;
   width: 280px;
 
+
   display: flex;
   flex-direction: column;
 `;
@@ -26,6 +27,17 @@ const NoteList = styled.div`
   flex-grow: 1;
   min-height: 100px;
 `;
+const StyledButton = styled.button `
+  border: 3px solid lightgrey;
+  border-radius: 2px;
+  padding: 8px;
+  margin-bottom: 8px;
+  height: 100px;
+  width: 264px;
+  
+  text-align: center;
+  font-size: 50px;
+`
 
 export default function(props) {
 
@@ -53,13 +65,14 @@ export default function(props) {
             >
               {notes}
               {provided.placeholder}
+              <StyledButton onClick={props.addNote}> 
+                +
+              </StyledButton>
             </NoteList>
             )}
           </Droppable>
-
           
-
-          </Container>
+        </Container>
       )}
     </Draggable>
   ); 
