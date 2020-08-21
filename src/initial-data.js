@@ -17,17 +17,17 @@ const intialData = {
     'column-1': {
       id: 'column-1',
       title: 'To do',
-      noteIds: ['task-1', 'task-2', 'task-3', 'task-4', 'task-5', 'task-6', 'task-7', 'task-8', 'task-9', 'task-10', 'task-11', 'task-12'],
+      noteIds: ['task-1', 'task-2', 'task-3', 'task-4'],
     },
     'column-2': {
       id: 'column-2',
       title: 'In progress',
-      noteIds: [],
+      noteIds: ['task-5', 'task-6', 'task-7', 'task-8'],
     },
     'column-3': {
       id: 'column-3',
       title: 'Done',
-      noteIds: [],
+      noteIds: ['task-9', 'task-10', 'task-11', 'task-12'],
     },
     'column-4': {
       id: 'column-4',

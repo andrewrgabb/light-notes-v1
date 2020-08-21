@@ -10,7 +10,7 @@ const Structure = styled.div`
 }
 `;
 
-const Header = styled.h1`
+const Header = styled.div`
   padding: 20px;
   text-align: center;
   border: 2px solid;
@@ -19,6 +19,7 @@ const Header = styled.h1`
 function App() {
 
   const [state, setState] = useState(initialData);
+  const [columnCount, setColumnCount] = useState(4);
 
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
@@ -101,10 +102,48 @@ function App() {
       setState(newState);
   };
 
+  let addColumn = () => {
+    let newColumnCount = columnCount + 1;
+    setColumnCount(newColumnCount);
+    let newColumnName = "column-" + newColumnCount;
+    const newColumn = {
+      id: newColumnName,
+      title: 'Column ' + newColumnCount,
+      noteIds: [],
+    };
+    
+    const newColumnOrder = state.columnOrder;
+    newColumnOrder.push(newColumnName);
+
+    console.log(newColumn);
+
+    const newColumns = {
+      ...state.columns,
+      [newColumnName]: newColumn,
+    }
+
+    console.log(newColumns);
+
+    const newState = {
+      ...state,
+      columns: newColumns,
+      newColumnOrder,
+    }
+    console.log("hello")
+
+    setState(newState);
+    console.log(state);
+  }
+
   return (
     <Structure>
-      <Header id="Header">
-        Light Notes
+      <Header id="Header" >
+        <h1>
+          Light Notes    
+        </h1>
+        <button onClick={addColumn}>
+          Add a Column!
+        </button>
       </Header>
       <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd}/>
     </Structure>

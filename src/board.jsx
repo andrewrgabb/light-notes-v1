@@ -20,7 +20,6 @@ function InnerList(props) {
 }
 
 export default function(props) {
-  
 
   return (
     <DragDropContext onDragEnd={props.onDragEnd}>
