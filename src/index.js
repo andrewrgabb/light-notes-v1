@@ -1,17 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import styled from 'styled-components';
+
+import Board from './board';
+
+const Structure = styled.div`
+  padding: 20px;
+}
+`;
+
+const Header = styled.h1`
+  padding: 20px;
+  text-align: center;
+  border: 2px solid;
+`;
+
+function App() {
+  return (
+    <Structure>
+      <Header id="Header">
+        Light Notes
+      </Header>
+      <Board />
+    </Structure>
+  );
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
