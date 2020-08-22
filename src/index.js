@@ -8,14 +8,26 @@ import Board from './board';
 
 const Structure = styled.div`
   padding: 20px;
-}
 `;
 
 const Header = styled.div`
   padding: 20px;
-  text-align: center;
-  border: 2px solid;
+  text-align: left;
+  font-size: 20px;
+  background-color: white;
+  border-radius: 4px;
 `;
+
+const Footer = styled.h2 `
+  position: fixed;
+  padding: 20px;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background-color: white;
+  text-align: center;
+  border-radius: 4px;
+`
 
 function App() {
 
@@ -50,7 +62,7 @@ function App() {
       return;
     }
 
-
+    // if type = notes
     const start = state.columns[source.droppableId];
     const finish = state.columns[destination.droppableId];
 
@@ -171,15 +183,20 @@ function App() {
 
   return (
     <Structure>
-      <Header id="Header" >
+      <Header>
         <h1>
           Light Notes    
         </h1>
-        <button onClick={addColumn}>
-          Add a Column!
-        </button>
       </Header>
-      <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
+      <div>
+        <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
+        <Footer>
+          <h2>
+            This is the Footer.
+          </h2>
+        </Footer>
+      </div>
+      
     </Structure>
   );
 }

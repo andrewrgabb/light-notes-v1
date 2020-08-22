@@ -9,6 +9,35 @@ const Container = styled.div `
   display: flex;
 `;
 
+const ColumnContainer = styled.div`
+  background-color: white;
+  margin-top: 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  width: 280px;
+  height: 80px;
+
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledButton = styled.button `
+  margin-top: 8px;
+  border: 2px solid;
+  border-radius: 50%;
+  background-color: inherit;
+  
+  width: 60px;
+  height: 60px;
+
+  padding-bottom: 6px;
+  font-size: 50px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 function InnerList(props) {
   const { column, noteMap, index, addNote } = props;
   const notes = useMemo(
@@ -40,9 +69,15 @@ export default function(props) {
               );
             })}
             {provided.placeholder}
+            <ColumnContainer>
+              <StyledButton onClick={props.addColumn}>
+                +
+              </StyledButton>
+            </ColumnContainer>
           </Container>
         )}
       </Droppable>
+      
     </DragDropContext>
   ); 
 }

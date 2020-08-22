@@ -7,47 +7,56 @@ const Container = styled.div`
   background-color: white;
   margin-top: 8px;
   margin-right: 8px;
-  border-right: 2px solid;
-  border-left: 2px solid;
-  border-radius: 2px;
+  border-radius: 4px;
   width: 280px;
-
-
+  
   display: flex;
   flex-direction: column;
 `;
+
 const Title = styled.h2`
-  padding: 8px;
+  padding: 24px;
   text-align: center;
+  font-size: 24px
 `;
 const NoteList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'inherit')};
   flex-grow: 1;
-  min-height: 100px;
+  min-height: 10px;
 `;
+
 const StyledButton = styled.button `
-  border: 3px solid lightgrey;
-  border-radius: 2px;
-  padding: 8px;
-  margin-bottom: 8px;
-  height: 100px;
-  width: 264px;
+  border: 2px solid;
+  border-radius: 50%;
+  background-color: white;
   
-  text-align: center;
+  width: 60px;
+  height: 60px;
+
+  padding-bottom: 6px;
   font-size: 50px;
+  line-height: 0;
+  margin: auto;
 `
 
 export default function(props) {
 
-  const notes = useMemo(
+  /*const notes = useMemo(
     () =>
       props.notes.map((note, index) => (
         <Note key={note.id} note={note} index={index} />
       )),
     [props.notes]
+  );*/
+
+  const notes = (
+    props.notes.map((note, index) => (
+      <Note key={note.id} note={note} index={index} />
+    ))
   );
+      
 
   return (
     <Draggable draggableId={props.column.id} index={props.index} >
@@ -65,12 +74,12 @@ export default function(props) {
             >
               {notes}
               {provided.placeholder}
-              <StyledButton onClick={props.addNote}> 
-                +
-              </StyledButton>
             </NoteList>
             )}
           </Droppable>
+          <StyledButton onClick={props.addNote}>
+            + 
+          </StyledButton>
           
         </Container>
       )}
