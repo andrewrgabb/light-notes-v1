@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from './note';
@@ -9,9 +9,11 @@ const Container = styled.div`
   margin-right: 8px;
   border-radius: 4px;
   width: 280px;
+  height: 400px;
   
   display: flex;
   flex-direction: column;
+  min-height:100%
 `;
 
 const Title = styled.h2`
@@ -19,6 +21,15 @@ const Title = styled.h2`
   text-align: center;
   font-size: 24px
 `;
+
+const Content = styled.div`
+  background-color: lightgreen;
+  overflow: auto;
+  width: 100%;
+  margin-top: 40px;
+  bottom: 40;
+`;
+
 const NoteList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
@@ -39,6 +50,10 @@ const StyledButton = styled.button `
   font-size: 50px;
   line-height: 0;
   margin: auto;
+
+  position: fixed;
+  padding: 20px;
+  bottom: 0;
 `
 
 export default function(props) {
@@ -65,18 +80,20 @@ export default function(props) {
           <Title {...provided.dragHandleProps}>
             {props.column.title}
           </Title>
-          <Droppable droppableId={props.column.id}>
-            {(provided, snapshot) => (
-            <NoteList
-              ref={provided.innerRef} 
-              {...provided.droppableProps}
-              isDraggingOver={snapshot.isDraggingOver}
-            >
-              {notes}
-              {provided.placeholder}
-            </NoteList>
-            )}
-          </Droppable>
+          <Content>
+            <Droppable droppableId={props.column.id}>
+              {(provided, snapshot) => (
+              <NoteList
+                ref={provided.innerRef} 
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {notes}
+                {provided.placeholder}
+              </NoteList>
+              )}
+            </Droppable>
+          </Content>
           <StyledButton onClick={props.addNote}>
             + 
           </StyledButton>

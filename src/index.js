@@ -7,7 +7,18 @@ import initialDataEmpty from './initial-data-empty';
 import Board from './board';
 
 const Structure = styled.div`
+  background-color: pink;
   padding: 20px;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+`;
+
+const Content = styled.div`
+  background-color: lightblue;
+  width: 100%;
+  flex-grow : 1;
+  height: 100%;
 `;
 
 const Header = styled.div`
@@ -188,15 +199,9 @@ function App() {
           Light Notes    
         </h1>
       </Header>
-      <div>
+      <Content>
         <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
-        <Footer>
-          <h2>
-            This is the Footer.
-          </h2>
-        </Footer>
-      </div>
-      
+      </Content>
     </Structure>
   );
 }

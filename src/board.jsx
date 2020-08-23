@@ -7,6 +7,7 @@ import Column from './column';
 
 const Container = styled.div `
   display: flex;
+  height: 100%;
 `;
 
 const ColumnContainer = styled.div`
@@ -19,6 +20,7 @@ const ColumnContainer = styled.div`
 
   display: flex;
   justify-content: center;
+  height: 100%;
 `;
 
 const StyledButton = styled.button `
@@ -30,7 +32,10 @@ const StyledButton = styled.button `
   width: 60px;
   height: 60px;
 
-  padding-bottom: 6px;
+  position: fixed;
+  padding: 20px;
+  bottom: 0;
+
   font-size: 50px;
   
   display: flex;
