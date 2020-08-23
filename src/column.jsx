@@ -5,11 +5,9 @@ import Note from './note';
 
 const Container = styled.div`
   background-color: white;
-  margin-top: 8px;
   margin-right: 8px;
   border-radius: 4px;
   width: 280px;
-  height: 400px;
   
   display: flex;
   flex-direction: column;
@@ -51,11 +49,14 @@ const StyledButton = styled.button `
   line-height: 0;
   margin: auto;
 
-  position: fixed;
   padding: 20px;
   bottom: 0;
+  left: 50%;
+  
 `
+/*
 
+*/
 export default function(props) {
 
   /*const notes = useMemo(

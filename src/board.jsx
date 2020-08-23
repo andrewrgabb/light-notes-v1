@@ -12,11 +12,9 @@ const Container = styled.div `
 
 const ColumnContainer = styled.div`
   background-color: white;
-  margin-top: 8px;
   margin-right: 8px;
   border-radius: 4px;
   width: 280px;
-  height: 80px;
 
   display: flex;
   justify-content: center;
@@ -32,11 +30,12 @@ const StyledButton = styled.button `
   width: 60px;
   height: 60px;
 
-  position: fixed;
+  position: relative;
   padding: 20px;
   bottom: 0;
 
   font-size: 50px;
+  
   
   display: flex;
   justify-content: center;
@@ -50,7 +49,7 @@ function InnerList(props) {
     column.noteIds.map(noteId => noteMap[noteId]),
     [column, noteMap]
   );
-  return <Column column={column} notes={notes} index={index} addNote={addNote}/>;
+  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
 }
 
 export default function(props) {
@@ -58,12 +57,12 @@ export default function(props) {
   return (
     <DragDropContext onDragEnd={props.onDragEnd}>
       <Droppable
-        droppableId='board' 
+        droppableId='board'
         direction='horizontal' 
         type='column'
       >
         {provided => (
-          <Container
+          <Container id="Board"
             {...provided.droppableProps}
             ref={provided.innerRef} 
           >
@@ -74,7 +73,7 @@ export default function(props) {
               );
             })}
             {provided.placeholder}
-            <ColumnContainer>
+            <ColumnContainer id="Column Container">
               <StyledButton onClick={props.addColumn}>
                 +
               </StyledButton>

@@ -8,37 +8,22 @@ import Board from './board';
 
 const Structure = styled.div`
   background-color: pink;
-  padding: 20px;
-  display: flex;
-  flex-flow: column;
-  height: 100%;
 `;
 
 const Content = styled.div`
   background-color: lightblue;
-  width: 100%;
-  flex-grow : 1;
-  height: 100%;
+  position: absolute;
+  top: 80px;
+  bottom: 0;
+  width: 100%; 
 `;
 
 const Header = styled.div`
-  padding: 20px;
+  height: 80px;
   text-align: left;
   font-size: 20px;
   background-color: white;
-  border-radius: 4px;
 `;
-
-const Footer = styled.h2 `
-  position: fixed;
-  padding: 20px;
-  bottom: 0;
-  width: 100%;
-  height: 40px;
-  background-color: white;
-  text-align: center;
-  border-radius: 4px;
-`
 
 function App() {
 
@@ -200,7 +185,7 @@ function App() {
         </h1>
       </Header>
       <Content>
-        <Board notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );
