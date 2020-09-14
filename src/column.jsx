@@ -21,11 +21,12 @@ const Title = styled.h2`
 `;
 
 const Content = styled.div`
-  background-color: lightgreen;
+  background-color: grey;
   overflow: auto;
   width: 100%;
   margin-top: 40px;
   bottom: 40;
+  min-height: 400px;
 `;
 
 const NoteList = styled.div`

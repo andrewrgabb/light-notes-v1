@@ -4,7 +4,7 @@ import { Draggable } from 'react-beautiful-dnd';
 
 const Container = styled.button `
   border: none;
-  background-color: inherit;
+  background-color: grey;
   padding: 8px;
   margin-bottom: 8px;
   height: 100px;
