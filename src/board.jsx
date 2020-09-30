@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { useImperativeHandle } from 'react'; //forwardRef, 
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import '@atlaskit/css-reset';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -27,7 +29,24 @@ function InnerList(props) {
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
 }
 
-export default function(props) {
+
+
+const board = React.forwardRef((props, ref) => {
+
+  // const boardRef = React.createRef();
+  
+  useImperativeHandle(ref, () => ({
+
+    scrollRight(columnCount, columnlength) {
+      //alert("getAlert from Child");
+      console.log(columnCount * columnlength);
+      //window.scrollBy(columnCount * columnlength, 0);
+      //let boardDomNode = ReactDOM.findDOMNode(this);
+      //ref.scrollLeft = ref.scrollWidth;
+      console.log(ref);
+    }
+
+  }));
 
   return (
     <DragDropContext onDragEnd={props.onDragEnd}>
@@ -51,7 +70,9 @@ export default function(props) {
           </Container>
         )}
       </Droppable>
-      
+
     </DragDropContext>
-  ); 
-}
+  );
+});
+
+export default board;
