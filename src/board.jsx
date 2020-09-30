@@ -6,41 +6,19 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Column from './column';
 
 const Container = styled.div `
+  background-color: purple;
   display: flex;
   height: 100%;
+  width: 100%;
+
+  overflow-x: scroll;
+
 `;
+/*
 
-const ColumnContainer = styled.div`
-  background-color: white;
-  margin-right: 8px;
-  border-radius: 4px;
-  width: 280px;
-
-  display: flex;
-  justify-content: center;
-  height: 100%;
-`;
-
-const StyledButton = styled.button `
-  margin-top: 8px;
-  border: 2px solid;
-  border-radius: 50%;
-  background-color: inherit;
   
-  width: 60px;
-  height: 60px;
-
-  position: relative;
-  padding: 20px;
-  bottom: 0;
-
-  font-size: 50px;
-  
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+  width: 100%;
+*/
 
 function InnerList(props) {
   const { column, noteMap, index, addNote } = props;
@@ -73,11 +51,6 @@ export default function(props) {
               );
             })}
             {provided.placeholder}
-            <ColumnContainer id="Column Container">
-              <StyledButton onClick={props.addColumn}>
-                +
-              </StyledButton>
-            </ColumnContainer>
           </Container>
         )}
       </Droppable>

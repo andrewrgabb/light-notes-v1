@@ -4,17 +4,19 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from './note';
 
 const Container = styled.div`
-  background-color: white;
+  position: relative;
+  background-color: orange;
   margin-right: 8px;
   border-radius: 4px;
-  width: 280px;
+  min-width: 280px;
   
   display: flex;
   flex-direction: column;
-  min-height:100%
+  height:100%
 `;
 
 const Title = styled.h2`
+  background-color: blue;
   padding: 24px;
   text-align: center;
   font-size: 24px
@@ -24,9 +26,9 @@ const Content = styled.div`
   background-color: grey;
   overflow: auto;
   width: 100%;
-  margin-top: 40px;
-  bottom: 40;
-  min-height: 400px;
+  margin-top: 10px;
+  margin-bottom: 70px;
+  min-height: 150px;
 `;
 
 const NoteList = styled.div`
@@ -39,42 +41,24 @@ const NoteList = styled.div`
 
 const StyledButton = styled.button `
   border: 2px solid;
-  border-radius: 50%;
   background-color: white;
   
-  width: 60px;
+  width: 100%;
   height: 60px;
 
-  padding-bottom: 6px;
   font-size: 50px;
-  line-height: 0;
-  margin: auto;
-
-  padding: 20px;
-  bottom: 0;
-  left: 50%;
-  
+  line-height: 0px;
+  position: absolute;
+  bottom: 0px;
 `
-/*
 
-*/
 export default function(props) {
-
-  /*const notes = useMemo(
-    () =>
-      props.notes.map((note, index) => (
-        <Note key={note.id} note={note} index={index} />
-      )),
-    [props.notes]
-  );*/
-
   const notes = (
     props.notes.map((note, index) => (
       <Note key={note.id} note={note} index={index} />
     ))
   );
       
-
   return (
     <Draggable draggableId={props.column.id} index={props.index} >
       {provided => (

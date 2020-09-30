@@ -19,17 +19,39 @@ const Content = styled.div`
 `;
 
 const Header = styled.div`
+  position: relative;
   height: 80px;
   text-align: left;
   font-size: 20px;
   background-color: white;
 `;
 
+const Title = styled.h1`
+  position: absolute;
+  width: 50%;
+  float: left;
+  padding-top: 15px;
+  padding-left: 10px;
+`;
+
+const StyledButton = styled.button `
+  position: absolute;
+  border: 2px solid;
+  background-color: white;
+  
+  width: 40px;
+  height: 40px;
+
+  font-size: 20px;
+  line-height: 0px;
+
+  margin-left: 50%;
+  margin-top: 20px;
+`
+
 function App() {
 
   const [state, setState] = useState(initialDataEmpty);
-  const [columnCount, setColumnCount] = useState(1);
-  const [noteCount, setNoteCount] = useState(1);
 
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
@@ -113,8 +135,8 @@ function App() {
   };
 
   let addColumn = () => {
-    let newColumnCount = columnCount + 1;
-    setColumnCount(newColumnCount);
+    let newColumnCount = state.columnCount + 1;
+
     let newColumnName = "column-" + newColumnCount;
     const newColumn = {
       id: newColumnName,
@@ -134,6 +156,7 @@ function App() {
       ...state,
       columns: newColumns,
       columnOrder: newColumnOrder,
+      columnCount: newColumnCount,
     }
 
     setState(newState);
@@ -141,8 +164,8 @@ function App() {
 
   let addNote = (columnId) => {
 
-    let newNoteCount = noteCount + 1;
-    setNoteCount(newNoteCount);
+    let newNoteCount = state.noteCount + 1;
+
     let newNoteId = "note-" + newNoteCount;
     const newNote = {
       id: newNoteId,
@@ -171,6 +194,7 @@ function App() {
     const newState = {
       ...state,
       notes: newNotes,
+      noteCount: newNoteCount,
       columns: newColumns,
     }
 
@@ -180,9 +204,12 @@ function App() {
   return (
     <Structure>
       <Header>
-        <h1>
-          Light Notes    
-        </h1>
+        <Title>
+          Light Notes 
+        </Title>
+        <StyledButton onClick={addColumn}>
+                +
+        </StyledButton>
       </Header>
       <Content>
         <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
