@@ -135,6 +135,7 @@ function App() {
   };
 
   let addColumn = () => {
+
     let newColumnCount = state.columnCount + 1;
 
     let newColumnName = "column-" + newColumnCount;

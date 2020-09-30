@@ -6,19 +6,16 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Column from './column';
 
 const Container = styled.div `
+  position: relative;
+
   background-color: purple;
   display: flex;
   height: 100%;
-  width: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
 
-  overflow-x: scroll;
-
+  overflow: auto;
 `;
-/*
-
-  
-  width: 100%;
-*/
 
 function InnerList(props) {
   const { column, noteMap, index, addNote } = props;
