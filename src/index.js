@@ -53,9 +53,6 @@ function App() {
 
   const [state, setState] = useState(initialDataEmpty);
 
-  // Scroll in the board
-  const boardRef = React.createRef();
-
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
 
@@ -164,10 +161,6 @@ function App() {
     }
 
     setState(newState);
-
-    //let boardDomNode = ReactDOM.findDOMNode(boardRef);
-    //boardDomNode.scrollLeft = boardDomNode.scrollWidth;
-    boardRef.current.scrollRight(state.columnCount, 290);
   }
 
   let addNote = (columnId) => {
@@ -221,7 +214,7 @@ function App() {
         </StyledButton>
       </Header>
       <Content>
-        <Board id="Board" ref={boardRef} notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );

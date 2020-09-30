@@ -31,22 +31,7 @@ function InnerList(props) {
 
 
 
-const board = React.forwardRef((props, ref) => {
-
-  // const boardRef = React.createRef();
-  
-  useImperativeHandle(ref, () => ({
-
-    scrollRight(columnCount, columnlength) {
-      //alert("getAlert from Child");
-      console.log(columnCount * columnlength);
-      //window.scrollBy(columnCount * columnlength, 0);
-      //let boardDomNode = ReactDOM.findDOMNode(this);
-      //ref.scrollLeft = ref.scrollWidth;
-      console.log(ref);
-    }
-
-  }));
+export default function(props) {
 
   return (
     <DragDropContext onDragEnd={props.onDragEnd}>
@@ -73,6 +58,4 @@ const board = React.forwardRef((props, ref) => {
 
     </DragDropContext>
   );
-});
-
-export default board;
+}
