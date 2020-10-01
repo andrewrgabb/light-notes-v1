@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react';
-import { useImperativeHandle } from 'react'; //forwardRef, 
-import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import '@atlaskit/css-reset';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';

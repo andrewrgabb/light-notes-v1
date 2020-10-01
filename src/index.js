@@ -25,6 +25,7 @@ const Header = styled.div`
   font-size: 20px;
   background-color: white;
 `;
+//border-bottom: 4px solid black;
 
 const Title = styled.h1`
   position: absolute;
@@ -39,13 +40,12 @@ const StyledButton = styled.button `
   border: 2px solid;
   background-color: white;
   
-  width: 40px;
+  width: 240px;
   height: 40px;
 
-  font-size: 20px;
-  line-height: 0px;
+  font-size: inherit;
 
-  margin-left: 50%;
+  right: 20px;
   margin-top: 20px;
 `
 
@@ -210,7 +210,7 @@ function App() {
           Light Notes 
         </Title>
         <StyledButton onClick={addColumn}>
-                +
+          Add Column
         </StyledButton>
       </Header>
       <Content>

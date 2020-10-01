@@ -5,30 +5,48 @@ import Note from './note';
 
 const Container = styled.div`
   position: relative;
-  background-color: orange;
-  margin-right: 8px;
-  border-radius: 4px;
+  background-color: white;
+  
   min-width: 280px;
   
   display: flex;
   flex-direction: column;
-  height:100%
+  height:100%;
+  
+  margin-left: 8px;
+  margin-right: 8px;
+
+
+
+  border-left: 4px solid black;
+  border-right: 4px solid black;
+
+  
 `;
+//  
+//border-right: 8px solid blue;
+
+//
 
 const Title = styled.h2`
   background-color: blue;
-  padding: 24px;
+  padding: 16px;
   text-align: center;
-  font-size: 24px
+  font-size: 24px;
+  max-height: 60px;
 `;
 
+//border-top: 4px solid black;
+//border-bottom: 4px solid black;
+
 const Content = styled.div`
-  background-color: grey;
+  position: relative;
+  background-color: lightgrey;
   overflow: auto;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 70px;
-  min-height: 150px;
+  min-height: calc(100% - 140px);
 `;
 
 const NoteList = styled.div`
@@ -36,9 +54,8 @@ const NoteList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'inherit')};
   flex-grow: 1;
-  min-height: 10px;
+  min-height: calc(100% - 16px);
 `;
-
 const StyledButton = styled.button `
   border: 2px solid;
   background-color: white;
