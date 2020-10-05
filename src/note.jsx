@@ -3,12 +3,15 @@ import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
 const Container = styled.div`
-  border: 3px solid lightgrey;
+  border: 3px solid darkgrey;
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
-  background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
+  background-color: ${props => (props.isDragging ? 'Azure' : 'white')};
   min-height: 100px;
+
+  border-radius: 5px;
+  color: black;
 
   &: focus {
     outline: none;

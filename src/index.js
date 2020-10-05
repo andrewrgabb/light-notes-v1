@@ -10,6 +10,7 @@ const Structure = styled.div`
 `;
 
 const Content = styled.div`
+  background-color: white;
   position: absolute;
   top: 80px;
   bottom: 0;
@@ -20,10 +21,10 @@ const Header = styled.div`
   position: relative;
   height: 80px;
   text-align: left;
+  left: 10px;
   font-size: 20px;
   background-color: white;
 `;
-//border-bottom: 4px solid black;
 
 const Title = styled.h1`
   position: absolute;
@@ -31,6 +32,7 @@ const Title = styled.h1`
   float: left;
   padding-top: 15px;
   padding-left: 20px;
+  color: black;
 `;
 
 const StyledButton = styled.button `
@@ -45,6 +47,9 @@ const StyledButton = styled.button `
 
   right: 20px;
   margin-top: 20px;
+
+  border-radius: 5px;
+  color: black;
 `
 
 function App() {
