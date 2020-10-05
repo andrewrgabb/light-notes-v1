@@ -16,32 +16,25 @@ const Container = styled.div`
   margin-left: 8px;
   margin-right: 8px;
 
-
-
   border-left: 4px solid black;
   border-right: 4px solid black;
 
-  
-`;
-//  
-//border-right: 8px solid blue;
+  border-radius: 5px;
 
-//
+`;
 
 const Title = styled.h2`
-  background-color: blue;
+  background-color: DodgerBlue;
   padding: 16px;
   text-align: center;
   font-size: 24px;
+  color: black;
   max-height: 60px;
 `;
 
-//border-top: 4px solid black;
-//border-bottom: 4px solid black;
 
 const Content = styled.div`
   position: relative;
-  background-color: lightgrey;
   overflow: auto;
   width: 100%;
   margin-top: 10px;
@@ -52,7 +45,7 @@ const Content = styled.div`
 const NoteList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'inherit')};
+  background-color: ${props => (props.isDraggingOver ? 'DodgerBlue' : 'inherit')};
   flex-grow: 1;
   min-height: calc(100% - 16px);
 `;
@@ -60,8 +53,12 @@ const StyledButton = styled.button `
   border: 2px solid;
   background-color: white;
   
-  width: 100%;
-  height: 60px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  width: calc(100% - 20px);
+  height: 55px;
+
+  border-radius: 5px;
 
   font-size: 50px;
   line-height: 0px;
