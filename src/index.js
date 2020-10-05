@@ -7,11 +7,9 @@ import initialDataEmpty from './initial-data-empty';
 import Board from './board';
 
 const Structure = styled.div`
-  background-color: pink;
 `;
 
 const Content = styled.div`
-  background-color: lightblue;
   position: absolute;
   top: 80px;
   bottom: 0;

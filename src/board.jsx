@@ -7,8 +7,6 @@ import Column from './column';
 
 const Container = styled.div `
   position: relative;
-
-  background-color: purple;
   display: flex;
   height: 100%;
   margin-left: 20px;

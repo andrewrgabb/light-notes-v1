@@ -29,10 +29,11 @@ const Container = styled.div`
 //
 
 const Title = styled.h2`
-  background-color: blue;
+  background-color: lightgrey;
   padding: 16px;
   text-align: center;
   font-size: 24px;
+  color: black;
   max-height: 60px;
 `;
 
@@ -41,7 +42,6 @@ const Title = styled.h2`
 
 const Content = styled.div`
   position: relative;
-  background-color: lightgrey;
   overflow: auto;
   width: 100%;
   margin-top: 10px;
