@@ -1,3 +1,10 @@
+# Light Notes
+
+A simple notes app.
+
+Please note that this is a personal project of mine and is currently a work-in-progress.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
