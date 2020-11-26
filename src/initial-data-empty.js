@@ -1,12 +1,12 @@
 const intialData = {
   notes: {
-    'note-1': { id: 'note-1', content: 'notable'},
+    'note-1': { id: 'note-1', content: 'Note 1'},
   },
   noteCount: 1,
   columns: {
     'column-1': {
       id: 'column-1',
-      title: 'To do',
+      title: 'Column 1',
       noteIds: ['note-1'],
     },
   },

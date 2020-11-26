@@ -173,7 +173,7 @@ function App() {
     let newNoteId = "note-" + newNoteCount;
     const newNote = {
       id: newNoteId,
-      content: ['notable' + newNoteCount]
+      content: ['Note ' + newNoteCount]
     };
     
     const columnToAppend = state.columns[columnId];
