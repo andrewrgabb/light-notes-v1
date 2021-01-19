@@ -7,7 +7,7 @@ const Container = styled.div`
   position: relative;
   background-color: white;
   
-  min-width: 280px;
+  min-width: 380px;
   
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@ const Container = styled.div`
 
   border-radius: 5px;
 
-`;
+`
 
 const Title = styled.h2`
   background-color: DodgerBlue;
@@ -30,17 +30,17 @@ const Title = styled.h2`
   font-size: 24px;
   color: black;
   max-height: 60px;
-`;
+`
 
 
 const Content = styled.div`
   position: relative;
-  overflow: auto;
+  overflow: scroll;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 70px;
   min-height: calc(100% - 140px);
-`;
+`
 
 const NoteList = styled.div`
   padding: 8px;
@@ -48,7 +48,8 @@ const NoteList = styled.div`
   background-color: ${props => (props.isDraggingOver ? 'DodgerBlue' : 'inherit')};
   flex-grow: 1;
   min-height: calc(100% - 16px);
-`;
+`
+
 const StyledButton = styled.button `
   border: 2px solid;
   background-color: white;

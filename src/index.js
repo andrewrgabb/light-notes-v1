@@ -6,6 +6,10 @@ import initialDataEmpty from './initial-data-empty';
 
 import Board from './board';
 
+import Amplify from "aws-amplify";
+import awsExports from "./aws-exports";
+Amplify.configure(awsExports);
+
 const Structure = styled.div`
 `;
 
@@ -54,7 +58,16 @@ const StyledButton = styled.button `
 
 function App() {
 
-  const [state, setState] = useState(initialDataEmpty);
+  const [notes, setNotes] = useState(initialDataEmpty.notes);
+
+  const [noteCount, setNoteCount] = useState(initialDataEmpty.noteCount);
+
+  const [columns, setColumns] = useState(initialDataEmpty.columns);
+
+  const [columnCount, setColumnCount] = useState(initialDataEmpty.columnCount);
+
+  const [columnOrder, setColumnOrder] = useState(initialDataEmpty.columnOrder);
+  
 
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
@@ -71,21 +84,17 @@ function App() {
     }
 
     if (type === 'column') {
-      const newColumnOrder = Array.from(state.columnOrder);
+      const newColumnOrder = Array.from(columnOrder);
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
 
-      const newState = {
-        ...state,
-        columnOrder: newColumnOrder,
-      };
-      setState(newState);
+      setColumnOrder(newColumnOrder);
       return;
     }
 
     // if type = notes
-    const start = state.columns[source.droppableId];
-    const finish = state.columns[destination.droppableId];
+    const start = columns[source.droppableId];
+    const finish = columns[destination.droppableId];
 
     // Moving notes within the same column
     if (start === finish) {
@@ -98,15 +107,12 @@ function App() {
         noteIds: newNoteIds,
       };
 
-      const newState = {
-        ...state,
-        columns: {
-          ...state.columns,
-          [newColumn.id]: newColumn,
-        },
+      const newColumns = {
+        ...columns,
+        [newColumn.id]: newColumn,
       };
 
-      setState(newState);
+      setColumns(newColumns)
       return;
     }
 
@@ -125,21 +131,18 @@ function App() {
       noteIds: finishNoteIds,
     };
 
-    const newState = {
-      ...state,
-      columns: {
-        ...state.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      },
+    const newColumns = {
+      ...columns,
+      [newStart.id]: newStart,
+      [newFinish.id]: newFinish,
     };
 
-      setState(newState);
+    setColumns(newColumns)
   };
 
   let addColumn = () => {
 
-    let newColumnCount = state.columnCount + 1;
+    let newColumnCount = columnCount + 1;
 
     let newColumnName = "column-" + newColumnCount;
     const newColumn = {
@@ -148,27 +151,24 @@ function App() {
       noteIds: [],
     };
     
-    const newColumnOrder = state.columnOrder;
+    const newColumnOrder = columnOrder;
     newColumnOrder.push(newColumnName);
 
+    setColumnOrder(newColumnOrder)
+
     const newColumns = {
-      ...state.columns,
+      ...columns,
       [newColumnName]: newColumn,
     }
 
-    const newState = {
-      ...state,
-      columns: newColumns,
-      columnOrder: newColumnOrder,
-      columnCount: newColumnCount,
-    }
+    setColumns(newColumns)
 
-    setState(newState);
+    setColumnCount(newColumnCount)
   }
 
   let addNote = (columnId) => {
 
-    let newNoteCount = state.noteCount + 1;
+    let newNoteCount = noteCount + 1;
 
     let newNoteId = "note-" + newNoteCount;
     const newNote = {
@@ -176,9 +176,9 @@ function App() {
       content: ['Note ' + newNoteCount]
     };
     
-    const columnToAppend = state.columns[columnId];
+    const columnToAppend = columns[columnId];
     const columnToAppendNoteIds = columnToAppend.noteIds;
-    columnToAppendNoteIds.push(newNoteId);
+    columnToAppendNoteIds.unshift(newNoteId);
     
     const newColumnToAppend = {
       ...columnToAppend,
@@ -186,23 +186,20 @@ function App() {
     }
 
     const newColumns = {
-      ...state.columns,
+      ...columns,
       [columnId]: newColumnToAppend,
     }
 
+    setColumns(newColumns)
+
     const newNotes = {
-      ...state.notes,
+      ...notes,
       [newNoteId]: newNote,
     }
 
-    const newState = {
-      ...state,
-      notes: newNotes,
-      noteCount: newNoteCount,
-      columns: newColumns,
-    }
+    setNotes(newNotes)
 
-    setState(newState);
+    setNoteCount(newNoteCount)
   }
   
 
@@ -217,7 +214,7 @@ function App() {
         </StyledButton>
       </Header>
       <Content>
-        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={notes} columns={columns} columnOrder={columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );

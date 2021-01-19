@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.0",
+    "@aws-amplify/ui-react": "^0.2.34",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "add": "^2.0.6",
+    "aws-amplify": "^3.3.14",
     "eslint-plugin-react-hooks": "^4.1.0",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",

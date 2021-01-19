@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-lightnotesv1-dev-210106-authRole",
+      "UnauthRoleArn": "arn:aws:iam::943116842259:role/amplify-lightnotesv1-dev-210106-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::943116842259:role/amplify-lightnotesv1-dev-210106-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-lightnotesv1-dev-210106-deployment",
+      "UnauthRoleName": "amplify-lightnotesv1-dev-210106-unauthRole",
+      "StackName": "amplify-lightnotesv1-dev-210106",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:943116842259:stack/amplify-lightnotesv1-dev-210106/16940590-5974-11eb-afa6-0a165e1483c4",
+      "AmplifyAppId": "d15agq1bpjmk2h"
+    }
+  }
+}
