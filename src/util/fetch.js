@@ -38,7 +38,7 @@ export async function fetchColumns() {
         noteOrder: noteOrder,
       }
 
-      /*
+      
       console.log(jsonColumn.id)
 
       const info = {
@@ -46,14 +46,12 @@ export async function fetchColumns() {
       }
 
       await API.graphql(graphqlOperation(deleteColumn, {input: info}))
-      */
-
+      
+/*
       newColumns = {
         ...newColumns,
         [newId]: newColumn,
-      }
-
-      //newColumns[index] = newColumn
+      }*/
     }
     
     return (newColumns)
@@ -66,14 +64,14 @@ export async function fetchColumnOrder() {
     const columnOrderData = await API.graphql(graphqlOperation(listColumnOrders))
     const jsonColumnOrder = columnOrderData.data.listColumnOrders.items
 
-    /*console.log(jsonColumnOrder[0])
+    console.log(jsonColumnOrder[0])
 
     const info = {
       id: jsonColumnOrder[0].id,
     }
 
-    await API.graphql(graphqlOperation(deleteColumnOrder, {input: info}))*/
-
+    await API.graphql(graphqlOperation(deleteColumnOrder, {input: info}))
+    /*
     if (jsonColumnOrder.length > 0) {
 
       const id = jsonColumnOrder[0].id
@@ -99,7 +97,7 @@ export async function fetchColumnOrder() {
       await API.graphql(graphqlOperation(createColumnOrder, {input: newColumnOrder}))
 
       return (newColumnOrder)
-    }
+    }*/
 
   } catch (err) { console.log('error fetching column order'); console.log(err) }
 }

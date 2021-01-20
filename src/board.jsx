@@ -18,21 +18,37 @@ const Container = styled.div `
 function InnerList(props) {
   const { column, noteMap, index, addNote } = props;
 
-  console.log("noteOrder")
-  console.log(column)
-  console.log(Array.isArray(column.noteOrder))
-
-  if (column.noteOrder.length > 0) {
-    const notes = column.noteOrder.map(noteId => noteMap[noteId]);
-    return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
-  } else {
-    const notes = [];
-    return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
-  }
-  // useMemo for [column, noteMap] removed here due to incompatibility with an empty array
+  const notes = useMemo(
+    () =>
+    column.noteOrder.map(noteId => noteMap[noteId]),
+    [column, noteMap]
+  );
+  
+  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
 }
 
-
+/*
+const notes = useMemo(
+    () =>
+    { var noteSelection = [];
+      for (var i = 0; i < column.noteOrder.length; i ++) {
+        let noteId = column.noteOrder[i];
+        const tempNote = noteMap[noteId]
+        if (tempNote) {
+          noteSelection.unshift(tempNote)
+        } else {
+          const fillerNote = {
+            id: noteId,
+            content: 'loading...',
+          }
+          noteSelection.unshift(fillerNote)
+        }
+      }
+      return noteSelection;
+    },
+    [column, noteMap]
+  );
+  */
 
 export default function(props) {
 

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 // import initialData from './initial-data';
-import initialDataEmpty from './initial-data-empty';
+import initialNotes from './initial-notes';
+import initialBoard from './initial-board';
 
 import Board from './board';
 
@@ -68,13 +69,9 @@ const StyledButton = styled.button `
 
 function App() {
 
-  const [state, setState] = useState(initialDataEmpty)
+  const [board, setBoard] = useState(initialBoard)
 
-  const [notes, setNotes] = useState(initialDataEmpty.notes);
-
-  const [columns, setColumns] = useState(initialDataEmpty.columns);
-
-  const [columnOrder, setColumnOrder] = useState(initialDataEmpty.columnOrder);
+  const [notes, setNotes] = useState(initialNotes);
 
   // Count
   const [noteCount, setNoteCount] = useState(1);
@@ -82,24 +79,24 @@ function App() {
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
-    fetchData()
+    //fetchData()
   }, [])
 
   async function fetchData() {
     try {
 
       await Promise.all([fetchNotes(), fetchColumns(), fetchColumnOrder()])
-      .then(response => 
+      /*.then(response => 
         {
-          const newState = {
+          const newBoard = {
             notes: response[0],
             columns: response[1],
             columnOrder: response[2],
           }
-          console.log(newState)
-          setState(newState)
+          console.log(newBoard)
+          setBoard(newBoard)
         }
-      )
+      )*/
     }  catch (err) {
       console.log('error fetching data:', err)
     }
@@ -118,21 +115,21 @@ function App() {
         noteOrder: [],
       };
       
-      const newColumnOrder = state.columnOrder;
+      const newColumnOrder = board.columnOrder;
       newColumnOrder.ids.push(id);
   
       const newColumns = {
-        ...state.columns,
+        ...board.columns,
         [id]: newColumn,
       }
   
-      const newState = {
-        ...state,
+      const newBoard = {
+        ...board,
         columns: newColumns,
         columnOrder: newColumnOrder,
       }
   
-      setState(newState);
+      setBoard(newBoard);
   
       setColumnCount(newColumnCount)
   
@@ -153,9 +150,9 @@ function App() {
       console.log(jsonColumn)
       console.log(jsonColumnOrder)
   
-      await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
+      //await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
   
-      await API.graphql(graphqlOperation(updateColumnOrder, {input: jsonColumnOrder}))
+      //await API.graphql(graphqlOperation(updateColumnOrder, {input: jsonColumnOrder}))
 
     } catch (err) {
       console.log('error adding column:')
@@ -188,28 +185,28 @@ function App() {
     }
 
     if (type === 'column') {
-      const newColumnOrderIds = Array.from(state.columnOrder.ids);
+      const newColumnOrderIds = Array.from(board.columnOrder.ids);
       newColumnOrderIds.splice(source.index, 1);
       newColumnOrderIds.splice(destination.index, 0, draggableId);
 
       const newColumnOrder = {
-        ...state.columnOrder,
+        ...board.columnOrder,
         ids: newColumnOrderIds,
       };
 
-      const newState = {
-        ...state,
+      const newBoard = {
+        ...board,
         columnOrder: newColumnOrder,
       }
 
-      setState(newState)
+      setBoard(newBoard)
 
       return;
     }
 
     // if type = notes
-    const start = state.columns[source.droppableId];
-    const finish = state.columns[destination.droppableId];
+    const start = board.columns[source.droppableId];
+    const finish = board.columns[destination.droppableId];
 
     // Moving notes within the same column
     if (start === finish) {
@@ -223,16 +220,16 @@ function App() {
       };
 
       const newColumns = {
-        ...state.columns,
+        ...board.columns,
         [newColumn.id]: newColumn,
       };
 
-      const newState = {
-        ...state,
+      const newBoard = {
+        ...board,
         columns: newColumns,
       }
   
-      setState(newState);
+      setBoard(newBoard);
       return;
     }
 
@@ -252,17 +249,17 @@ function App() {
     };
 
     const newColumns = {
-      ...state.columns,
+      ...board.columns,
       [newStart.id]: newStart,
       [newFinish.id]: newFinish,
     };
 
-    const newState = {
-      ...state,
+    const newBoard = {
+      ...board,
       columns: newColumns,
     }
 
-    setState(newState);
+    setBoard(newBoard);
   };
 
 
@@ -276,7 +273,7 @@ function App() {
       content: ['Note ' + newNoteCount]
     };
     
-    const columnToAppend = state.columns[columnId];
+    const columnToAppend = board.columns[columnId];
     const columnToAppendNoteOrder = columnToAppend.noteOrder;
     columnToAppendNoteOrder.unshift(newNoteId);
     
@@ -286,22 +283,23 @@ function App() {
     }
 
     const newColumns = {
-      ...state.columns,
+      ...board.columns,
       [columnId]: newColumnToAppend,
     }
 
-    const newNotes = {
-      ...state.notes,
-      [newNoteId]: newNote,
-    }
-
-    const newState = {
-      ...state,
-      notes: newNotes,
+    const newBoard = {
+      ...board,
       columns: newColumns,
     }
 
-    setState(newState);
+    setBoard(newBoard);
+
+    const newNotes = {
+      ...notes,
+      [newNoteId]: newNote,
+    }
+
+    setNotes(newNotes)
 
     setNoteCount(newNoteCount)
   }
@@ -318,7 +316,7 @@ function App() {
         </StyledButton>
       </Header>
       <Content>
-        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder.ids} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder.ids} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );

@@ -69,13 +69,12 @@ const StyledButton = styled.button `
 
 export default function(props) {
 
-  console.log("props.notes")
-  console.log(props.notes)
-
   const notes = (
-    props.notes.map((note, index) => (
-      <Note key={note.id} note={note} index={index} />
-    ))
+    props.notes.map((note, index) => {
+      if (note) {
+        return <Note key={note.id} note={note} index={index} />
+      }
+    })
   );
       
   return (
