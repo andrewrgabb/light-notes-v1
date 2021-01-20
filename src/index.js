@@ -147,8 +147,8 @@ function App() {
         ids: jsonIds,
       }
 
-      console.log(jsonColumn)
-      console.log(jsonColumnOrder)
+      //console.log(jsonColumn)
+      //console.log(jsonColumnOrder)
   
       //await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
   

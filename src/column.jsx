@@ -74,6 +74,7 @@ export default function(props) {
       if (note) {
         return <Note key={note.id} note={note} index={index} />
       }
+      return null
     })
   );
       
