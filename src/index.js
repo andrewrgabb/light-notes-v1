@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 // import initialData from './initial-data';
@@ -6,7 +6,17 @@ import initialDataEmpty from './initial-data-empty';
 
 import Board from './board';
 
-import Amplify from "aws-amplify";
+import { v4 as uuidv4 } from 'uuid';
+
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+
+// Update
+import { createNote, deleteNote } from './graphql/mutations'
+import { createColumn, updateColumn, deleteColumn } from './graphql/mutations'
+import { createColumnOrder, updateColumnOrder, deleteColumnOrder } from './graphql/mutations'
+
+import { fetchNotes, fetchColumns, fetchColumnOrder } from './util/fetch'
+
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
@@ -58,16 +68,110 @@ const StyledButton = styled.button `
 
 function App() {
 
-  const [notes, setNotes] = useState(initialDataEmpty.notes);
+  const [state, setState] = useState(initialDataEmpty)
 
-  const [noteCount, setNoteCount] = useState(initialDataEmpty.noteCount);
+  const [notes, setNotes] = useState(initialDataEmpty.notes);
 
   const [columns, setColumns] = useState(initialDataEmpty.columns);
 
-  const [columnCount, setColumnCount] = useState(initialDataEmpty.columnCount);
-
   const [columnOrder, setColumnOrder] = useState(initialDataEmpty.columnOrder);
+
+  // Count
+  const [noteCount, setNoteCount] = useState(1);
+  const [columnCount, setColumnCount] = useState(1);
+
+  // Fetch Notes, Columns, and ColumnOrder
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  async function fetchData() {
+    try {
+
+      await Promise.all([fetchNotes(), fetchColumns(), fetchColumnOrder()])
+      .then(response => 
+        {
+          const newState = {
+            notes: response[0],
+            columns: response[1],
+            columnOrder: response[2],
+          }
+          console.log(newState)
+          setState(newState)
+        }
+      )
+    }  catch (err) {
+      console.log('error fetching data:', err)
+    }
+  };
+
+  // Create Columns and Notes
+  async function addColumn() {
+    try {
+
+      let newColumnCount = columnCount + 1;
   
+      let id  = uuidv4();
+      const newColumn = {
+        id: id,
+        name: 'Column ' + newColumnCount,
+        noteOrder: [],
+      };
+      
+      const newColumnOrder = state.columnOrder;
+      newColumnOrder.ids.push(id);
+  
+      const newColumns = {
+        ...state.columns,
+        [id]: newColumn,
+      }
+  
+      const newState = {
+        ...state,
+        columns: newColumns,
+        columnOrder: newColumnOrder,
+      }
+  
+      setState(newState);
+  
+      setColumnCount(newColumnCount)
+  
+      const jsonNoteOrder = JSON.stringify(newColumn.noteOrder)
+  
+      const jsonColumn = {
+        ...newColumn,
+        noteOrder: jsonNoteOrder,
+      };
+
+      const jsonIds = JSON.stringify(newColumnOrder.ids)
+
+      const jsonColumnOrder = {
+        ...newColumnOrder,
+        ids: jsonIds,
+      }
+
+      console.log(jsonColumn)
+      console.log(jsonColumnOrder)
+  
+      await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
+  
+      await API.graphql(graphqlOperation(updateColumnOrder, {input: jsonColumnOrder}))
+
+    } catch (err) {
+      console.log('error adding column:')
+      console.log(err)
+    }
+  }
+
+  
+  // Update Columns, and ColumnOrder
+
+
+
+  // Delete Columns, Notes (To be added once the delete function is implemented in the GUI)
+
+
+
 
   let onDragEnd = result => {
     const { destination, source, draggableId, type} = result;
@@ -84,120 +188,120 @@ function App() {
     }
 
     if (type === 'column') {
-      const newColumnOrder = Array.from(columnOrder);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
+      const newColumnOrderIds = Array.from(state.columnOrder.ids);
+      newColumnOrderIds.splice(source.index, 1);
+      newColumnOrderIds.splice(destination.index, 0, draggableId);
 
-      setColumnOrder(newColumnOrder);
+      const newColumnOrder = {
+        ...state.columnOrder,
+        ids: newColumnOrderIds,
+      };
+
+      const newState = {
+        ...state,
+        columnOrder: newColumnOrder,
+      }
+
+      setState(newState)
+
       return;
     }
 
     // if type = notes
-    const start = columns[source.droppableId];
-    const finish = columns[destination.droppableId];
+    const start = state.columns[source.droppableId];
+    const finish = state.columns[destination.droppableId];
 
     // Moving notes within the same column
     if (start === finish) {
-      const newNoteIds = Array.from(start.noteIds);
-      newNoteIds.splice(source.index, 1);
-      newNoteIds.splice(destination.index, 0, draggableId);
+      const newNoteOrder = Array.from(start.noteOrder);
+      newNoteOrder.splice(source.index, 1);
+      newNoteOrder.splice(destination.index, 0, draggableId);
 
       const newColumn = {
-        ...start,
-        noteIds: newNoteIds,
+        ...start, // or finish since they are the same column
+        noteOrder: newNoteOrder,
       };
 
       const newColumns = {
-        ...columns,
+        ...state.columns,
         [newColumn.id]: newColumn,
       };
 
-      setColumns(newColumns)
+      const newState = {
+        ...state,
+        columns: newColumns,
+      }
+  
+      setState(newState);
       return;
     }
 
     // Moving notes from one column to another
-    const startNoteIds = Array.from(start.noteIds);
-    startNoteIds.splice(source.index, 1);
+    const startNoteOrder = Array.from(start.noteOrder);
+    startNoteOrder.splice(source.index, 1);
     const newStart = {
       ...start,
-      noteIds: startNoteIds,
+      noteOrder: startNoteOrder,
     };
 
-    const finishNoteIds = Array.from(finish.noteIds);
-    finishNoteIds.splice(destination.index, 0, draggableId);
+    const finishNoteOrder = Array.from(finish.noteOrder);
+    finishNoteOrder.splice(destination.index, 0, draggableId);
     const newFinish = {
       ...finish,
-      noteIds: finishNoteIds,
+      noteOrder: finishNoteOrder,
     };
 
     const newColumns = {
-      ...columns,
+      ...state.columns,
       [newStart.id]: newStart,
       [newFinish.id]: newFinish,
     };
 
-    setColumns(newColumns)
-  };
-
-  let addColumn = () => {
-
-    let newColumnCount = columnCount + 1;
-
-    let newColumnName = "column-" + newColumnCount;
-    const newColumn = {
-      id: newColumnName,
-      title: 'Column ' + newColumnCount,
-      noteIds: [],
-    };
-    
-    const newColumnOrder = columnOrder;
-    newColumnOrder.push(newColumnName);
-
-    setColumnOrder(newColumnOrder)
-
-    const newColumns = {
-      ...columns,
-      [newColumnName]: newColumn,
+    const newState = {
+      ...state,
+      columns: newColumns,
     }
 
-    setColumns(newColumns)
+    setState(newState);
+  };
 
-    setColumnCount(newColumnCount)
-  }
 
   let addNote = (columnId) => {
 
     let newNoteCount = noteCount + 1;
 
-    let newNoteId = "note-" + newNoteCount;
+    let newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
       content: ['Note ' + newNoteCount]
     };
     
-    const columnToAppend = columns[columnId];
-    const columnToAppendNoteIds = columnToAppend.noteIds;
-    columnToAppendNoteIds.unshift(newNoteId);
+    const columnToAppend = state.columns[columnId];
+    const columnToAppendNoteOrder = columnToAppend.noteOrder;
+    columnToAppendNoteOrder.unshift(newNoteId);
     
     const newColumnToAppend = {
       ...columnToAppend,
-      noteIds: columnToAppendNoteIds,
+      noteOrder: columnToAppendNoteOrder,
     }
 
     const newColumns = {
-      ...columns,
+      ...state.columns,
       [columnId]: newColumnToAppend,
     }
 
-    setColumns(newColumns)
-
     const newNotes = {
-      ...notes,
+      ...state.notes,
       [newNoteId]: newNote,
     }
 
-    setNotes(newNotes)
+    const newState = {
+      ...state,
+      notes: newNotes,
+      columns: newColumns,
+    }
+
+    setState(newState);
 
     setNoteCount(newNoteCount)
   }
@@ -214,10 +318,11 @@ function App() {
         </StyledButton>
       </Header>
       <Content>
-        <Board id="Board" notes={notes} columns={columns} columnOrder={columnOrder} onDragEnd={onDragEnd} addColumn={addColumn} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder.ids} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );
+  
 }
 
 ReactDOM.render(

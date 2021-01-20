@@ -17,17 +17,28 @@ const Container = styled.div `
 
 function InnerList(props) {
   const { column, noteMap, index, addNote } = props;
-  const notes = useMemo(
-    () =>
-    column.noteIds.map(noteId => noteMap[noteId]),
-    [column, noteMap]
-  );
-  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
+
+  console.log("noteOrder")
+  console.log(column)
+  console.log(Array.isArray(column.noteOrder))
+
+  if (column.noteOrder.length > 0) {
+    const notes = column.noteOrder.map(noteId => noteMap[noteId]);
+    return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
+  } else {
+    const notes = [];
+    return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
+  }
+  // useMemo for [column, noteMap] removed here due to incompatibility with an empty array
 }
 
 
 
 export default function(props) {
+
+  if (! props.columnOrder) {
+    return null
+  }
 
   return (
     <DragDropContext onDragEnd={props.onDragEnd}>

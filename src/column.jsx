@@ -68,6 +68,10 @@ const StyledButton = styled.button `
 `
 
 export default function(props) {
+
+  console.log("props.notes")
+  console.log(props.notes)
+
   const notes = (
     props.notes.map((note, index) => (
       <Note key={note.id} note={note} index={index} />
@@ -79,7 +83,7 @@ export default function(props) {
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
           <Title {...provided.dragHandleProps}>
-            {props.column.title}
+            {props.column.name}
           </Title>
           <Content>
             <Droppable droppableId={props.column.id}>
