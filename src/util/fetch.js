@@ -2,14 +2,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { API, graphqlOperation } from 'aws-amplify'
 
+// fetchNotes / fetchBoard
 import { listNotes, listBoards } from '../graphql/queries'
 
+// fetchBoard
 import { createBoard } from '../graphql/mutations'
 
-import { deleteNote, deleteBoard } from '../graphql/mutations'
+// resetDatabase
+import { deleteNote, updateBoard } from '../graphql/mutations'
 
-// Fetch Notes, Columns, and ColumnOrder
-export async function fetchNotes() {
+// Download the notes from the server
+export const fetchNotes = async() => {
   try {
     const noteData = await API.graphql(graphqlOperation(listNotes))
     const tempNotes = noteData.data.listNotes.items
@@ -33,14 +36,15 @@ export async function fetchNotes() {
       }
     }
 
-    console.log(newNotes)
+    //console.log(newNotes)
 
     return newNotes
 
   } catch (err) { console.log('error fetching notes'); console.log(err)}
 }
 
-export async function fetchBoard() {
+// Download the board from the server
+export const fetchBoard = async() => {
   try {
     const boardData = await API.graphql(graphqlOperation(listBoards))
     const jsonBoard = boardData.data.listBoards.items
@@ -56,7 +60,7 @@ export async function fetchBoard() {
         columnOrder: json.columnOrder,
       }
 
-      console.log(newBoard)
+      //console.log(newBoard)
 
       return (newBoard)
       
@@ -81,7 +85,7 @@ export async function fetchBoard() {
 
       await API.graphql(graphqlOperation(createBoard, {input: inputBoard}))
 
-      console.log(newBoard)
+      //console.log(newBoard)
 
       return (newBoard)
     }
@@ -89,10 +93,9 @@ export async function fetchBoard() {
   } catch (err) { console.log('error fetching board'); console.log(err) }
 }
 
-export async function resetDatabase() {
-
+// Reset the board in the server
+export const resetDatabase = async() => {
   try {
-
     const noteData = await API.graphql(graphqlOperation(listNotes))
     const tempNotes = noteData.data.listNotes.items
     
@@ -111,12 +114,25 @@ export async function resetDatabase() {
     const boardData = await API.graphql(graphqlOperation(listBoards))
     const jsonBoard = boardData.data.listBoards.items
 
-    const info = {
-      id: jsonBoard[0].id,
+    const id = jsonBoard[0].id
+    const columns = {};
+    const columnOrder = [];
+
+    const newBoard = {
+      id: id,
+      columns: columns,
+      columnOrder: columnOrder,
     }
 
-    await API.graphql(graphqlOperation(deleteBoard, {input: info}))
+    const jsonBoardClean = JSON.stringify(newBoard)
+
+    const inputBoard = {
+      id: id,
+      json: jsonBoardClean,
+    }
+
+    // Maintain the same board-id, but from the columns.
+    await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
   } catch (err) { console.log('error resetting App'); console.log(err)}
-
 }

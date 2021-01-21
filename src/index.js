@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
-import { createNote, deleteNote } from './graphql/mutations'
+import { createNote } from './graphql/mutations'
 import { updateBoard } from './graphql/mutations'
 
 import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
@@ -98,13 +98,21 @@ function App() {
     fetchData()
   }, [])
 
-  let reset = () => {
-    setBoard(initialBoard)
+  const reset = () => {
+
+    const id = board.id
+
+    const newBoard = {
+      ...initialBoard,
+      id: id,
+    }
+
+    setBoard(newBoard)
     setNotes(initialNotes)
     resetDatabase()
   }
 
-  async function fetchData() {
+  const fetchData = async() => {
     try {
 
       await Promise.all([fetchNotes(), fetchBoard()])
@@ -120,9 +128,9 @@ function App() {
     }  catch (err) {
       console.log('error fetching data', err)
     }
-  };
+  }
 
-  async function uploadBoard(newBoard) {
+  const uploadBoard = async(newBoard) => {
     try {
 
       const jsonBoard = JSON.stringify(newBoard)
@@ -132,7 +140,7 @@ function App() {
         json: jsonBoard,
       }
 
-      console.log(inputBoard)
+      //console.log(inputBoard)
   
       await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
@@ -142,10 +150,10 @@ function App() {
     }
   }
 
-  async function uploadNote(newNote) {
+  const uploadNote = async(newNote) => {
     try {
 
-      console.log(newNote)
+      //console.log(newNote)
   
       await API.graphql(graphqlOperation(createNote, {input: newNote}))
 
@@ -156,10 +164,10 @@ function App() {
   }
 
   // Create Columns and Notes
-  let addColumn = () => {
-    let newColumnCount = columnCount + 1;
+  const addColumn = () => {
+    const newColumnCount = columnCount + 1;
 
-    let id  = uuidv4();
+    const id  = uuidv4();
     const newColumn = {
       id: id,
       name: 'Column ' + newColumnCount,
@@ -187,7 +195,7 @@ function App() {
     uploadBoard(newBoard)
   }
 
-  let onDragEnd = (result) => {
+  const onDragEnd = (result) => {
     const { destination, source, draggableId, type} = result;
 
     if (!destination) {
@@ -278,11 +286,11 @@ function App() {
   };
 
 
-  let addNote = (columnId) => {
+  const addNote = (columnId) => {
 
-    let newNoteCount = noteCount + 1;
+    const newNoteCount = noteCount + 1;
 
-    let newNoteId = uuidv4();
+    const newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
       content: ('Note ' + newNoteCount)
