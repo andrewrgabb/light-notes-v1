@@ -17,6 +17,9 @@ import { updateBoard } from './graphql/mutations'
 
 import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
 
+// Subscribe
+import { onUpdateBoard, onCreateNote } from './graphql/subscriptions'
+
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
@@ -96,7 +99,68 @@ function App() {
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
     fetchData()
+    subscribeToBoardUpdates()
+    subscribeToNoteUpdates()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const subscribeToBoardUpdates = () => {
+    API.graphql(
+      graphqlOperation(onUpdateBoard)
+    ).subscribe({
+      next: ({ value }) => {
+  
+        const data = value.data.onUpdateBoard;
+  
+        const id = data.id
+        const json = JSON.parse(data.json)
+  
+        const newBoard = {
+          id: id,
+          columns: json.columns,
+          columnOrder: json.columnOrder,
+        }
+  
+        setBoard(newBoard)
+  
+        console.log({ data });
+      },
+      error: error => {
+        console.warn(error);
+      }
+    });
+  }
+
+  const subscribeToNoteUpdates = () => {
+    API.graphql(
+      graphqlOperation(onCreateNote)
+    ).subscribe({
+      next: ({ provider, value }) => {
+  
+        console.log({provider})
+        
+        const data = value.data.onCreateNote;
+  
+        const newNote = {
+          id: data.id,
+          name: data.name,
+          content: data.content,
+        }
+  
+        const newNotes = {
+          ...notes,
+          [data.id]: newNote,
+        }
+  
+        setNotes(newNotes)
+  
+        console.log({ data });
+      },
+      error: error => {
+        console.warn(error);
+      }
+    });
+  }
 
   const reset = () => {
 
@@ -162,6 +226,15 @@ function App() {
       console.log(err)
     }
   }
+
+  // Subscriptions
+
+  // UpdateBoard and CreateNote (for now)
+
+  // Subscribe to note creation
+  //(async () => {
+  
+  //})();
 
   // Create Columns and Notes
   const addColumn = () => {
