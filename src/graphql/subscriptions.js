@@ -34,64 +34,31 @@ export const onDeleteNote = /* GraphQL */ `
     }
   }
 `;
-export const onCreateColumn = /* GraphQL */ `
-  subscription OnCreateColumn {
-    onCreateColumn {
+export const onCreateBoard = /* GraphQL */ `
+  subscription OnCreateBoard {
+    onCreateBoard {
       id
-      name
-      noteOrder
+      json
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateColumn = /* GraphQL */ `
-  subscription OnUpdateColumn {
-    onUpdateColumn {
+export const onUpdateBoard = /* GraphQL */ `
+  subscription OnUpdateBoard {
+    onUpdateBoard {
       id
-      name
-      noteOrder
+      json
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteColumn = /* GraphQL */ `
-  subscription OnDeleteColumn {
-    onDeleteColumn {
+export const onDeleteBoard = /* GraphQL */ `
+  subscription OnDeleteBoard {
+    onDeleteBoard {
       id
-      name
-      noteOrder
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateColumnOrder = /* GraphQL */ `
-  subscription OnCreateColumnOrder {
-    onCreateColumnOrder {
-      id
-      ids
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateColumnOrder = /* GraphQL */ `
-  subscription OnUpdateColumnOrder {
-    onUpdateColumnOrder {
-      id
-      ids
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteColumnOrder = /* GraphQL */ `
-  subscription OnDeleteColumnOrder {
-    onDeleteColumnOrder {
-      id
-      ids
+      json
       createdAt
       updatedAt
     }

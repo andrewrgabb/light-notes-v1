@@ -1,5 +1,3 @@
-const intialNotes = {
-  'note-1': { id: 'note-1', content: 'Note 1'},
-};
+const intialNotes = {};
     
 export default intialNotes;

@@ -27,29 +27,6 @@ function InnerList(props) {
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
 }
 
-/*
-const notes = useMemo(
-    () =>
-    { var noteSelection = [];
-      for (var i = 0; i < column.noteOrder.length; i ++) {
-        let noteId = column.noteOrder[i];
-        const tempNote = noteMap[noteId]
-        if (tempNote) {
-          noteSelection.unshift(tempNote)
-        } else {
-          const fillerNote = {
-            id: noteId,
-            content: 'loading...',
-          }
-          noteSelection.unshift(fillerNote)
-        }
-      }
-      return noteSelection;
-    },
-    [column, noteMap]
-  );
-  */
-
 export default function(props) {
 
   if (! props.columnOrder) {

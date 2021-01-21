@@ -38,26 +38,25 @@ export const listNotes = /* GraphQL */ `
     }
   }
 `;
-export const getColumn = /* GraphQL */ `
-  query GetColumn($id: String!) {
-    getColumn(id: $id) {
+export const getBoard = /* GraphQL */ `
+  query GetBoard($id: String!) {
+    getBoard(id: $id) {
       id
-      name
-      noteOrder
+      json
       createdAt
       updatedAt
     }
   }
 `;
-export const listColumns = /* GraphQL */ `
-  query ListColumns(
+export const listBoards = /* GraphQL */ `
+  query ListBoards(
     $id: String
-    $filter: ModelColumnFilterInput
+    $filter: ModelBoardFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listColumns(
+    listBoards(
       id: $id
       filter: $filter
       limit: $limit
@@ -66,43 +65,7 @@ export const listColumns = /* GraphQL */ `
     ) {
       items {
         id
-        name
-        noteOrder
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getColumnOrder = /* GraphQL */ `
-  query GetColumnOrder($id: String!) {
-    getColumnOrder(id: $id) {
-      id
-      ids
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listColumnOrders = /* GraphQL */ `
-  query ListColumnOrders(
-    $id: String
-    $filter: ModelColumnOrderFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listColumnOrders(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        ids
+        json
         createdAt
         updatedAt
       }

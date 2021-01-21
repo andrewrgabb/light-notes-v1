@@ -13,10 +13,9 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
 import { createNote, deleteNote } from './graphql/mutations'
-import { createColumn, updateColumn, deleteColumn } from './graphql/mutations'
-import { createColumnOrder, updateColumnOrder, deleteColumnOrder } from './graphql/mutations'
+import { updateBoard } from './graphql/mutations'
 
-import { fetchNotes, fetchColumns, fetchColumnOrder } from './util/fetch'
+import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
 
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
@@ -67,6 +66,23 @@ const StyledButton = styled.button `
   color: black;
 `
 
+const ResetButton = styled.button `
+  position: absolute;
+  border: 2px solid;
+  background-color: white;
+  
+  width: 120px;
+  height: 40px;
+
+  font-size: inherit;
+
+  right: 300px;
+  margin-top: 20px;
+
+  border-radius: 5px;
+  color: black;
+`
+
 function App() {
 
   const [board, setBoard] = useState(initialBoard)
@@ -79,98 +95,99 @@ function App() {
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
-    //fetchData()
+    fetchData()
   }, [])
+
+  let reset = () => {
+    setBoard(initialBoard)
+    setNotes(initialNotes)
+    resetDatabase()
+  }
 
   async function fetchData() {
     try {
 
-      await Promise.all([fetchNotes(), fetchColumns(), fetchColumnOrder()])
-      /*.then(response => 
+      await Promise.all([fetchNotes(), fetchBoard()])
+      .then(response => 
         {
-          const newBoard = {
-            notes: response[0],
-            columns: response[1],
-            columnOrder: response[2],
-          }
-          console.log(newBoard)
+          const newNotes = response[0]
+          setNotes(newNotes)
+
+          const newBoard = response[1]
           setBoard(newBoard)
         }
-      )*/
+      )
     }  catch (err) {
-      console.log('error fetching data:', err)
+      console.log('error fetching data', err)
     }
   };
 
-  // Create Columns and Notes
-  async function addColumn() {
+  async function uploadBoard(newBoard) {
     try {
 
-      let newColumnCount = columnCount + 1;
-  
-      let id  = uuidv4();
-      const newColumn = {
-        id: id,
-        name: 'Column ' + newColumnCount,
-        noteOrder: [],
-      };
-      
-      const newColumnOrder = board.columnOrder;
-      newColumnOrder.ids.push(id);
-  
-      const newColumns = {
-        ...board.columns,
-        [id]: newColumn,
-      }
-  
-      const newBoard = {
-        ...board,
-        columns: newColumns,
-        columnOrder: newColumnOrder,
-      }
-  
-      setBoard(newBoard);
-  
-      setColumnCount(newColumnCount)
-  
-      const jsonNoteOrder = JSON.stringify(newColumn.noteOrder)
-  
-      const jsonColumn = {
-        ...newColumn,
-        noteOrder: jsonNoteOrder,
-      };
+      const jsonBoard = JSON.stringify(newBoard)
 
-      const jsonIds = JSON.stringify(newColumnOrder.ids)
-
-      const jsonColumnOrder = {
-        ...newColumnOrder,
-        ids: jsonIds,
+      const inputBoard = {
+        id: board.id,
+        json: jsonBoard,
       }
 
-      //console.log(jsonColumn)
-      //console.log(jsonColumnOrder)
+      console.log(inputBoard)
   
-      //await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
-  
-      //await API.graphql(graphqlOperation(updateColumnOrder, {input: jsonColumnOrder}))
+      await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
     } catch (err) {
-      console.log('error adding column:')
+      console.log('error updating board:')
       console.log(err)
     }
   }
 
+  async function uploadNote(newNote) {
+    try {
+
+      console.log(newNote)
   
-  // Update Columns, and ColumnOrder
+      await API.graphql(graphqlOperation(createNote, {input: newNote}))
 
+    } catch (err) {
+      console.log('error creating note:')
+      console.log(err)
+    }
+  }
 
+  // Create Columns and Notes
+  let addColumn = () => {
+    let newColumnCount = columnCount + 1;
 
-  // Delete Columns, Notes (To be added once the delete function is implemented in the GUI)
+    let id  = uuidv4();
+    const newColumn = {
+      id: id,
+      name: 'Column ' + newColumnCount,
+      noteOrder: [],
+    };
+    
+    const newColumnOrder = board.columnOrder;
+    newColumnOrder.push(id);
 
+    const newColumns = {
+      ...board.columns,
+      [id]: newColumn,
+    }
 
+    const newBoard = {
+      ...board,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
+    }
 
+    setBoard(newBoard);
 
-  let onDragEnd = result => {
+    setColumnCount(newColumnCount)
+
+    uploadBoard(newBoard)
+  }
+
+  let onDragEnd = (result) => {
     const { destination, source, draggableId, type} = result;
 
     if (!destination) {
@@ -185,14 +202,9 @@ function App() {
     }
 
     if (type === 'column') {
-      const newColumnOrderIds = Array.from(board.columnOrder.ids);
-      newColumnOrderIds.splice(source.index, 1);
-      newColumnOrderIds.splice(destination.index, 0, draggableId);
-
-      const newColumnOrder = {
-        ...board.columnOrder,
-        ids: newColumnOrderIds,
-      };
+      const newColumnOrder = Array.from(board.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
 
       const newBoard = {
         ...board,
@@ -200,6 +212,7 @@ function App() {
       }
 
       setBoard(newBoard)
+      uploadBoard(newBoard)
 
       return;
     }
@@ -230,6 +243,7 @@ function App() {
       }
   
       setBoard(newBoard);
+      uploadBoard(newBoard)
       return;
     }
 
@@ -260,6 +274,7 @@ function App() {
     }
 
     setBoard(newBoard);
+    uploadBoard(newBoard)
   };
 
 
@@ -270,7 +285,7 @@ function App() {
     let newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
-      content: ['Note ' + newNoteCount]
+      content: ('Note ' + newNoteCount)
     };
     
     const columnToAppend = board.columns[columnId];
@@ -293,6 +308,7 @@ function App() {
     }
 
     setBoard(newBoard);
+    uploadBoard(newBoard)
 
     const newNotes = {
       ...notes,
@@ -300,6 +316,7 @@ function App() {
     }
 
     setNotes(newNotes)
+    uploadNote(newNote)
 
     setNoteCount(newNoteCount)
   }
@@ -314,9 +331,14 @@ function App() {
         <StyledButton onClick={addColumn}>
           Add Column
         </StyledButton>
+        <ResetButton onClick={reset}>
+          Reset
+        </ResetButton>
       </Header>
+
+      
       <Content>
-        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder.ids} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>
   );

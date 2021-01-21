@@ -2,102 +2,121 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { API, graphqlOperation } from 'aws-amplify'
 
-import { listNotes, listColumns, listColumnOrders } from '../graphql/queries'
+import { listNotes, listBoards } from '../graphql/queries'
 
-import { deleteColumnOrder, deleteColumn, createColumnOrder } from '../graphql/mutations'
+import { createBoard } from '../graphql/mutations'
+
+import { deleteNote, deleteBoard } from '../graphql/mutations'
 
 // Fetch Notes, Columns, and ColumnOrder
 export async function fetchNotes() {
   try {
     const noteData = await API.graphql(graphqlOperation(listNotes))
-    const newNotes = noteData.data.listNotes.items
+    const tempNotes = noteData.data.listNotes.items
+
+    var newNotes = {}
+    
+    for (var index = 0; index < tempNotes.length; index++) { 
+      
+      const newNote = tempNotes[index]
+
+      const newId = newNote.id
+
+      const refinedNote = {
+        id: newId,
+        content: newNote.content,
+      }
+
+      newNotes = {
+        ...newNotes,
+        [newId]: refinedNote,
+      }
+    }
+
+    console.log(newNotes)
 
     return newNotes
 
-  } catch (err) { console.log('error fetching notes');}
+  } catch (err) { console.log('error fetching notes'); console.log(err)}
 }
 
-export async function fetchColumns() {
+export async function fetchBoard() {
   try {
-    const columnData = await API.graphql(graphqlOperation(listColumns))
-    const jsonColumns = columnData.data.listColumns.items
-
-    var newColumns
+    const boardData = await API.graphql(graphqlOperation(listBoards))
+    const jsonBoard = boardData.data.listBoards.items
     
-    for (var index = 0; index < jsonColumns.length; index++) { 
-      
-      const jsonColumn = jsonColumns[index]
+    if (jsonBoard.length > 0) {
 
-      const newId = jsonColumn.id
+      const id = jsonBoard[0].id
+      const json = JSON.parse(jsonBoard[0].json)
 
-      const noteOrder = JSON.parse(jsonColumn.noteOrder)
-
-      const newColumn = {
-        id: newId,
-        name: jsonColumn.name,
-        noteOrder: noteOrder,
-      }
-
-      
-      console.log(jsonColumn.id)
-
-      const info = {
-        id: jsonColumn.id,
-      }
-
-      await API.graphql(graphqlOperation(deleteColumn, {input: info}))
-      
-/*
-      newColumns = {
-        ...newColumns,
-        [newId]: newColumn,
-      }*/
-    }
-    
-    return (newColumns)
-
-  } catch (err) { console.log('error fetching columns'); console.log(err)  }
-}
-
-export async function fetchColumnOrder() {
-  try {
-    const columnOrderData = await API.graphql(graphqlOperation(listColumnOrders))
-    const jsonColumnOrder = columnOrderData.data.listColumnOrders.items
-
-    console.log(jsonColumnOrder[0])
-
-    const info = {
-      id: jsonColumnOrder[0].id,
-    }
-
-    await API.graphql(graphqlOperation(deleteColumnOrder, {input: info}))
-    /*
-    if (jsonColumnOrder.length > 0) {
-
-      const id = jsonColumnOrder[0].id
-      const ids = JSON.parse(jsonColumnOrder[0].ids)
-
-      const newColumnOrder = {
+      const newBoard = {
         id: id,
-        ids: ids,
+        columns: json.columns,
+        columnOrder: json.columnOrder,
       }
 
-      return (newColumnOrder)
+      console.log(newBoard)
+
+      return (newBoard)
       
     } else {
 
       const id = uuidv4();
-      const ids = [];
+      const columns = {};
+      const columnOrder = [];
 
-      const newColumnOrder = {
+      const newBoard = {
         id: id,
-        ids: ids,
+        columns: columns,
+        columnOrder: columnOrder,
       }
 
-      await API.graphql(graphqlOperation(createColumnOrder, {input: newColumnOrder}))
+      const jsonBoard = JSON.stringify(newBoard)
 
-      return (newColumnOrder)
-    }*/
+      const inputBoard = {
+        id: id,
+        json: jsonBoard,
+      }
 
-  } catch (err) { console.log('error fetching column order'); console.log(err) }
+      await API.graphql(graphqlOperation(createBoard, {input: inputBoard}))
+
+      console.log(newBoard)
+
+      return (newBoard)
+    }
+
+  } catch (err) { console.log('error fetching board'); console.log(err) }
+}
+
+export async function resetDatabase() {
+
+  try {
+
+    const noteData = await API.graphql(graphqlOperation(listNotes))
+    const tempNotes = noteData.data.listNotes.items
+    
+    for (var index = 0; index < tempNotes.length; index++) { 
+      
+      const id = tempNotes[index].id
+
+      const info = {
+        id: id,
+      }
+
+      await API.graphql(graphqlOperation(deleteNote, {input: info}))
+
+    }
+
+    const boardData = await API.graphql(graphqlOperation(listBoards))
+    const jsonBoard = boardData.data.listBoards.items
+
+    const info = {
+      id: jsonBoard[0].id,
+    }
+
+    await API.graphql(graphqlOperation(deleteBoard, {input: info}))
+
+  } catch (err) { console.log('error resetting App'); console.log(err)}
+
 }
