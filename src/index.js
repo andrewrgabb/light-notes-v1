@@ -104,7 +104,12 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const subscribeToBoardUpdates = () => {
+  useEffect(() => {
+    console.log({notes})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  })
+
+  const subscribeToBoardUpdates = async() => {
     API.graphql(
       graphqlOperation(onUpdateBoard)
     ).subscribe({
@@ -120,10 +125,12 @@ function App() {
           columns: json.columns,
           columnOrder: json.columnOrder,
         }
+
+        //console.log({board})
   
         setBoard(newBoard)
   
-        console.log({ data });
+        //console.log({ data, newBoard });
       },
       error: error => {
         console.warn(error);
@@ -131,30 +138,12 @@ function App() {
     });
   }
 
-  const subscribeToNoteUpdates = () => {
+  const subscribeToNoteUpdates = async() => {
     API.graphql(
       graphqlOperation(onCreateNote)
     ).subscribe({
       next: ({ provider, value }) => {
-  
-        console.log({provider})
-        
-        const data = value.data.onCreateNote;
-  
-        const newNote = {
-          id: data.id,
-          name: data.name,
-          content: data.content,
-        }
-  
-        const newNotes = {
-          ...notes,
-          [data.id]: newNote,
-        }
-  
-        setNotes(newNotes)
-  
-        console.log({ data });
+        updateNotes()
       },
       error: error => {
         console.warn(error);
@@ -191,6 +180,21 @@ function App() {
       )
     }  catch (err) {
       console.log('error fetching data', err)
+    }
+  }
+
+  const updateNotes = async() => {
+    try {
+
+      await Promise.all([fetchNotes()])
+      .then(response => 
+        {
+          const newNotes = response[0]
+          setNotes(newNotes)
+        }
+      )
+    }  catch (err) {
+      console.log('error fetching notes', err)
     }
   }
 
