@@ -1,10 +1,12 @@
 type Note @model @key(fields: ["id"]) {
   id: String!
-  name: String
-  content: String
+  name: String!
+  content: String!
+  sessionId: String!
 }
 
 type Board @model @key(fields: ["id"]) {
   id: String!
-  json: String
+  json: String!
+  sessionId: String!
 }

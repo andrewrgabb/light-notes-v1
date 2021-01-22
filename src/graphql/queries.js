@@ -7,6 +7,7 @@ export const getNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -31,6 +32,7 @@ export const listNotes = /* GraphQL */ `
         id
         name
         content
+        sessionId
         createdAt
         updatedAt
       }
@@ -43,6 +45,7 @@ export const getBoard = /* GraphQL */ `
     getBoard(id: $id) {
       id
       json
+      sessionId
       createdAt
       updatedAt
     }
@@ -66,6 +69,7 @@ export const listBoards = /* GraphQL */ `
       items {
         id
         json
+        sessionId
         createdAt
         updatedAt
       }

@@ -7,6 +7,7 @@ export const onCreateNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -18,6 +19,7 @@ export const onUpdateNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -29,6 +31,7 @@ export const onDeleteNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -39,6 +42,7 @@ export const onCreateBoard = /* GraphQL */ `
     onCreateBoard {
       id
       json
+      sessionId
       createdAt
       updatedAt
     }
@@ -49,6 +53,7 @@ export const onUpdateBoard = /* GraphQL */ `
     onUpdateBoard {
       id
       json
+      sessionId
       createdAt
       updatedAt
     }
@@ -59,6 +64,7 @@ export const onDeleteBoard = /* GraphQL */ `
     onDeleteBoard {
       id
       json
+      sessionId
       createdAt
       updatedAt
     }

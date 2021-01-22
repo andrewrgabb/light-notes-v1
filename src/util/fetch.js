@@ -9,7 +9,7 @@ import { listNotes, listBoards } from '../graphql/queries'
 import { createBoard } from '../graphql/mutations'
 
 // resetDatabase
-import { deleteNote, updateBoard } from '../graphql/mutations'
+import { deleteNote, updateBoard, /*deleteBoard*/ } from '../graphql/mutations'
 
 // Download the notes from the server
 export const fetchNotes = async() => {
@@ -37,15 +37,13 @@ export const fetchNotes = async() => {
       }
     }
 
-    //console.log(newNotes)
-
     return newNotes
 
   } catch (err) { console.log('error fetching notes'); console.log(err)}
 }
 
 // Download the board from the server
-export const fetchBoard = async() => {
+export const fetchBoard = async(sessionId) => {
   try {
     const boardData = await API.graphql(graphqlOperation(listBoards))
     const jsonBoard = boardData.data.listBoards.items
@@ -60,8 +58,6 @@ export const fetchBoard = async() => {
         columns: json.columns,
         columnOrder: json.columnOrder,
       }
-
-      //console.log(newBoard)
 
       return (newBoard)
       
@@ -82,6 +78,7 @@ export const fetchBoard = async() => {
       const inputBoard = {
         id: id,
         json: jsonBoard,
+        sessionId: sessionId,
       }
 
       await API.graphql(graphqlOperation(createBoard, {input: inputBoard}))
@@ -132,8 +129,17 @@ export const resetDatabase = async() => {
       json: jsonBoardClean,
     }
 
-    // Maintain the same board-id, but from the columns.
+    // Maintain the same board-id, but remove the columns.
     await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
+
+    // Alternative to delete entire board row: Used before schema updates
+    /*
+    const info = {
+      id: id,
+    }
+
+    await API.graphql(graphqlOperation(deleteBoard, {input: info}))
+    */
 
   } catch (err) { console.log('error resetting App'); console.log(err)}
 }

@@ -93,18 +93,28 @@ function App() {
   const [notes, setNotes] = useState(initialNotes);
   const notesRef = useRef();
 
-  // Count
-  const [noteCount, setNoteCount] = useState(1);
-  const [columnCount, setColumnCount] = useState(1);
+  const [sessionId, setSessionId] = useState(1);
+  const sessionIdRef = useRef();
 
+  // Count (Will be irrelavent soon)
+  const [noteCount, setNoteCount] = useState(0);
+  const [columnCount, setColumnCount] = useState(0);
 
+  // Refs
   notesRef.current = notes
+  sessionIdRef.current = sessionId
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
-    fetchData()
+
+    const newSessionId  = uuidv4()
+    setSessionId(newSessionId)
+
+    fetchData(sessionId)
+
     subscribeToBoardUpdates()
     subscribeToNoteUpdates()
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -113,19 +123,24 @@ function App() {
       graphqlOperation(onUpdateBoard)
     ).subscribe({
       next: ({ value }) => {
-  
+
         const data = value.data.onUpdateBoard;
-  
-        const id = data.id
-        const json = JSON.parse(data.json)
-  
-        const newBoard = {
-          id: id,
-          columns: json.columns,
-          columnOrder: json.columnOrder,
-        }
-  
-        setBoard(newBoard)
+
+        const currentSessionId =  sessionIdRef.current
+
+        if (currentSessionId !== data.sessionId) {
+
+          const id = data.id
+          const json = JSON.parse(data.json)
+
+          const newBoard = {
+            id: id,
+            columns: json.columns,
+            columnOrder: json.columnOrder,
+          }
+
+          setBoard(newBoard)
+        }      
       },
       error: error => {
         console.warn(error);
@@ -141,20 +156,25 @@ function App() {
 
         const data = value.data.onCreateNote;
 
-        const currentNotes = notesRef.current
+        const currentSessionId =  sessionIdRef.current
 
-        const newNote = {
-          id: data.id,
-          name: data.name,
-          content: data.content,
-        };
+        if (currentSessionId !== data.sessionId) {
 
-        const newNotes = {
-          ...currentNotes,
-          [data.id]: newNote,
+          const currentNotes = notesRef.current
+
+          const newNote = {
+            id: data.id,
+            name: data.name,
+            content: data.content,
+          };
+
+          const newNotes = {
+            ...currentNotes,
+            [data.id]: newNote,
+          }
+      
+          setNotes(newNotes)
         }
-    
-        setNotes(newNotes)
       },
       error: error => {
         console.warn(error);
@@ -171,15 +191,18 @@ function App() {
       id: id,
     }
 
+    // local
     setBoard(newBoard)
     setNotes(initialNotes)
+
+    // database
     resetDatabase()
   }
 
-  const fetchData = async() => {
+  const fetchData = async(sessionId) => {
     try {
 
-      await Promise.all([fetchNotes(), fetchBoard()])
+      await Promise.all([fetchNotes(), fetchBoard(sessionId)])
       .then(response => 
         {
           const newNotes = response[0]
@@ -196,12 +219,18 @@ function App() {
 
   const uploadBoard = async(newBoard) => {
     try {
+
+      console.log({sessionId})
+
       const jsonBoard = JSON.stringify(newBoard)
 
       const inputBoard = {
         id: board.id,
         json: jsonBoard,
+        sessionId: sessionId,
       }
+
+      console.log({inputBoard})
   
       await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
@@ -211,10 +240,12 @@ function App() {
     }
   }
 
-  const uploadNote = async(newNote) => {
+  const uploadNote = async(noteToUpload) => {
     try {
 
-      await API.graphql(graphqlOperation(createNote, {input: newNote}))
+      console.log({noteToUpload})
+
+      await API.graphql(graphqlOperation(createNote, {input: noteToUpload}))
 
     } catch (err) {
       console.log('error creating note:')
@@ -355,6 +386,10 @@ function App() {
       name: ('Note ' + newNoteCount),
       content: ('Note ' + newNoteCount),
     };
+    const noteToUpload = {
+      ...newNote,
+      sessionId: sessionId,
+    };
     
     const columnToAppend = board.columns[columnId];
     const columnToAppendNoteOrder = columnToAppend.noteOrder;
@@ -383,10 +418,8 @@ function App() {
       [newNoteId]: newNote,
     }
 
-    console.log({notes})
-
     setNotes(newNotes)
-    uploadNote(newNote)
+    uploadNote(noteToUpload)
 
     setNoteCount(newNoteCount)
   }
