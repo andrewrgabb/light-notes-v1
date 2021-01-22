@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 // import initialData from './initial-data';
@@ -91,10 +91,14 @@ function App() {
   const [board, setBoard] = useState(initialBoard)
 
   const [notes, setNotes] = useState(initialNotes);
+  const notesRef = useRef();
 
   // Count
   const [noteCount, setNoteCount] = useState(1);
   const [columnCount, setColumnCount] = useState(1);
+
+
+  notesRef.current = notes
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
@@ -104,12 +108,7 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    console.log({notes})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  })
-
-  const subscribeToBoardUpdates = async() => {
+  const subscribeToBoardUpdates = () => {
     API.graphql(
       graphqlOperation(onUpdateBoard)
     ).subscribe({
@@ -125,12 +124,8 @@ function App() {
           columns: json.columns,
           columnOrder: json.columnOrder,
         }
-
-        //console.log({board})
   
         setBoard(newBoard)
-  
-        //console.log({ data, newBoard });
       },
       error: error => {
         console.warn(error);
@@ -138,12 +133,28 @@ function App() {
     });
   }
 
-  const subscribeToNoteUpdates = async() => {
+  const subscribeToNoteUpdates = () => {
     API.graphql(
       graphqlOperation(onCreateNote)
     ).subscribe({
       next: ({ provider, value }) => {
-        updateNotes()
+
+        const data = value.data.onCreateNote;
+
+        const currentNotes = notesRef.current
+
+        const newNote = {
+          id: data.id,
+          name: data.name,
+          content: data.content,
+        };
+
+        const newNotes = {
+          ...currentNotes,
+          [data.id]: newNote,
+        }
+    
+        setNotes(newNotes)
       },
       error: error => {
         console.warn(error);
@@ -183,32 +194,14 @@ function App() {
     }
   }
 
-  const updateNotes = async() => {
-    try {
-
-      await Promise.all([fetchNotes()])
-      .then(response => 
-        {
-          const newNotes = response[0]
-          setNotes(newNotes)
-        }
-      )
-    }  catch (err) {
-      console.log('error fetching notes', err)
-    }
-  }
-
   const uploadBoard = async(newBoard) => {
     try {
-
       const jsonBoard = JSON.stringify(newBoard)
 
       const inputBoard = {
         id: board.id,
         json: jsonBoard,
       }
-
-      //console.log(inputBoard)
   
       await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
@@ -221,8 +214,6 @@ function App() {
   const uploadNote = async(newNote) => {
     try {
 
-      //console.log(newNote)
-  
       await API.graphql(graphqlOperation(createNote, {input: newNote}))
 
     } catch (err) {
@@ -230,15 +221,6 @@ function App() {
       console.log(err)
     }
   }
-
-  // Subscriptions
-
-  // UpdateBoard and CreateNote (for now)
-
-  // Subscribe to note creation
-  //(async () => {
-  
-  //})();
 
   // Create Columns and Notes
   const addColumn = () => {
@@ -370,7 +352,8 @@ function App() {
     const newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
-      content: ('Note ' + newNoteCount)
+      name: ('Note ' + newNoteCount),
+      content: ('Note ' + newNoteCount),
     };
     
     const columnToAppend = board.columns[columnId];
@@ -399,6 +382,8 @@ function App() {
       ...notes,
       [newNoteId]: newNote,
     }
+
+    console.log({notes})
 
     setNotes(newNotes)
     uploadNote(newNote)

@@ -27,6 +27,7 @@ export const fetchNotes = async() => {
 
       const refinedNote = {
         id: newId,
+        name: newNote.name,
         content: newNote.content,
       }
 
