@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from './note';
+import { getMenu } from './images/menu.js'
 
 const Container = styled.div`
   position: relative;
@@ -23,15 +24,28 @@ const Container = styled.div`
 
 `
 
-const Title = styled.h2`
+const TopSection = styled.div `
   background-color: DodgerBlue;
+  max-height: 60px;
   padding: 16px;
+`
+
+const Title = styled.h2`
   text-align: center;
   font-size: 24px;
   color: black;
-  max-height: 60px;
+  float: left;
+  display:inline-block;
 `
 
+const DropdownBox = styled.div `
+  background-color: transparent;
+  opacity: 100%;
+  width: 35px;
+  height: 35px;
+  float: right;
+  display:inline-block;
+`
 
 const Content = styled.div`
   position: relative;
@@ -67,6 +81,10 @@ const StyledButton = styled.button `
   bottom: 0px;
 `
 
+const menuClick = () => {
+  console.log("menu!")
+}
+
 export default function(props) {
 
   const notes = (
@@ -82,9 +100,15 @@ export default function(props) {
     <Draggable draggableId={props.column.id} index={props.index} >
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <Title {...provided.dragHandleProps}>
-            {props.column.name}
-          </Title>
+          <TopSection {...provided.dragHandleProps}>
+            <Title >
+              {props.column.name}
+            </Title>
+            <DropdownBox id="dropdown" onClick={menuClick}>
+              {getMenu()}
+            </DropdownBox>
+          </TopSection>
+          
           <Content>
             <Droppable droppableId={props.column.id}>
               {(provided, snapshot) => (
