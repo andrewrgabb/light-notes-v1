@@ -24,30 +24,30 @@ import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
 const Structure = styled.div`
+  background-color: #EFEFEF;
 `;
 
 const Content = styled.div`
-  background-color: white;
+  background-color: inherit;
   position: absolute;
-  top: 80px;
+  top: 50px;
   bottom: 0;
   width: 100%; 
 `;
 
 const Header = styled.div`
   position: relative;
-  height: 80px;
+  height: 50px;
   text-align: left;
-  left: 10px;
+  padding-left: 10px;
   font-size: 20px;
-  background-color: white;
 `;
 
-const Title = styled.h1`
+const Title = styled.h3`
   position: absolute;
   width: 50%;
   float: left;
-  padding-top: 15px;
+  padding-top: 10px;
   padding-left: 20px;
   color: black;
 `;
@@ -58,32 +58,20 @@ const StyledButton = styled.button `
   background-color: white;
   
   width: 240px;
-  height: 40px;
+  height: 30px;
 
   font-size: inherit;
 
   right: 20px;
-  margin-top: 20px;
+  margin-top: 10px;
 
   border-radius: 5px;
   color: black;
 `
 
-const ResetButton = styled.button `
-  position: absolute;
-  border: 2px solid;
-  background-color: white;
-  
+const ResetButton = styled(StyledButton) `
   width: 120px;
-  height: 40px;
-
-  font-size: inherit;
-
   right: 300px;
-  margin-top: 20px;
-
-  border-radius: 5px;
-  color: black;
 `
 
 function App() {
@@ -426,21 +414,21 @@ function App() {
   
 
   return (
-    <Structure>
-      <Header>
-        <Title>
+    <Structure id="structure">
+      <Header id="header">
+        <Title id="title">
           Light Notes 
         </Title>
-        <StyledButton onClick={addColumn}>
+        <StyledButton id="add-column-button" onClick={addColumn}>
           Add Column
         </StyledButton>
-        <ResetButton onClick={reset}>
+        <ResetButton id="reset-column-button" onClick={reset}>
           Reset
         </ResetButton>
       </Header>
 
       
-      <Content>
+      <Content id="content ">
         <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
       </Content>
     </Structure>

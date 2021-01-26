@@ -6,7 +6,7 @@ import { getMenu } from './images/menu.js'
 
 const Container = styled.div`
   position: relative;
-  background-color: white;
+  background-color: #FAFAFA;
   
   min-width: 380px;
   
@@ -21,31 +21,40 @@ const Container = styled.div`
   border-right: 4px solid black;
 
   border-radius: 5px;
-
 `
 
 const TopSection = styled.div `
   background-color: DodgerBlue;
-  max-height: 60px;
-  padding: 16px;
+  padding 5px;
+  max-height: 40px;
+  display: flex;
+  justify-content: space-between;
 `
 
-const Title = styled.h2`
+const ColumnTitle = styled.div`
   text-align: center;
-  font-size: 24px;
+  font-size: 20px;
   color: black;
-  float: left;
-  display:inline-block;
+  margin-top: 2px;
+  margin-left: 10px;
 `
 
 const DropdownBox = styled.div `
-  background-color: transparent;
-  opacity: 100%;
-  width: 35px;
-  height: 35px;
   float: right;
-  display:inline-block;
+  opacity: 100%;
+  width: 30px;
+  height: 30px;
+  
+  padding-left: 4px;
+  padding-right: 4px;
+
+  border-radius: 5px;
+
+  :hover {
+    background-color: #1873CC; 
+  }
 `
+//border: 1px solid #0F4A82;
 
 const Content = styled.div`
   position: relative;
@@ -101,9 +110,9 @@ export default function(props) {
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
           <TopSection {...provided.dragHandleProps}>
-            <Title >
+            <ColumnTitle >
               {props.column.name}
-            </Title>
+            </ColumnTitle>
             <DropdownBox id="dropdown" onClick={menuClick}>
               {getMenu()}
             </DropdownBox>
