@@ -1,179 +1,234 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
-// import initialData from './initial-data';
-import initialDataEmpty from './initial-data-empty';
 
-import Board from './board';
+import initialNotes from './initial/initial-notes';
+import initialBoard from './initial/initial-board';
+
+import Board from './component/Board';
+import Dropdown from './component/Dropdown';
+
+import { Structure, Content, Header, Title, StyledButton, ResetButton} from './styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
-import { createNote, deleteNote } from './graphql/mutations'
-import { createColumn, updateColumn, deleteColumn } from './graphql/mutations'
-import { createColumnOrder, updateColumnOrder, deleteColumnOrder } from './graphql/mutations'
+import { createNote } from './graphql/mutations'
+import { updateBoard } from './graphql/mutations'
 
-import { fetchNotes, fetchColumns, fetchColumnOrder } from './util/fetch'
+import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
+
+// Subscribe
+import { onUpdateBoard, onCreateNote } from './graphql/subscriptions'
 
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
-const Structure = styled.div`
-`;
 
-const Content = styled.div`
-  background-color: white;
-  position: absolute;
-  top: 80px;
-  bottom: 0;
-  width: 100%; 
-`;
+const App = () => {
 
-const Header = styled.div`
-  position: relative;
-  height: 80px;
-  text-align: left;
-  left: 10px;
-  font-size: 20px;
-  background-color: white;
-`;
+  const [board, setBoard] = useState(initialBoard)
 
-const Title = styled.h1`
-  position: absolute;
-  width: 50%;
-  float: left;
-  padding-top: 15px;
-  padding-left: 20px;
-  color: black;
-`;
+  const [notes, setNotes] = useState(initialNotes);
+  const notesRef = useRef();
 
-const StyledButton = styled.button `
-  position: absolute;
-  border: 2px solid;
-  background-color: white;
-  
-  width: 240px;
-  height: 40px;
+  const [sessionId, setSessionId] = useState(1);
+  const sessionIdRef = useRef();
 
-  font-size: inherit;
+  // Count (Will be irrelavent soon)
+  const [noteCount, setNoteCount] = useState(0);
+  const [columnCount, setColumnCount] = useState(0);
 
-  right: 20px;
-  margin-top: 20px;
+  // Refs
+  notesRef.current = notes
+  sessionIdRef.current = sessionId
 
-  border-radius: 5px;
-  color: black;
-`
-
-function App() {
-
-  const [state, setState] = useState(initialDataEmpty)
-
-  const [notes, setNotes] = useState(initialDataEmpty.notes);
-
-  const [columns, setColumns] = useState(initialDataEmpty.columns);
-
-  const [columnOrder, setColumnOrder] = useState(initialDataEmpty.columnOrder);
-
-  // Count
-  const [noteCount, setNoteCount] = useState(1);
-  const [columnCount, setColumnCount] = useState(1);
+  // Dropdown menu
+  const [dropdown, setDropdown] = useState({});
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
-    fetchData()
+
+    const newSessionId  = uuidv4()
+    setSessionId(newSessionId)
+
+    fetchData(sessionId)
+
+    subscribeToBoardUpdates()
+    subscribeToNoteUpdates()
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  async function fetchData() {
+  const subscribeToBoardUpdates = () => {
+    API.graphql(
+      graphqlOperation(onUpdateBoard)
+    ).subscribe({
+      next: ({ value }) => {
+
+        const data = value.data.onUpdateBoard;
+
+        const currentSessionId =  sessionIdRef.current
+
+        if (currentSessionId !== data.sessionId) {
+
+          const id = data.id
+          const json = JSON.parse(data.json)
+
+          const newBoard = {
+            id: id,
+            columns: json.columns,
+            columnOrder: json.columnOrder,
+          }
+
+          setBoard(newBoard)
+        }      
+      },
+      error: error => {
+        console.warn(error);
+      }
+    });
+  }
+
+  const subscribeToNoteUpdates = () => {
+    API.graphql(
+      graphqlOperation(onCreateNote)
+    ).subscribe({
+      next: ({ provider, value }) => {
+
+        const data = value.data.onCreateNote;
+
+        const currentSessionId =  sessionIdRef.current
+
+        if (currentSessionId !== data.sessionId) {
+
+          const currentNotes = notesRef.current
+
+          const newNote = {
+            id: data.id,
+            name: data.name,
+            content: data.content,
+          };
+
+          const newNotes = {
+            ...currentNotes,
+            [data.id]: newNote,
+          }
+      
+          setNotes(newNotes)
+        }
+      },
+      error: error => {
+        console.warn(error);
+      }
+    });
+  }
+
+  const reset = () => {
+
+    const id = board.id
+
+    const newBoard = {
+      ...initialBoard,
+      id: id,
+    }
+
+    // local
+    setBoard(newBoard)
+    setNotes(initialNotes)
+
+    // database
+    resetDatabase()
+  }
+
+  const fetchData = async(sessionId) => {
     try {
 
-      await Promise.all([fetchNotes(), fetchColumns(), fetchColumnOrder()])
+      await Promise.all([fetchNotes(), fetchBoard(sessionId)])
       .then(response => 
         {
-          const newState = {
-            notes: response[0],
-            columns: response[1],
-            columnOrder: response[2],
-          }
-          console.log(newState)
-          setState(newState)
+          const newNotes = response[0]
+          setNotes(newNotes)
+
+          const newBoard = response[1]
+          setBoard(newBoard)
         }
       )
     }  catch (err) {
-      console.log('error fetching data:', err)
+      console.log('error fetching data', err)
     }
-  };
+  }
 
-  // Create Columns and Notes
-  async function addColumn() {
+  const uploadBoard = async(newBoard) => {
     try {
 
-      let newColumnCount = columnCount + 1;
-  
-      let id  = uuidv4();
-      const newColumn = {
-        id: id,
-        name: 'Column ' + newColumnCount,
-        noteOrder: [],
-      };
-      
-      const newColumnOrder = state.columnOrder;
-      newColumnOrder.ids.push(id);
-  
-      const newColumns = {
-        ...state.columns,
-        [id]: newColumn,
-      }
-  
-      const newState = {
-        ...state,
-        columns: newColumns,
-        columnOrder: newColumnOrder,
-      }
-  
-      setState(newState);
-  
-      setColumnCount(newColumnCount)
-  
-      const jsonNoteOrder = JSON.stringify(newColumn.noteOrder)
-  
-      const jsonColumn = {
-        ...newColumn,
-        noteOrder: jsonNoteOrder,
-      };
+      //console.log({sessionId})
 
-      const jsonIds = JSON.stringify(newColumnOrder.ids)
+      const jsonBoard = JSON.stringify(newBoard)
 
-      const jsonColumnOrder = {
-        ...newColumnOrder,
-        ids: jsonIds,
+      const inputBoard = {
+        id: board.id,
+        json: jsonBoard,
+        sessionId: sessionId,
       }
 
-      console.log(jsonColumn)
-      console.log(jsonColumnOrder)
+      //console.log({inputBoard})
   
-      await API.graphql(graphqlOperation(createColumn, {input: jsonColumn}))
-  
-      await API.graphql(graphqlOperation(updateColumnOrder, {input: jsonColumnOrder}))
+      await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
     } catch (err) {
-      console.log('error adding column:')
+      console.log('error updating board:')
       console.log(err)
     }
   }
 
-  
-  // Update Columns, and ColumnOrder
+  const uploadNote = async(noteToUpload) => {
+    try {
 
+      //console.log({noteToUpload})
 
+      await API.graphql(graphqlOperation(createNote, {input: noteToUpload}))
 
-  // Delete Columns, Notes (To be added once the delete function is implemented in the GUI)
+    } catch (err) {
+      console.log('error creating note:')
+      console.log(err)
+    }
+  }
 
+  // Create Columns and Notes
+  const addColumn = () => {
+    const newColumnCount = columnCount + 1;
 
+    const id  = uuidv4();
+    const newColumn = {
+      id: id,
+      name: 'Column ' + newColumnCount,
+      noteOrder: [],
+    };
+    
+    const newColumnOrder = board.columnOrder;
+    newColumnOrder.push(id);
 
+    const newColumns = {
+      ...board.columns,
+      [id]: newColumn,
+    }
 
-  let onDragEnd = result => {
+    const newBoard = {
+      ...board,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
+    }
+
+    setBoard(newBoard);
+
+    setColumnCount(newColumnCount)
+
+    uploadBoard(newBoard)
+  }
+
+  const onDragEnd = (result) => {
     const { destination, source, draggableId, type} = result;
 
     if (!destination) {
@@ -188,28 +243,24 @@ function App() {
     }
 
     if (type === 'column') {
-      const newColumnOrderIds = Array.from(state.columnOrder.ids);
-      newColumnOrderIds.splice(source.index, 1);
-      newColumnOrderIds.splice(destination.index, 0, draggableId);
+      const newColumnOrder = Array.from(board.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
 
-      const newColumnOrder = {
-        ...state.columnOrder,
-        ids: newColumnOrderIds,
-      };
-
-      const newState = {
-        ...state,
+      const newBoard = {
+        ...board,
         columnOrder: newColumnOrder,
       }
 
-      setState(newState)
+      setBoard(newBoard)
+      uploadBoard(newBoard)
 
       return;
     }
 
     // if type = notes
-    const start = state.columns[source.droppableId];
-    const finish = state.columns[destination.droppableId];
+    const start = board.columns[source.droppableId];
+    const finish = board.columns[destination.droppableId];
 
     // Moving notes within the same column
     if (start === finish) {
@@ -223,16 +274,17 @@ function App() {
       };
 
       const newColumns = {
-        ...state.columns,
+        ...board.columns,
         [newColumn.id]: newColumn,
       };
 
-      const newState = {
-        ...state,
+      const newBoard = {
+        ...board,
         columns: newColumns,
       }
   
-      setState(newState);
+      setBoard(newBoard);
+      uploadBoard(newBoard)
       return;
     }
 
@@ -252,31 +304,37 @@ function App() {
     };
 
     const newColumns = {
-      ...state.columns,
+      ...board.columns,
       [newStart.id]: newStart,
       [newFinish.id]: newFinish,
     };
 
-    const newState = {
-      ...state,
+    const newBoard = {
+      ...board,
       columns: newColumns,
     }
 
-    setState(newState);
+    setBoard(newBoard);
+    uploadBoard(newBoard)
   };
 
 
-  let addNote = (columnId) => {
+  const addNote = (columnId) => {
 
-    let newNoteCount = noteCount + 1;
+    const newNoteCount = noteCount + 1;
 
-    let newNoteId = uuidv4();
+    const newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
-      content: ['Note ' + newNoteCount]
+      name: ('Note ' + newNoteCount),
+      content: ('Note ' + newNoteCount),
+    };
+    const noteToUpload = {
+      ...newNote,
+      sessionId: sessionId,
     };
     
-    const columnToAppend = state.columns[columnId];
+    const columnToAppend = board.columns[columnId];
     const columnToAppendNoteOrder = columnToAppend.noteOrder;
     columnToAppendNoteOrder.unshift(newNoteId);
     
@@ -286,40 +344,81 @@ function App() {
     }
 
     const newColumns = {
-      ...state.columns,
+      ...board.columns,
       [columnId]: newColumnToAppend,
     }
 
-    const newNotes = {
-      ...state.notes,
-      [newNoteId]: newNote,
-    }
-
-    const newState = {
-      ...state,
-      notes: newNotes,
+    const newBoard = {
+      ...board,
       columns: newColumns,
     }
 
-    setState(newState);
+    setBoard(newBoard);
+    uploadBoard(newBoard)
+
+    const newNotes = {
+      ...notes,
+      [newNoteId]: newNote,
+    }
+
+    setNotes(newNotes)
+    uploadNote(noteToUpload)
 
     setNoteCount(newNoteCount)
   }
-  
+
+  const openMenu = (columnId) => {
+
+    const dropdown = document.getElementById(`${columnId}-dropdown`)
+
+    const rect = dropdown.getBoundingClientRect()
+
+    console.log({rect})
+
+    const { bottom, left } = rect;
+
+    const x = left;
+    const y = bottom;
+
+    console.log({y})
+
+    const newDropdown = {
+      x: x,
+      y: y,
+    };
+
+    setDropdown(newDropdown)
+  }
+
+  const closeMenu = () => {
+    if (Object.keys(dropdown).length > 0) {
+      setDropdown({})
+    }
+  }
 
   return (
-    <Structure>
-      <Header>
-        <Title>
+    <Structure id="structure" onClick={closeMenu}>
+      <Header id="header">
+        <Title id="title">
           Light Notes 
         </Title>
-        <StyledButton onClick={addColumn}>
+        <StyledButton id="add-column-button" onClick={addColumn}>
           Add Column
         </StyledButton>
+        <ResetButton id="reset-column-button" onClick={reset}>
+          Reset
+        </ResetButton>
       </Header>
-      <Content>
-        <Board id="Board" notes={state.notes} columns={state.columns} columnOrder={state.columnOrder.ids} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
+
+      
+      <Content id="content">
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
+          addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)}/>
       </Content>
+
+      <Dropdown id="column-menu" settings={dropdown} />
+      <div id="note-menu" />
+      <div id="note-pop-up" />
     </Structure>
   );
   

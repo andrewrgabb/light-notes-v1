@@ -10,6 +10,7 @@ export const createNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -24,6 +25,7 @@ export const updateNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
@@ -38,87 +40,49 @@ export const deleteNote = /* GraphQL */ `
       id
       name
       content
+      sessionId
       createdAt
       updatedAt
     }
   }
 `;
-export const createColumn = /* GraphQL */ `
-  mutation CreateColumn(
-    $input: CreateColumnInput!
-    $condition: ModelColumnConditionInput
+export const createBoard = /* GraphQL */ `
+  mutation CreateBoard(
+    $input: CreateBoardInput!
+    $condition: ModelBoardConditionInput
   ) {
-    createColumn(input: $input, condition: $condition) {
+    createBoard(input: $input, condition: $condition) {
       id
-      name
-      noteOrder
+      json
+      sessionId
       createdAt
       updatedAt
     }
   }
 `;
-export const updateColumn = /* GraphQL */ `
-  mutation UpdateColumn(
-    $input: UpdateColumnInput!
-    $condition: ModelColumnConditionInput
+export const updateBoard = /* GraphQL */ `
+  mutation UpdateBoard(
+    $input: UpdateBoardInput!
+    $condition: ModelBoardConditionInput
   ) {
-    updateColumn(input: $input, condition: $condition) {
+    updateBoard(input: $input, condition: $condition) {
       id
-      name
-      noteOrder
+      json
+      sessionId
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteColumn = /* GraphQL */ `
-  mutation DeleteColumn(
-    $input: DeleteColumnInput!
-    $condition: ModelColumnConditionInput
+export const deleteBoard = /* GraphQL */ `
+  mutation DeleteBoard(
+    $input: DeleteBoardInput!
+    $condition: ModelBoardConditionInput
   ) {
-    deleteColumn(input: $input, condition: $condition) {
+    deleteBoard(input: $input, condition: $condition) {
       id
-      name
-      noteOrder
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createColumnOrder = /* GraphQL */ `
-  mutation CreateColumnOrder(
-    $input: CreateColumnOrderInput!
-    $condition: ModelColumnOrderConditionInput
-  ) {
-    createColumnOrder(input: $input, condition: $condition) {
-      id
-      ids
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateColumnOrder = /* GraphQL */ `
-  mutation UpdateColumnOrder(
-    $input: UpdateColumnOrderInput!
-    $condition: ModelColumnOrderConditionInput
-  ) {
-    updateColumnOrder(input: $input, condition: $condition) {
-      id
-      ids
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteColumnOrder = /* GraphQL */ `
-  mutation DeleteColumnOrder(
-    $input: DeleteColumnOrderInput!
-    $condition: ModelColumnOrderConditionInput
-  ) {
-    deleteColumnOrder(input: $input, condition: $condition) {
-      id
-      ids
+      json
+      sessionId
       createdAt
       updatedAt
     }

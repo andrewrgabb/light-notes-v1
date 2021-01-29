@@ -1,16 +1,12 @@
 type Note @model @key(fields: ["id"]) {
   id: String!
-  name: String
-  content: String
+  name: String!
+  content: String!
+  sessionId: String!
 }
 
-type Column @model @key(fields: ["id"]) {
+type Board @model @key(fields: ["id"]) {
   id: String!
-  name: String
-  noteOrder: String
-}
-
-type ColumnOrder @model @key(fields: ["id"]) {
-  id: String!
-  ids: String
+  json: String!
+  sessionId: String!
 }
