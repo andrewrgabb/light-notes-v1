@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
-// import initialData from './initial-data';
-import initialNotes from './initial-notes';
-import initialBoard from './initial-board';
 
-import Board from './board';
+import initialNotes from './initial/initial-notes';
+import initialBoard from './initial/initial-board';
+
+import Board from './component/Board';
+import Dropdown from './component/Dropdown';
+
+import { Structure, Content, Header, Title, StyledButton, ResetButton} from './styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,58 +25,8 @@ import { onUpdateBoard, onCreateNote } from './graphql/subscriptions'
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
-const Structure = styled.div`
-  background-color: #EFEFEF;
-`;
 
-const Content = styled.div`
-  background-color: inherit;
-  position: absolute;
-  top: 50px;
-  bottom: 0;
-  width: 100%; 
-`;
-
-const Header = styled.div`
-  position: relative;
-  height: 50px;
-  text-align: left;
-  padding-left: 10px;
-  font-size: 20px;
-`;
-
-const Title = styled.h3`
-  position: absolute;
-  width: 50%;
-  float: left;
-  padding-top: 10px;
-  padding-left: 20px;
-  color: black;
-`;
-
-const StyledButton = styled.button `
-  position: absolute;
-  border: 2px solid;
-  background-color: white;
-  
-  width: 240px;
-  height: 30px;
-
-  font-size: inherit;
-
-  right: 20px;
-  margin-top: 10px;
-
-  border-radius: 5px;
-  color: black;
-`
-
-const ResetButton = styled(StyledButton) `
-  width: 120px;
-  right: 300px;
-`
-
-function App() {
+const App = () => {
 
   const [board, setBoard] = useState(initialBoard)
 
@@ -91,6 +43,9 @@ function App() {
   // Refs
   notesRef.current = notes
   sessionIdRef.current = sessionId
+
+  // Dropdown menu
+  const [dropdown, setDropdown] = useState({});
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
@@ -208,7 +163,7 @@ function App() {
   const uploadBoard = async(newBoard) => {
     try {
 
-      console.log({sessionId})
+      //console.log({sessionId})
 
       const jsonBoard = JSON.stringify(newBoard)
 
@@ -218,7 +173,7 @@ function App() {
         sessionId: sessionId,
       }
 
-      console.log({inputBoard})
+      //console.log({inputBoard})
   
       await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
@@ -231,7 +186,7 @@ function App() {
   const uploadNote = async(noteToUpload) => {
     try {
 
-      console.log({noteToUpload})
+      //console.log({noteToUpload})
 
       await API.graphql(graphqlOperation(createNote, {input: noteToUpload}))
 
@@ -411,10 +366,38 @@ function App() {
 
     setNoteCount(newNoteCount)
   }
-  
+
+  const openMenu = (columnId) => {
+
+    const dropdown = document.getElementById(`${columnId}-dropdown`)
+
+    const rect = dropdown.getBoundingClientRect()
+
+    console.log({rect})
+
+    const { bottom, left } = rect;
+
+    const x = left;
+    const y = bottom;
+
+    console.log({y})
+
+    const newDropdown = {
+      x: x,
+      y: y,
+    };
+
+    setDropdown(newDropdown)
+  }
+
+  const closeMenu = () => {
+    if (Object.keys(dropdown).length > 0) {
+      setDropdown({})
+    }
+  }
 
   return (
-    <Structure id="structure">
+    <Structure id="structure" onClick={closeMenu}>
       <Header id="header">
         <Title id="title">
           Light Notes 
@@ -428,9 +411,14 @@ function App() {
       </Header>
 
       
-      <Content id="content ">
-        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} addNote={(columnId) => addNote(columnId)} />
+      <Content id="content">
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
+          addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)}/>
       </Content>
+
+      <Dropdown id="column-menu" settings={dropdown} />
+      <div id="note-menu" />
+      <div id="note-pop-up" />
     </Structure>
   );
   

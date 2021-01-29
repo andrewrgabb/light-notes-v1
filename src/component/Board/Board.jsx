@@ -1,22 +1,13 @@
 import React, { useMemo } from 'react';
-import styled from 'styled-components';
 import '@atlaskit/css-reset';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import Column from './column';
+import Column from '../Column';
 
-const Container = styled.div `
-  position: relative;
-  display: flex;
-  height: 100%;
-  margin-left: 20px;
-  margin-right: 20px;
+import { Container } from './styles';
 
-  overflow: auto;
-`;
-
-function InnerList(props) {
-  const { column, noteMap, index, addNote } = props;
+const InnerList = (props) => {
+  const { column, noteMap, index, addNote, openMenu } = props;
 
   const notes = useMemo(
     () =>
@@ -24,10 +15,10 @@ function InnerList(props) {
     [column, noteMap]
   );
   
-  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote}/>;
+  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} openMenu={openMenu} />;
 }
 
-export default function(props) {
+const Board = (props) => {
 
   if (! props.columnOrder) {
     return null
@@ -48,7 +39,8 @@ export default function(props) {
             {props.columnOrder.map((columnId, index) => {
               const column = props.columns[columnId];
               return (
-                <InnerList key={column.id} column={column} noteMap={props.notes} index={index} addNote={() => props.addNote(columnId)}/>
+                <InnerList key={column.id} column={column} noteMap={props.notes} index={index} 
+                  addNote={() => props.addNote(columnId)} openMenu={() => props.openMenu(columnId)}/>
               );
             })}
             {provided.placeholder}
@@ -59,3 +51,5 @@ export default function(props) {
     </DragDropContext>
   );
 }
+
+export default Board;
