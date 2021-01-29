@@ -373,14 +373,10 @@ const App = () => {
 
     const rect = dropdown.getBoundingClientRect()
 
-    console.log({rect})
-
     const { bottom, left } = rect;
 
     const x = left;
     const y = bottom;
-
-    console.log({y})
 
     const newDropdown = {
       x: x,
