@@ -2,9 +2,10 @@ import styled from 'styled-components';
 
 export const DropdownBox = styled.div `
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 280px;
   border: 4px solid #222222;
-  background-color: green;
+  border-radius: 10px;
+  background-color: purple;
   opacity: 70%;
 `

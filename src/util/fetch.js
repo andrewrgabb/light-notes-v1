@@ -83,8 +83,6 @@ export const fetchBoard = async(sessionId) => {
 
       await API.graphql(graphqlOperation(createBoard, {input: inputBoard}))
 
-      //console.log(newBoard)
-
       return (newBoard)
     }
 

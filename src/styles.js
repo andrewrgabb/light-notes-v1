@@ -24,7 +24,7 @@ export const Title = styled.h3`
 export const StyledButton = styled.button `
   position: absolute;
   border: 2px solid;
-  background-color: white;
+  background-color: #FAFAFA;
   
   width: 240px;
   height: 30px;
