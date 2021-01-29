@@ -6,15 +6,11 @@ const Dropdown = ( props ) => {
 
   const {settings} = props;
 
-  if (Object.keys(settings).length === 0) {
-    return null;
-  }
+  const {x, y, open} = settings;
 
-  const {x, y} = settings
-  
-  return (
-    <DropdownBox style={{left: `${x}px`, top: `${y}px` }} />
-  );
+  const dropdown = open ? <DropdownBox style={{left: `${x}px`, top: `${y}px` }} /> : null;
+
+  return dropdown;
 }
 
 export default Dropdown;

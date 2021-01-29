@@ -3,5 +3,5 @@ const intialBoard = {
   columns: {},
   columnOrder: [],
 };
-  
+
 export default intialBoard;
