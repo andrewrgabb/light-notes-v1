@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import initialBoard from './initial/initial-board';
 import initialNotes from './initial/initial-notes';
-import intialDropdown from './initial/initial-dropdown';
+import intialDropdownSettings from './initial/initial-dropdown-settings';
 
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
@@ -45,7 +45,8 @@ const App = () => {
   sessionIdRef.current = sessionId
 
   // Dropdown menu
-  const [dropdown, setDropdown] = useState(intialDropdown);
+  const [dropdownSettings, setDropdownSettings] = useState(intialDropdownSettings);
+
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
@@ -378,26 +379,34 @@ const App = () => {
     const x = left;
     const y = bottom;
 
+    const width = 220;
+    //const height = 280;
+
     const newDropdown = {
       open: true,
       x: x,
       y: y,
+      width: width,
+      options: ["Edit", "Highlight", "Delete"],
     };
 
-    setDropdown(newDropdown)
+    setDropdownSettings(newDropdown)
   }
 
   const closeMenu = () => {
 
-    if (dropdown.open) {
+    if (dropdownSettings.open) {
 
       const newDropdown = {
         open: false,
         x: 0,
         y: 0,
+        width: 0,
+        height: 0,
+        options: [],
       };
   
-      setDropdown(newDropdown)
+      setDropdownSettings(newDropdown)
     }
   }
 
@@ -420,7 +429,7 @@ const App = () => {
           addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)}/>
       </Content>
 
-      <Dropdown id="column-menu" settings={dropdown} />
+      <Dropdown id="column-menu" settings={dropdownSettings}  />
       <div id="note-menu" />
       <div id="note-pop-up" />
     </Structure>
