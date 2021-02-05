@@ -5,5 +5,5 @@ export const DropdownBox = styled.div `
   border: 4px solid #222222;
   border-radius: 10px;
   background-color: purple;
-  opacity: 98%;
+  opacity: 99%;
 `

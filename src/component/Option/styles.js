@@ -6,7 +6,10 @@ export const OptionBox = styled.div `
   height: 30px;
   border-radius: 10px;
   background-color: aqua;
-  opacity: 90%;
+  opacity: 80%;
+  :hover {
+    opacity: 98%;
+  }
   margin: 10px;
   text-align: center;
   padding-top: 10px;

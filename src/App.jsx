@@ -368,9 +368,21 @@ const App = () => {
     setNoteCount(newNoteCount)
   }
 
-  const openMenu = (columnId) => {
+  const editColumn = (columnId) => {
+    console.log("Editing column ",{columnId})
+  }
 
-    const dropdown = document.getElementById(`${columnId}-dropdown`)
+  const highlightColumn = (columnId) => {
+    console.log("Highlighting column ",{columnId})
+  }
+
+  const deleteColumn = (columnId) => {
+    console.log("Deleting column ",{columnId})
+  }
+
+  const openMenu = (objectId) => {
+
+    const dropdown = document.getElementById(`${objectId}-dropdown`)
 
     const rect = dropdown.getBoundingClientRect()
 
@@ -383,11 +395,16 @@ const App = () => {
     //const height = 280;
 
     const newDropdown = {
+      objectId: objectId,
       open: true,
       x: x,
       y: y,
       width: width,
-      options: ["Edit", "Highlight", "Delete"],
+      options: [
+        {text: "Edits", function: editColumn},
+        {text: "Highlight", function: highlightColumn},
+        {text: "Delete", function: deleteColumn},
+      ],
     };
 
     setDropdownSettings(newDropdown)

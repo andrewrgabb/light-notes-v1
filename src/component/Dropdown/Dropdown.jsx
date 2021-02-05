@@ -7,11 +7,11 @@ const Dropdown = ( props ) => {
 
   const {settings} = props;
 
-  const {x, y, width, open, options} = settings;
+  const {objectId, open, x, y, width, options} = settings;
 
   const optionList = (
     options.map((option, index) => {
-      return <Option text={option} key={index}/>
+      return <Option option={option} objectId={objectId} key={index}/>
     })
   );
 

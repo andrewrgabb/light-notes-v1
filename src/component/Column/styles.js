@@ -21,7 +21,6 @@ export const Container = styled.div`
 
 export const TopSection = styled.div `
   background-color: DodgerBlue;
-  background-opacity: 50%;
   height: 40px;
   padding: 2px;
   display: flex;
@@ -50,7 +49,7 @@ export const DropdownBox = styled.div `
   border-radius: 5px;
 
   :hover {
-  background-color: #1873CC; 
+    background-color: #1873CC; 
   }
 `
 
