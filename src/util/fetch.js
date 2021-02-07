@@ -103,6 +103,8 @@ export const resetDatabase = async() => {
         id: id,
       }
 
+      //console.log({info})
+
       await API.graphql(graphqlOperation(deleteNote, {input: info}))
 
     }

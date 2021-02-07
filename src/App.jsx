@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
-import { createNote } from './graphql/mutations'
+import { createNote, deleteNote } from './graphql/mutations'
 import { updateBoard } from './graphql/mutations'
 
 import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
@@ -192,7 +192,27 @@ const App = () => {
       await API.graphql(graphqlOperation(createNote, {input: noteToUpload}))
 
     } catch (err) {
-      console.log('error creating note:')
+      console.log('error uploading note:')
+      console.log(err)
+    }
+  }
+
+  const removeNote = async(noteToRemove) => {
+    try {
+
+      //console.log({noteToRemove})
+      const id = noteToRemove.id;
+
+      const info = {
+        id: id,
+      }
+
+      //console.log({info})
+
+      await API.graphql(graphqlOperation(deleteNote, {input: info}))
+
+    } catch (err) {
+      console.log('error deleting note:')
       console.log(err)
     }
   }
@@ -228,6 +248,35 @@ const App = () => {
 
     uploadBoard(newBoard)
   }
+
+  const removeColumn = (columnId) => {
+
+    const column = board.columns[columnId];
+
+    const columnNotes = column.noteOrder.map(noteId => notes[noteId]);
+
+    columnNotes.forEach(note => {
+      removeNote(note);
+    });
+
+    //console.log("Removing column ",{columnId})
+
+    let newColumns = board.columns;
+
+    delete newColumns[columnId];
+
+    const newColumnOrder = board.columnOrder.filter(otherColumnId => otherColumnId !== columnId);
+
+    const newBoard = {
+      ...board,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
+    }
+
+    setBoard(newBoard);
+    uploadBoard(newBoard)
+  }
+  
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type} = result;
@@ -376,10 +425,6 @@ const App = () => {
     console.log("Highlighting column ",{columnId})
   }
 
-  const deleteColumn = (columnId) => {
-    console.log("Deleting column ",{columnId})
-  }
-
   const openMenu = (objectId) => {
 
     const dropdown = document.getElementById(`${objectId}-dropdown`)
@@ -403,7 +448,7 @@ const App = () => {
       options: [
         {text: "Edits", function: editColumn},
         {text: "Highlight", function: highlightColumn},
-        {text: "Delete", function: deleteColumn},
+        {text: "Delete", function: removeColumn},
       ],
     };
 
