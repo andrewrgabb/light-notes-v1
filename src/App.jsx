@@ -224,7 +224,7 @@ const App = () => {
     const id  = uuidv4();
     const newColumn = {
       id: id,
-      name: 'Column ' + newColumnCount,
+      title: 'Column ' + newColumnCount,
       noteOrder: [],
     };
     
@@ -417,12 +417,29 @@ const App = () => {
     setNoteCount(newNoteCount)
   }
 
-  const editColumn = (columnId) => {
-    console.log("Editing column ",{columnId})
-  }
+  const updateColumnTitle = (columnId, newTitle) => {
 
-  const highlightColumn = (columnId) => {
-    console.log("Highlighting column ",{columnId})
+    //console.log({columnId, newTitle})
+
+    const columnToAppend = board.columns[columnId];
+
+    const newColumnToAppend = {
+      ...columnToAppend,
+      title: newTitle,
+    }
+
+    const newColumns = {
+      ...board.columns,
+      [columnId]: newColumnToAppend,
+    }
+
+    const newBoard = {
+      ...board,
+      columns: newColumns,
+    }
+
+    setBoard(newBoard);
+    uploadBoard(newBoard)
   }
 
   const openMenu = (objectId) => {
@@ -446,8 +463,9 @@ const App = () => {
       y: y,
       width: width,
       options: [
-        {text: "Edits", function: editColumn},
+        /*
         {text: "Highlight", function: highlightColumn},
+        {text: "Edit", function: editColumn},*/
         {text: "Delete", function: removeColumn},
       ],
     };
@@ -488,7 +506,8 @@ const App = () => {
       
       <Content id="content">
         <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
-          addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)}/>
+          addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)} 
+          updateColumnTitle={(columnId, newTitle) => updateColumnTitle(columnId, newTitle)}/>
       </Content>
 
       <Dropdown id="column-menu" settings={dropdownSettings}  />

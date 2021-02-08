@@ -15,14 +15,22 @@ const Column = (props) => {
       return null
     })
   );
+
+  function handleTitleChange(e) {
+    props.updateColumnTitle(props.column.id, e.target.value)
+  }
       
   return (
     <Draggable draggableId={props.column.id} index={props.index} >
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
           <TopSection {...provided.dragHandleProps}>
-            <ColumnTitle >
-              {props.column.name}
+            <ColumnTitle 
+              id={`${props.column.id} Title`}
+              label=""
+              type="text"
+              value={props.column.title}
+              onChange={handleTitleChange}>
             </ColumnTitle>
             <DropdownBox id={`${props.column.id}-dropdown`} onClick={props.openMenu}>
               {getMenu()}

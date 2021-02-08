@@ -28,12 +28,15 @@ export const TopSection = styled.div `
   border-radius: 5px;
 `
 
-export const ColumnTitle = styled.div`
+export const ColumnTitle = styled.input`
   text-align: center;
   font-size: 20px;
   color: black;
   margin-top: 6px;
-  margin-left: 10px;
+  margin-left: 16px;
+  width: 100%;
+  text-align: left;
+  padding-left: 10px;
 `
 
 export const DropdownBox = styled.div `

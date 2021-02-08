@@ -7,7 +7,7 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openMenu } = props;
+  const { column, noteMap, index, addNote, openMenu, updateColumnTitle } = props;
 
   const notes = useMemo(
     () =>
@@ -15,7 +15,8 @@ const InnerList = (props) => {
     [column, noteMap]
   );
   
-  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} openMenu={openMenu} />;
+  return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} 
+    openMenu={openMenu} updateColumnTitle={updateColumnTitle} />;
 }
 
 const Board = (props) => {
@@ -34,13 +35,14 @@ const Board = (props) => {
         {provided => (
           <Container id="Board"
             {...provided.droppableProps}
-            ref={provided.innerRef} 
+            ref={provided.innerRef}
           >
             {props.columnOrder.map((columnId, index) => {
               const column = props.columns[columnId];
               return (
                 <InnerList key={column.id} column={column} noteMap={props.notes} index={index} 
-                  addNote={() => props.addNote(columnId)} openMenu={() => props.openMenu(columnId)}/>
+                  addNote={() => props.addNote(columnId)} openMenu={() => props.openMenu(columnId)}
+                  updateColumnTitle={(columnId, newTitle) => props.updateColumnTitle(columnId, newTitle)}/>
               );
             })}
             {provided.placeholder}
