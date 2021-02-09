@@ -15,7 +15,7 @@ const NoteEditor = ( props ) => {
   }
 
   function handleContentChange(e) {
-    updateNoteContent(noteId, e.target.value)
+    updateNoteContent(noteId, title, e.target.value)
   }
 
   function handleOnClick() {

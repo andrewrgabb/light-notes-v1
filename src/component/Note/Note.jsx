@@ -15,7 +15,7 @@ const Note = (props) => {
       {...provided.dragHandleProps}
       ref={provided.innerRef}
       isDragging={snapshot.isDragging}
-      onClick={props.openNoteMenu}
+      onClick={(event) => {props.openNoteMenu(); event.stopPropagation();}}
       >
         {title}
         <br/>

@@ -10,11 +10,15 @@ export const Box = styled.div `
   font-weight: bold;
   font-size: 20px;
   text-align: center;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 export const Title = styled.textarea `
   position: relative;
-  width: 210px;
+  width: 300px;
   height: 30px;
   background-color: white;
   margin-top: 10px;
@@ -27,8 +31,8 @@ export const Title = styled.textarea `
 
 export const Content = styled.textarea `
   position: relative;
-  width: 210px;
-  height: 80px;
+  width: 300px;
+  height: 200px;
   background-color: white;
   margin-top: 10px;
   margin-bottom: 10px;

@@ -621,7 +621,7 @@ const App = () => {
 
     //console.log("Editing column title", {columnId});
 
-    const noteToEdit = notes.noteId;
+    const noteToEdit = notes[noteId];
     
     const title = noteToEdit.title;
     const content = noteToEdit.content;
@@ -722,9 +722,30 @@ const App = () => {
     setColumnEditor(newColumnEditor)
   }
 
+  const closeNoteEditor = () => {
+
+    hideGreyScreen()
+
+    const newNoteEditor = {
+      noteId: "",
+      open: false,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      title: "",
+      content: "",
+      updateNote: {},
+      saveNote: {},
+    };
+
+    setNoteEditor(newNoteEditor)
+  }
+
   const closePopUps = () => {
     closeDropdown();
     closeColumnEditor();
+    closeNoteEditor();
   }
 
   const showGreyScreen = () => {
@@ -762,7 +783,7 @@ const App = () => {
         <Content id="content">
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            openNoteMenu={(noteId) => openNoteMenu(noteId)} />
+            openNoteMenu={(noteId) => editNote(noteId)} />
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />
