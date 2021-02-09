@@ -7,10 +7,11 @@ export const OptionBox = styled.div `
   border-radius: 10px;
   background-color: aqua;
   opacity: 80%;
+  font-weight: bold;
   :hover {
-    opacity: 98%;
+    opacity: 95%;
   }
-  margin: 10px;
+  margin: 5px;
   text-align: center;
   padding-top: 10px;
 `

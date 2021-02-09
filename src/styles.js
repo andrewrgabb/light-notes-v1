@@ -27,7 +27,7 @@ export const StyledButton = styled.button `
   background-color: #FAFAFA;
   
   width: 240px;
-  height: 30px;
+  height: 36px;
 
   font-size: inherit;
 
@@ -36,11 +36,6 @@ export const StyledButton = styled.button `
 
   border-radius: 5px;
   color: black;
-`
-
-export const ResetButton = styled(StyledButton) `
-  width: 120px;
-  right: 300px;
 `
 
 export const Content = styled.div`

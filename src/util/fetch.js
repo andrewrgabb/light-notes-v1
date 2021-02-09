@@ -17,9 +17,13 @@ export const fetchNotes = async() => {
     const noteData = await API.graphql(graphqlOperation(listNotes))
     const tempNotes = noteData.data.listNotes.items
 
+    const noteCount = tempNotes.length;
+
+    console.log({noteCount})
+
     var newNotes = {}
     
-    for (var index = 0; index < tempNotes.length; index++) { 
+    for (var index = 0; index < noteCount; index++) { 
       
       const newNote = tempNotes[index]
 

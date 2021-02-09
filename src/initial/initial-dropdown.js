@@ -1,4 +1,4 @@
-export const intialDropdownSettings = {
+export const intialDropdown = {
   objectId: "",
   open: false,
   x: 0,
@@ -7,4 +7,4 @@ export const intialDropdownSettings = {
   options: [],
 };
 
-export default intialDropdownSettings;
+export default intialDropdown;

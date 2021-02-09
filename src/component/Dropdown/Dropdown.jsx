@@ -16,7 +16,8 @@ const Dropdown = ( props ) => {
   );
 
   const dropdown = open ? 
-    <DropdownBox style={{left: `${x}px`, top: `${y}px`, width: `${width}px`}}>
+    <DropdownBox style={{left: `${x}px`, top: `${y}px`, width: `${width}px`}}
+      onClick={(event) => {event.stopPropagation();}}>
       {optionList}
     </DropdownBox>  
   : null;

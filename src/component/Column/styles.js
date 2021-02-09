@@ -20,7 +20,7 @@ export const Container = styled.div`
 `
 
 export const TopSection = styled.div `
-  background-color: DodgerBlue;
+  background-color: #6FB8FF;
   height: 40px;
   padding: 2px;
   display: flex;
@@ -28,7 +28,7 @@ export const TopSection = styled.div `
   border-radius: 5px;
 `
 
-export const ColumnTitle = styled.input`
+export const ColumnTitle = styled.div`
   text-align: center;
   font-size: 20px;
   color: black;
@@ -37,6 +37,7 @@ export const ColumnTitle = styled.input`
   width: 100%;
   text-align: left;
   padding-left: 10px;
+  overflow: hidden;
 `
 
 export const DropdownBox = styled.div `
@@ -68,7 +69,7 @@ export const Content = styled.div`
 export const NoteList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => (props.isDraggingOver ? 'DodgerBlue' : 'inherit')};
+  background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : 'inherit')};
   flex-grow: 1;
   min-height: calc(100% - 16px);
 `

@@ -2,12 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import initialBoard from './initial/initial-board';
 import initialNotes from './initial/initial-notes';
-import intialDropdownSettings from './initial/initial-dropdown-settings';
+import intialDropdown from './initial/initial-dropdown';
+import intialColumnEditor from './initial/initial-column-editor';
+import intialGreyScreen from './initial/initial-grey-screen'
 
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
+import ColumnEditor from './component/ColumnEditor';
+import GreyScreen from './component/GreyScreen';
 
-import { Structure, Content, Header, Title, StyledButton, ResetButton} from './styles';
+import { Structure, Content, Header, Title, StyledButton} from './styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -45,8 +49,13 @@ const App = () => {
   sessionIdRef.current = sessionId
 
   // Dropdown menu
-  const [dropdownSettings, setDropdownSettings] = useState(intialDropdownSettings);
+  const [dropdownSettings, setDropdownSettings] = useState(intialDropdown);
 
+  // Column editing box
+  const [columnEditorSettings, setColumnEditorSettings] = useState(intialColumnEditor);
+
+  // Grey screen
+  const [greyScreen, setGreyScreen] = useState(intialGreyScreen);
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
@@ -251,6 +260,8 @@ const App = () => {
 
   const removeColumn = (columnId) => {
 
+    closeDropdown()
+
     const column = board.columns[columnId];
 
     const columnNotes = column.noteOrder.map(noteId => notes[noteId]);
@@ -417,7 +428,87 @@ const App = () => {
     setNoteCount(newNoteCount)
   }
 
+  const openColumnMenu = (objectId) => {
+
+    const dropdown = document.getElementById(`${objectId}-dropdown`)
+
+    const rect = dropdown.getBoundingClientRect()
+
+    const { bottom, left } = rect;
+
+    const x = left;
+    const y = bottom;
+
+    const width = 160;
+    //const height = 280;
+
+    const newDropdown = {
+      objectId: objectId,
+      open: true,
+      x: x,
+      y: y,
+      width: width,
+      options: [
+        {text: "Edit", function: editColumnTitle},
+        {text: "Delete", function: removeColumn},
+      ],
+    };
+
+    setDropdownSettings(newDropdown)
+  }
+
+  const editColumnTitle = (columnId) => {
+
+    closeDropdown()
+    showGreyScreen()
+
+    //console.log("Editing column title", {columnId});
+
+    const columnToEdit = board.columns[columnId];
+    const titleToEdit = columnToEdit.title;
+
+    const x = window.innerWidth / 2 - 120;
+    const y = window.innerHeight / 3 - 65;
+
+    const newColumnEditor = {
+      columnId: columnId,
+      open: true,
+      x: x,
+      y: y,
+      width: 240,
+      height: 130,
+      title: titleToEdit,
+      updateColumnTitle: updateColumnTitle,
+      saveColumnTitle: saveColumnTitle,
+    };
+
+    setColumnEditorSettings(newColumnEditor)
+  }
+
   const updateColumnTitle = (columnId, newTitle) => {
+
+    // Not sure why the settings are dissapearing here
+    //console.log({columnEditorSettings})
+
+    const x = window.innerWidth / 2 - 120;
+    const y = window.innerHeight / 3 - 65;
+
+    const newColumnEditor = {
+      columnId: columnId,
+      open: true,
+      x: x,
+      y: y,
+      width: 240,
+      height: 130,
+      title: newTitle,
+      updateColumnTitle: updateColumnTitle,
+      saveColumnTitle: saveColumnTitle,
+    };
+
+    setColumnEditorSettings(newColumnEditor)
+  }
+
+  const saveColumnTitle = (columnId, newTitle) => {
 
     //console.log({columnId, newTitle})
 
@@ -442,80 +533,87 @@ const App = () => {
     uploadBoard(newBoard)
   }
 
-  const openMenu = (objectId) => {
-
-    const dropdown = document.getElementById(`${objectId}-dropdown`)
-
-    const rect = dropdown.getBoundingClientRect()
-
-    const { bottom, left } = rect;
-
-    const x = left;
-    const y = bottom;
-
-    const width = 220;
-    //const height = 280;
+  const closeDropdown = () => {
 
     const newDropdown = {
-      objectId: objectId,
-      open: true,
-      x: x,
-      y: y,
-      width: width,
-      options: [
-        /*
-        {text: "Highlight", function: highlightColumn},
-        {text: "Edit", function: editColumn},*/
-        {text: "Delete", function: removeColumn},
-      ],
+      objectId: "",
+      open: false,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      options: [],
     };
 
     setDropdownSettings(newDropdown)
   }
-
-  const closeMenu = () => {
-
-    if (dropdownSettings.open) {
-
-      const newDropdown = {
-        open: false,
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        options: [],
-      };
   
-      setDropdownSettings(newDropdown)
+  const closeColumnEditor = () => {
+
+    hideGreyScreen()
+
+    const newColumnEditor = {
+      columnId: "",
+      open: false,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      title: "",
+      updateColumnTitle: {},
+    };
+
+    setColumnEditorSettings(newColumnEditor)
+  }
+
+  const closePopUps = () => {
+    closeDropdown();
+    closeColumnEditor();
+  }
+
+  const showGreyScreen = () => {
+
+    const newGreyScreen = {
+      show: true,
+      closePopUps: closePopUps,
     }
+
+    setGreyScreen(newGreyScreen);
+  }
+
+  const hideGreyScreen = () => {
+
+    const newGreyScreen = {
+      show: false,
+      closePopUps: {},
+    }
+
+    setGreyScreen(newGreyScreen);
   }
 
   return (
-    <Structure id="structure" onClick={closeMenu}>
-      <Header id="header">
-        <Title id="title">
-          Light Notes 
-        </Title>
-        <StyledButton id="add-column-button" onClick={addColumn}>
-          Add Column
-        </StyledButton>
-        <ResetButton id="reset-column-button" onClick={reset}>
-          Reset
-        </ResetButton>
-      </Header>
-      
-      <Content id="content">
-        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
-          addNote={(columnId) => addNote(columnId)} openMenu={(columnId) => openMenu(columnId)} 
-          updateColumnTitle={(columnId, newTitle) => updateColumnTitle(columnId, newTitle)}/>
-      </Content>
-
-      <Dropdown id="column-menu" settings={dropdownSettings}  />
-      <div id="note-menu" />
-      <div id="note-pop-up" />
-    </Structure>
+    <React.Fragment>
+      <Structure id="structure" onClick={closePopUps}>
+        <Header id="header">
+          <Title id="title">
+            Light Notes 
+          </Title>
+          <StyledButton id="add-column-button" onClick={addColumn}>
+            Add Column
+          </StyledButton>
+        </Header>
+        
+        <Content id="content">
+          <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
+            addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
+            updateColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)}/>
+        </Content>
+      </Structure>
+      <GreyScreen id="grey-screen" settings={greyScreen} />
+      <Dropdown id="dropdown" settings={dropdownSettings}  />
+      <ColumnEditor id="editing-box" settings={columnEditorSettings} />
+    </React.Fragment>
   );
-  
 }
 
 export default App;

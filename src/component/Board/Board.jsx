@@ -7,7 +7,7 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openMenu, updateColumnTitle } = props;
+  const { column, noteMap, index, addNote, openColumnMenu, updateColumnTitle } = props;
 
   const notes = useMemo(
     () =>
@@ -16,7 +16,7 @@ const InnerList = (props) => {
   );
   
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} 
-    openMenu={openMenu} updateColumnTitle={updateColumnTitle} />;
+  openColumnMenu={openColumnMenu} updateColumnTitle={updateColumnTitle} />;
 }
 
 const Board = (props) => {
@@ -41,7 +41,7 @@ const Board = (props) => {
               const column = props.columns[columnId];
               return (
                 <InnerList key={column.id} column={column} noteMap={props.notes} index={index} 
-                  addNote={() => props.addNote(columnId)} openMenu={() => props.openMenu(columnId)}
+                  addNote={() => props.addNote(columnId)} openColumnMenu={() => props.openColumnMenu(columnId)}
                   updateColumnTitle={(columnId, newTitle) => props.updateColumnTitle(columnId, newTitle)}/>
               );
             })}

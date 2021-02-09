@@ -10,7 +10,7 @@ export const Container = styled.div`
 
   padding: 8px;
 
-  background-color: ${props => (props.isDragging ? 'Azure' : 'white')};
+  background-color: ${props => (props.isDragging ? '#C4E1FF' : 'white')};
   min-height: 120px;
 
   border-radius: 8px;
