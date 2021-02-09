@@ -177,6 +177,7 @@ const App = () => {
     });
   }
   
+  // eslint-disable-next-line no-unused-vars
   const reset = () => {
 
     const id = board.id
@@ -261,7 +262,57 @@ const App = () => {
     }
   }
 
-  const removeNote = async(noteId) => {
+  const removeNote = (noteId) => {
+
+    closeDropdown()
+
+    removeNoteFromDatabase(noteId)
+
+    const {
+      [noteId]: removed,
+      ...newNotes
+    } = notes
+
+    //console.log({newNotes})
+
+    setNotes(newNotes)
+
+    // eslint-disable-next-line no-unused-vars
+    for (const [key, value] of Object.entries(board.columns)) {
+  
+      //console.log({key, value})
+
+      const column = value;
+
+      const noteOrder = column.noteOrder
+      const newNoteOrder = noteOrder.filter(noteOrderId => noteOrderId !== noteId)
+
+      if (newNoteOrder.length < noteOrder.length) {
+
+        //console.log("recognides")
+
+        const newColumn = {
+          ...column,
+          noteOrder: newNoteOrder,
+        }
+
+        const newBoard = {
+          ...board,
+          columns: {
+            ...board.columns,
+            [newColumn.id]: newColumn,
+          }
+        }
+
+        uploadBoard(newBoard)
+        setBoard(newBoard)
+
+        return;
+      }
+    }
+  }
+
+  const removeNoteFromDatabase = async(noteId) => {
     try {
 
       const info = {
@@ -316,9 +367,13 @@ const App = () => {
 
     const columnNotes = column.noteOrder.map(noteId => notes[noteId]);
 
+    //console.log({columnNotes})
+
     columnNotes.forEach(note => {
-      const id = note.id;
-      removeNote(id);
+      if (note) {
+        const id = note.id;
+        removeNoteFromDatabase(id);
+      }
     });
 
     //console.log("Removing column ",{columnId})
@@ -482,9 +537,14 @@ const App = () => {
 
   const openColumnMenu = (columnId) => {
 
-    const dropdown = document.getElementById(`${columnId}-dropdown`)
+    if (dropdown.open && dropdown.objectId === columnId) {
+      closeDropdown()
+      return
+    }
 
-    const rect = dropdown.getBoundingClientRect()
+    const dropdownDom = document.getElementById(`${columnId}-dropdown`)
+
+    const rect = dropdownDom.getBoundingClientRect()
 
     const { bottom, left } = rect;
 
@@ -520,7 +580,7 @@ const App = () => {
     const titleToEdit = columnToEdit.title;
 
     const x = window.innerWidth / 2 - 120;
-    const y = window.innerHeight / 3 - 65;
+    const y = window.innerHeight / 3 - 60;
 
     const newColumnEditor = {
       columnId: columnId,
@@ -528,7 +588,7 @@ const App = () => {
       x: x,
       y: y,
       width: 240,
-      height: 130,
+      height: 120,
       title: titleToEdit,
       updateColumnTitle: updateColumnTitle,
       saveColumnTitle: saveColumnTitle,
@@ -543,7 +603,7 @@ const App = () => {
     //console.log({columnEditor})
 
     const x = window.innerWidth / 2 - 120;
-    const y = window.innerHeight / 3 - 65;
+    const y = window.innerHeight / 3 - 60;
 
     const newColumnEditor = {
       columnId: columnId,
@@ -551,7 +611,7 @@ const App = () => {
       x: x,
       y: y,
       width: 240,
-      height: 130,
+      height: 120,
       title: newTitle,
       updateColumnTitle: updateColumnTitle,
       saveColumnTitle: saveColumnTitle,
@@ -587,9 +647,14 @@ const App = () => {
   
   const openNoteMenu = (noteId) => {
 
-    const dropdown = document.getElementById(`${noteId}-dropdown`)
+    if (dropdown.open && dropdown.objectId === noteId) {
+      closeDropdown()
+      return
+    }
 
-    const rect = dropdown.getBoundingClientRect()
+    const dropdownDom = document.getElementById(`${noteId}-dropdown`)
+
+    const rect = dropdownDom.getBoundingClientRect()
 
     const { bottom, left } = rect;
 
@@ -626,7 +691,7 @@ const App = () => {
     const title = noteToEdit.title;
     const content = noteToEdit.content;
 
-    const x = window.innerWidth / 2 - 250;
+    const x = window.innerWidth / 2 - 200;
     const y = window.innerHeight / 3 - 180;
 
     const newNoteEditor = {
@@ -634,7 +699,7 @@ const App = () => {
       open: true,
       x: x,
       y: y,
-      width: 500,
+      width: 400,
       height: 360,
       title: title,
       content: content,
@@ -647,7 +712,7 @@ const App = () => {
 
   const updateNoteContent = (noteId, newTitle, newContent) => {
 
-    const x = window.innerWidth / 2 - 250;
+    const x = window.innerWidth / 2 - 200;
     const y = window.innerHeight / 3 - 180;
 
     const newNoteEditor = {
@@ -655,7 +720,7 @@ const App = () => {
       open: true,
       x: x,
       y: y,
-      width: 500,
+      width: 400,
       height: 360,
       title: newTitle,
       content: newContent,
@@ -783,7 +848,7 @@ const App = () => {
         <Content id="content">
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            openNoteMenu={(noteId) => editNote(noteId)} />
+            openNoteMenu={(noteId) => openNoteMenu(noteId)} />
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />

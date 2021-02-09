@@ -9,7 +9,9 @@ export const Box = styled.div `
   padding: 5px;
   font-weight: bold;
   font-size: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 export const Title = styled.textarea `
@@ -26,10 +28,7 @@ export const Title = styled.textarea `
 `
 
 export const Button = styled.button `
-  position: relative;
-  background-color: #CCCCCC;
-  float: right;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  background-color: lightGreen;
   font-size: 14px;
+  margin-bottom: 10px;
 `

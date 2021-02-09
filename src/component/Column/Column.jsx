@@ -7,37 +7,42 @@ import { Container, TopSection, ColumnTitle, DropdownBox, Content, NoteList, Sty
 
 const Column = (props) => {
 
-  const notes = (
-    props.notes.map((note, index) => {
+  const {notes, column} = props;
+
+  const {id, title} = column;
+
+  const completedNotes = (
+    notes.map((note, index) => {
       if (note) {
         return <Note key={note.id} note={note} index={index} openNoteMenu={() => props.openNoteMenu(note.id)} />
       }
+      console.log("Missing Note!")
       return null
     })
   );
   
   return (
-    <Draggable draggableId={props.column.id} index={props.index} >
+    <Draggable draggableId={id} index={props.index} >
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <TopSection {...provided.dragHandleProps}>
-            <ColumnTitle id={`${props.column.id} Title`}>
-              {props.column.title}
+          <TopSection {...provided.dragHandleProps} id={`top-section`}>
+            <ColumnTitle id={`${id}-title`}>
+              {title}
             </ColumnTitle>
-            <DropdownBox id={`${props.column.id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
+            <DropdownBox id={`${id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
               {getMenuIcon()}
             </DropdownBox>
           </TopSection>
           
           <Content>
-            <Droppable droppableId={props.column.id}>
+            <Droppable droppableId={id}>
               {(provided, snapshot) => (
               <NoteList
                 ref={provided.innerRef} 
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                {notes}
+                {completedNotes}
                 {provided.placeholder}
               </NoteList>
               )}

@@ -60,7 +60,7 @@ export const DropdownBox = styled.div `
 
 export const Content = styled.div`
   position: relative;
-  overflow: scroll;
+  overflow-y: scroll;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 70px;

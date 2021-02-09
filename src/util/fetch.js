@@ -19,7 +19,7 @@ export const fetchNotes = async() => {
 
     const noteCount = tempNotes.length;
 
-    console.log({noteCount})
+    //console.log({noteCount})
 
     var newNotes = {}
     

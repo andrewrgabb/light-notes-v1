@@ -43,10 +43,7 @@ export const Content = styled.textarea `
 `
 
 export const Button = styled.button `
-  position: relative;
-  background-color: #CCCCCC;
-  float: right;
-  margin-right: 10px;
+  background-color: lightGreen;
   margin-bottom: 10px;
   font-size: 14px;
 `
