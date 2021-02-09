@@ -10,7 +10,7 @@ const Column = (props) => {
   const notes = (
     props.notes.map((note, index) => {
       if (note) {
-        return <Note key={note.id} note={note} index={index} />
+        return <Note key={note.id} note={note} index={index} openNoteMenu={() => props.openNoteMenu(note.id)} />
       }
       return null
     })

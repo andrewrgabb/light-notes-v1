@@ -1,4 +1,4 @@
-export const intialColumnEditor = {
+export const columnEditor = {
   columnId: "",
   open: false,
   x: 0,
@@ -10,4 +10,4 @@ export const intialColumnEditor = {
   saveColumnTitle: {},
 };
 
-export default intialColumnEditor;
+export default columnEditor;

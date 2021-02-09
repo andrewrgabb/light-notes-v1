@@ -5,7 +5,7 @@ export const getNote = /* GraphQL */ `
   query GetNote($id: String!) {
     getNote(id: $id) {
       id
-      name
+      title
       content
       sessionId
       createdAt
@@ -30,7 +30,7 @@ export const listNotes = /* GraphQL */ `
     ) {
       items {
         id
-        name
+        title
         content
         sessionId
         createdAt

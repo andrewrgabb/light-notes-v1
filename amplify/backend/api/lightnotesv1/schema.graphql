@@ -1,6 +1,6 @@
 type Note @model @key(fields: ["id"]) {
   id: String!
-  name: String!
+  title: String!
   content: String!
   sessionId: String!
 }

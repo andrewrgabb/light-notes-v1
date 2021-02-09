@@ -1,30 +1,32 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import initialBoard from './initial/initial-board';
-import initialNotes from './initial/initial-notes';
-import intialDropdown from './initial/initial-dropdown';
-import intialColumnEditor from './initial/initial-column-editor';
-import intialGreyScreen from './initial/initial-grey-screen'
+import initialBoard from './initial/board';
+import initialNotes from './initial/notes';
+import intialDropdown from './initial/dropdown';
+import intialColumnEditor from './initial/column-editor';
+import intialNoteEditor from './initial/note-editor';
+import intialGreyScreen from './initial/grey-screen'
 
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
 import ColumnEditor from './component/ColumnEditor';
+import NoteEditor from './component/NoteEditor';
 import GreyScreen from './component/GreyScreen';
 
-import { Structure, Content, Header, Title, StyledButton} from './styles';
+import { Structure, Content, Header, Title, StyledButton} from './app-styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
-import { createNote, deleteNote } from './graphql/mutations'
+import { createNote, updateNote, deleteNote } from './graphql/mutations'
 import { updateBoard } from './graphql/mutations'
 
-import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch'
+import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch' //
 
 // Subscribe
-import { onUpdateBoard, onCreateNote } from './graphql/subscriptions'
+import { onUpdateBoard, onCreateNote, onUpdateNote } from './graphql/subscriptions'
 
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
@@ -49,10 +51,13 @@ const App = () => {
   sessionIdRef.current = sessionId
 
   // Dropdown menu
-  const [dropdownSettings, setDropdownSettings] = useState(intialDropdown);
+  const [dropdown, setDropdown] = useState(intialDropdown);
 
-  // Column editing box
-  const [columnEditorSettings, setColumnEditorSettings] = useState(intialColumnEditor);
+  // Column editor
+  const [columnEditor, setColumnEditor] = useState(intialColumnEditor);
+
+  // Note editor
+  const [noteEditor, setNoteEditor] = useState(intialNoteEditor);
 
   // Grey screen
   const [greyScreen, setGreyScreen] = useState(intialGreyScreen);
@@ -60,12 +65,15 @@ const App = () => {
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
 
+    /*reset()*/
+    
     const newSessionId  = uuidv4()
     setSessionId(newSessionId)
 
     fetchData(sessionId)
 
     subscribeToBoardUpdates()
+    subscribeToNoteCreations()
     subscribeToNoteUpdates()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +109,7 @@ const App = () => {
     });
   }
 
-  const subscribeToNoteUpdates = () => {
+  const subscribeToNoteCreations = () => {
     API.graphql(
       graphqlOperation(onCreateNote)
     ).subscribe({
@@ -117,7 +125,7 @@ const App = () => {
 
           const newNote = {
             id: data.id,
-            name: data.name,
+            title: data.title,
             content: data.content,
           };
 
@@ -135,6 +143,40 @@ const App = () => {
     });
   }
 
+  const subscribeToNoteUpdates = () => {
+    API.graphql(
+      graphqlOperation(onUpdateNote)
+    ).subscribe({
+      next: ({ provider, value }) => {
+
+        const data = value.data.onUpdateNote;
+
+        const currentSessionId =  sessionIdRef.current
+
+        if (currentSessionId !== data.sessionId) {
+
+          const currentNotes = notesRef.current
+
+          const newNote = {
+            id: data.id,
+            title: data.title,
+            content: data.content,
+          };
+
+          const newNotes = {
+            ...currentNotes,
+            [data.id]: newNote,
+          }
+      
+          setNotes(newNotes)
+        }
+      },
+      error: error => {
+        console.warn(error);
+      }
+    });
+  }
+  
   const reset = () => {
 
     const id = board.id
@@ -193,7 +235,7 @@ const App = () => {
     }
   }
 
-  const uploadNote = async(noteToUpload) => {
+  const uploadNewNote = async(noteToUpload) => {
     try {
 
       //console.log({noteToUpload})
@@ -206,17 +248,25 @@ const App = () => {
     }
   }
 
-  const removeNote = async(noteToRemove) => {
+  const uploadNote = async(noteToUpload) => {
     try {
 
-      //console.log({noteToRemove})
-      const id = noteToRemove.id;
+      //console.log({noteToUpload})
+
+      await API.graphql(graphqlOperation(updateNote, {input: noteToUpload}))
+
+    } catch (err) {
+      console.log('error uploading note:')
+      console.log(err)
+    }
+  }
+
+  const removeNote = async(noteId) => {
+    try {
 
       const info = {
-        id: id,
+        id: noteId,
       }
-
-      //console.log({info})
 
       await API.graphql(graphqlOperation(deleteNote, {input: info}))
 
@@ -267,7 +317,8 @@ const App = () => {
     const columnNotes = column.noteOrder.map(noteId => notes[noteId]);
 
     columnNotes.forEach(note => {
-      removeNote(note);
+      const id = note.id;
+      removeNote(id);
     });
 
     //console.log("Removing column ",{columnId})
@@ -387,9 +438,10 @@ const App = () => {
     const newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
-      name: ('Note ' + newNoteCount),
+      title: ('Note ' + newNoteCount),
       content: ('Note ' + newNoteCount),
     };
+
     const noteToUpload = {
       ...newNote,
       sessionId: sessionId,
@@ -423,14 +475,14 @@ const App = () => {
     }
 
     setNotes(newNotes)
-    uploadNote(noteToUpload)
+    uploadNewNote(noteToUpload)
 
     setNoteCount(newNoteCount)
   }
 
-  const openColumnMenu = (objectId) => {
+  const openColumnMenu = (columnId) => {
 
-    const dropdown = document.getElementById(`${objectId}-dropdown`)
+    const dropdown = document.getElementById(`${columnId}-dropdown`)
 
     const rect = dropdown.getBoundingClientRect()
 
@@ -443,7 +495,7 @@ const App = () => {
     //const height = 280;
 
     const newDropdown = {
-      objectId: objectId,
+      objectId: columnId,
       open: true,
       x: x,
       y: y,
@@ -454,7 +506,7 @@ const App = () => {
       ],
     };
 
-    setDropdownSettings(newDropdown)
+    setDropdown(newDropdown)
   }
 
   const editColumnTitle = (columnId) => {
@@ -482,13 +534,13 @@ const App = () => {
       saveColumnTitle: saveColumnTitle,
     };
 
-    setColumnEditorSettings(newColumnEditor)
+    setColumnEditor(newColumnEditor)
   }
 
   const updateColumnTitle = (columnId, newTitle) => {
 
     // Not sure why the settings are dissapearing here
-    //console.log({columnEditorSettings})
+    //console.log({columnEditor})
 
     const x = window.innerWidth / 2 - 120;
     const y = window.innerHeight / 3 - 65;
@@ -505,7 +557,7 @@ const App = () => {
       saveColumnTitle: saveColumnTitle,
     };
 
-    setColumnEditorSettings(newColumnEditor)
+    setColumnEditor(newColumnEditor)
   }
 
   const saveColumnTitle = (columnId, newTitle) => {
@@ -532,6 +584,110 @@ const App = () => {
     setBoard(newBoard);
     uploadBoard(newBoard)
   }
+  
+  const openNoteMenu = (noteId) => {
+
+    const dropdown = document.getElementById(`${noteId}-dropdown`)
+
+    const rect = dropdown.getBoundingClientRect()
+
+    const { bottom, left } = rect;
+
+    const x = left;
+    const y = bottom;
+
+    const width = 160;
+    //const height = 280;
+
+    const newDropdown = {
+      objectId: noteId,
+      open: true,
+      x: x,
+      y: y,
+      width: width,
+      options: [
+        {text: "Edit", function: editNote},
+        {text: "Delete", function: removeNote},
+      ],
+    };
+
+    setDropdown(newDropdown)
+  }
+
+  const editNote = (noteId) => {
+
+    closeDropdown()
+    showGreyScreen()
+
+    //console.log("Editing column title", {columnId});
+
+    const noteToEdit = notes.noteId;
+    
+    const title = noteToEdit.title;
+    const content = noteToEdit.content;
+
+    const x = window.innerWidth / 2 - 250;
+    const y = window.innerHeight / 3 - 180;
+
+    const newNoteEditor = {
+      noteId: noteId,
+      open: true,
+      x: x,
+      y: y,
+      width: 500,
+      height: 360,
+      title: title,
+      content: content,
+      updateNoteContent: updateNoteContent,
+      saveNote: saveNote,
+    };
+
+    setNoteEditor(newNoteEditor)
+  }
+
+  const updateNoteContent = (noteId, newTitle, newContent) => {
+
+    const x = window.innerWidth / 2 - 250;
+    const y = window.innerHeight / 3 - 180;
+
+    const newNoteEditor = {
+      noteId: noteId,
+      open: true,
+      x: x,
+      y: y,
+      width: 500,
+      height: 360,
+      title: newTitle,
+      content: newContent,
+      updateNoteContent: updateNoteContent,
+      saveNote: saveNote,
+    };
+
+    setNoteEditor(newNoteEditor)
+  }
+
+  const saveNote = (noteId, newTitle, newContent) => {
+
+    const newNote = {
+      id: noteId,
+      title: newTitle,
+      content: newContent,
+    }
+
+    const newNotes = {
+      ...notes,
+      [noteId]: newNote,
+    }
+
+    setNotes(newNotes);
+
+    const noteToUpload = {
+      ...newNote,
+      sessionId: sessionId,
+    };
+
+    uploadNote(noteToUpload)
+  }
 
   const closeDropdown = () => {
 
@@ -545,7 +701,7 @@ const App = () => {
       options: [],
     };
 
-    setDropdownSettings(newDropdown)
+    setDropdown(newDropdown)
   }
   
   const closeColumnEditor = () => {
@@ -563,7 +719,7 @@ const App = () => {
       updateColumnTitle: {},
     };
 
-    setColumnEditorSettings(newColumnEditor)
+    setColumnEditor(newColumnEditor)
   }
 
   const closePopUps = () => {
@@ -606,12 +762,13 @@ const App = () => {
         <Content id="content">
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            updateColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)}/>
+            openNoteMenu={(noteId) => openNoteMenu(noteId)} />
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />
-      <Dropdown id="dropdown" settings={dropdownSettings}  />
-      <ColumnEditor id="editing-box" settings={columnEditorSettings} />
+      <Dropdown id="dropdown" settings={dropdown}  />
+      <ColumnEditor id="column-editor" settings={columnEditor} />
+      <NoteEditor id="note-editor" settings={noteEditor} />
     </React.Fragment>
   );
 }

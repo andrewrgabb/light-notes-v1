@@ -136,7 +136,7 @@ export const resetDatabase = async() => {
     // Maintain the same board-id, but remove the columns.
     await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
-    // Alternative to delete entire board row: Used before schema updates
+    // Alternative: Delete entire board row (Used before schema updates)
     /*
     const info = {
       id: id,
