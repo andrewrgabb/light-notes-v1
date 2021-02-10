@@ -8,12 +8,10 @@ export const Container = styled.div`
 
   margin-left: 4px;
   margin-right: 4px;
-  margin-top: 4px;
   margin-bottom: 16px;
 
   background-color: ${props => (props.isDragging ? '#C4E1FF' : 'white')};
-  min-height: 120px;
-
+  
   border-radius: 8px;
   color: black;
 
@@ -24,6 +22,7 @@ export const Container = styled.div`
 `;
 
 export const TopSection = styled.div `
+  position: relative;
   background-color: #c8baff;
   height: 40px;
   display: flex;
@@ -37,7 +36,6 @@ export const NoteTitle = styled.textarea`
   color: black;
   width: 100%;
   padding-left: 6px;
-  overflow: hidden;
 
   margin-top: 6px;
   margin-bottom: 6px;
@@ -57,6 +55,7 @@ export const NoteTitle = styled.textarea`
     box-shadow: inset 0 0 0 2px #0079bf;
     border-radius: 3px;
     cursor: text;
+    outline-width: 0;
   }
 `
 
@@ -90,18 +89,44 @@ export const DropdownBox = styled.div `
   cursor: pointer;
 `
 
-export const Content = styled.textarea`
-  padding: 10px;
-  margin-top: 2px;
+export const ContentSection = styled.div `
+  margin: 4px;
   position: relative;
-  max-width: 100%;
-  min-width: calc(100% - 6px - 16px);
-  min-height: 120px;
+
+  width: calc(100% - 28px);
+`
+
+export const ContentEditingTarget = styled.div `
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
+`
+
+export const Content = styled.textarea`
+
+  width: 100%;
+
+  font-size: 16px;
+  padding: 10px;
+
   resize: none;
+
   border: none;
+  display: block;
+  resize: none;
+
+  min-height: 142px;
+
+  overflow: hidden;
+
+  background-color: transparent;
+
   :focus {
+    background-color: white;
+    box-shadow: inset 0 0 0 2px #0079bf;
+    border-radius: 3px;
+    cursor: text;
     outline-width: 0;
   }
-
-  background-color: inherit;
 `

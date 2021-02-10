@@ -49,7 +49,6 @@ export const ColumnTitle = styled.textarea`
   width: 100%;
   text-align: left;
   padding-left: 10px;
-  overflow: hidden;
   max-height: 100%;
 
   border: none;
@@ -63,6 +62,7 @@ export const ColumnTitle = styled.textarea`
     background-color: white;
     box-shadow: inset 0 0 0 2px #0079bf;
     border-radius: 3px;
+    outline-width: 0;
   }
 `
 
@@ -128,7 +128,7 @@ export const NoteList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : 'inherit')};
   flex-grow: 1;
-  min-height: calc(100% - 16px);
+  min-height: calc(100% - 8px);
 `
 
 export const StyledButton = styled.button `

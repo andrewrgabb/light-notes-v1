@@ -2,7 +2,7 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { getMenuIcon } from '../../images/menu.js'
 
-import { Container, TopSection, TitleEditingTarget, NoteTitle, DropdownBox, Content } from './styles';
+import { Container, TopSection, TitleEditingTarget, NoteTitle, DropdownBox, ContentSection, ContentEditingTarget, Content } from './styles';
 
 const Note = (props) => {
 
@@ -11,7 +11,6 @@ const Note = (props) => {
   const { editing, setEditingToThis, saveNote} = props;
 
   // Determine whether or not the user is editing the note title.
-  console.log(editing.noteTitle)
   const isEditingTitle = (editing.noteTitle === id);
   const isEditingContent = (editing.noteContent === id);
 
@@ -58,10 +57,45 @@ const Note = (props) => {
     }
   }
 
+  function handleEditingContentOnClick(event) {
+
+    const contentDom = event.target.parentNode.childNodes[1]
+    const cursorPosition = (contentDom.value.length > 10000) ? contentDom.value.length : 10000;
+
+    contentDom.focus()
+    contentDom.selectionStart = contentDom.selectionEnd = cursorPosition; 
+    //contentDom.select()
+    setEditingToThis(newEditingContent)
+  }
+
+  const numRows = (content) => {
+
+
+    const lines = content.split('\n');
+    const n = lines.length
+
+    let rowCount = 0
+
+    for (let i = 0; i < n; i++) {
+      const line = lines[i]
+      const rows = Math.ceil(line.length / 31)
+      if (rows < 1) {
+        rowCount ++;
+      } else {
+        rowCount += rows;
+      }
+    }
+    return rowCount
+  }
+
   function handleContentChange(e) {
 
     const newContent = e.target.value;
-    saveNote(id, title, newContent);
+
+    if (numRows(newContent) < 9) {
+      
+      saveNote(id, title, newContent);
+    }
   }
 
   return (
@@ -82,7 +116,10 @@ const Note = (props) => {
           </DropdownBox>
 
         </TopSection>
-        <Content readOnly={true} value={content} />
+        <ContentSection>
+            <ContentEditingTarget style={{display: `${isEditingContent? "none" : "block"}`}} onClick={(event) => {handleEditingContentOnClick(event); event.stopPropagation();}}/>
+            <Content id={`${id}-content`} onChange={handleContentChange} value={content} onClick={(event) => {event.stopPropagation();}} />
+        </ContentSection>
       </Container>
     )}
     </Draggable>
