@@ -25,7 +25,6 @@ export const TopSection = styled.div `
   background-color: #6FB8FF;
 
   height: 40px;
-  padding: 2px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
@@ -70,17 +69,17 @@ export const ColumnTitle = styled.textarea`
 `
 
 export const DropdownBox = styled.div `
-  
-  width: 30px;
-  height: 34px;
-
   position: absolute;
-  top: 2px;
+  top: 3px;
   right: 2px;
+
+  width: 28px;
+  height: 28px;
 
   display: block;
 
-  padding-top: 6px;
+  padding-top: 4px;
+  padding-bottom: 2px;
   padding-left: 4px;
   padding-right: 4px;
   
@@ -127,7 +126,7 @@ export const Content = styled.div`
 
 export const NoteList = styled.div`
   position: relative;
-  padding: 8px;
+  padding: 4px;
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : 'inherit')};
   flex-grow: 1;

@@ -4,9 +4,10 @@ export const Container = styled.div`
   border: 3px solid darkgrey;
   border-radius: 2px;
 
-  margin-left: 8px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 4px;
+  margin-bottom: 16px;
 
   background-color: ${props => (props.isDragging ? '#C4E1FF' : 'white')};
   min-height: 120px;
