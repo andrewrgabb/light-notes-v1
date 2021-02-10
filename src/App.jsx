@@ -5,7 +5,8 @@ import initialNotes from './initial/notes';
 import intialDropdown from './initial/dropdown';
 import intialColumnEditor from './initial/column-editor';
 import intialNoteEditor from './initial/note-editor';
-import intialGreyScreen from './initial/grey-screen'
+import intialGreyScreen from './initial/grey-screen';
+import initialEditing from './initial/editing';
 
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
@@ -52,6 +53,8 @@ const App = () => {
 
   // Dropdown menu
   const [dropdown, setDropdown] = useState(intialDropdown);
+
+  const [editing, setEditing] = useState(initialEditing);
 
   // Column editor
   const [columnEditor, setColumnEditor] = useState(intialColumnEditor);
@@ -624,21 +627,15 @@ const App = () => {
 
     //console.log({columnId, newTitle})
 
-    const columnToAppend = board.columns[columnId];
-
-    const newColumnToAppend = {
-      ...columnToAppend,
-      title: newTitle,
-    }
-
-    const newColumns = {
-      ...board.columns,
-      [columnId]: newColumnToAppend,
-    }
-
     const newBoard = {
       ...board,
-      columns: newColumns,
+      columns: {
+        ...board.columns,
+        [columnId]: {
+          ...board.columns[columnId],
+          title: newTitle,
+        }
+      },
     }
 
     setBoard(newBoard);
@@ -811,6 +808,7 @@ const App = () => {
     closeDropdown();
     closeColumnEditor();
     closeNoteEditor();
+    closeEditing();
   }
 
   const showGreyScreen = () => {
@@ -833,6 +831,15 @@ const App = () => {
     setGreyScreen(newGreyScreen);
   }
 
+  const closeEditing = () => {
+    setEditing(initialEditing);
+  }
+
+  const setEditingToThis = (newEditing) => {
+    //console.log({newEditing})
+    setEditing(newEditing);
+  }
+
   return (
     <React.Fragment>
       <Structure id="structure" onClick={closePopUps}>
@@ -848,7 +855,9 @@ const App = () => {
         <Content id="content">
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            openNoteMenu={(noteId) => openNoteMenu(noteId)} />
+            openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
+            saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
+            setEditingToThis={(newEditing) => setEditingToThis(newEditing)} />
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />

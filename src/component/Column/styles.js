@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
-  background-color: #FAFAFA;
 
   min-width: 380px;
   width: 380px;
@@ -18,53 +17,108 @@ export const Container = styled.div`
   border-right: 4px solid #222222;
 
   border-radius: 10px;
+
+  background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : '#FAFAFA')};
 `
 
 export const TopSection = styled.div `
   background-color: #6FB8FF;
+
+  background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : '#6FB8FF')};
+
   height: 40px;
   padding: 2px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
+  cursor: default;
 `
 
-export const ColumnTitle = styled.div`
+export const EditingTarget = styled.div `
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
+`
+
+export const ColumnTitle = styled.textarea`
   text-align: center;
   font-size: 20px;
   color: black;
   margin-top: 6px;
+  margin-bottom: 6px;
   margin-left: 16px;
+  margin-right: 40px;
   width: 100%;
   text-align: left;
   padding-left: 10px;
   overflow: hidden;
+  max-height: 100%;
+
+  border: none;
+
+  display: block;
+  resize: none;
+
+  background-color: transparent;
+
+  :focus {
+    background-color: white;
+    box-shadow: inset 0 0 0 2px #0079bf;
+    border-radius: 3px;
+  }
+
+  
 `
 
 export const DropdownBox = styled.div `
-  float: right;
-  opacity: 100%;
+  
   width: 30px;
   height: 34px;
 
-  padding-left: 4px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  display: block;
+
   padding-top: 6px;
+  padding-left: 4px;
   padding-right: 4px;
+  
+  opacity: 100%;
 
   border-radius: 5px;
 
   :hover {
     background-color: #1873CC; 
   }
+
+  cursor: pointer;
 `
 
 export const Content = styled.div`
   position: relative;
   overflow-y: scroll;
-  width: 100%;
-  margin-top: 10px;
+  width: calc(100% - 14px);
+  margin-top: 14px;
+  margin-left: 14px;
   margin-bottom: 70px;
-  min-height: calc(100% - 140px);
+  min-height: calc(100% - (5px + 55px + 14px + 14px + 40px + 4px; ));
+  border-left: 1px solid #E8E8E8;
+
+  &::-webkit-scrollbar {
+    border-right: none;
+    border-left: 1px solid #E8E8E8;
+    width: 16px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #E8E8E8;
+    background-clip: content-box;
+    border: 4px solid transparent;
+    border-radius: 10px;
+  }
 `
 
 export const NoteList = styled.div`
@@ -72,7 +126,7 @@ export const NoteList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : 'inherit')};
   flex-grow: 1;
-  min-height: calc(100% - 16px);
+  min-height: calc(100%);
 `
 
 export const StyledButton = styled.button `
@@ -90,4 +144,10 @@ export const StyledButton = styled.button `
   line-height: 0px;
   position: absolute;
   bottom: 0px;
+
+  padding-bottom: 10px;
+  :focus {
+    outline-width: 0;
+    background-color: #FFFFFF;
+  }
 `

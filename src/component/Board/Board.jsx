@@ -7,7 +7,7 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu } = props;
+  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu, editing, saveColumnTitle, setEditingToThis } = props;
 
   const notes = useMemo(
     () =>
@@ -16,17 +16,21 @@ const InnerList = (props) => {
   );
   
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} 
-  openColumnMenu={openColumnMenu} openNoteMenu={(noteId) => openNoteMenu(noteId)}/>;
+    openColumnMenu={openColumnMenu} openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
+    saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}/>;
 }
 
 const Board = (props) => {
 
-  if (! props.columnOrder) {
+  const {onDragEnd, columnOrder, columns, notes, addNote, openColumnMenu, openNoteMenu,
+    editing, saveColumnTitle, setEditingToThis} = props;
+
+  if (! columnOrder) {
     return null
   }
 
   return (
-    <DragDropContext onDragEnd={props.onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Droppable
         droppableId='board'
         direction='horizontal' 
@@ -37,12 +41,14 @@ const Board = (props) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {props.columnOrder.map((columnId, index) => {
-              const column = props.columns[columnId];
+            {columnOrder.map((columnId, index) => {
+              const column = columns[columnId];
               return (
-                <InnerList key={column.id} column={column} noteMap={props.notes} index={index} 
-                  addNote={() => props.addNote(columnId)} openColumnMenu={() => props.openColumnMenu(columnId)} 
-                  openNoteMenu={(noteId) => props.openNoteMenu(noteId)} />
+                <InnerList key={column.id} column={column} noteMap={notes} index={index} 
+                  addNote={() => addNote(columnId)} openColumnMenu={() => openColumnMenu(columnId)} 
+                  openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
+                  saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
+                  setEditingToThis={(newEditing) => setEditingToThis(newEditing)}/>
               );
             })}
             {provided.placeholder}

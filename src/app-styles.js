@@ -36,6 +36,11 @@ export const StyledButton = styled.button `
 
   border-radius: 5px;
   color: black;
+
+  :focus {
+    outline-width: 0;
+    background-color: #FFFFFF;
+  }
 `
 
 export const Content = styled.div`
