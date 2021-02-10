@@ -6,3 +6,5 @@ export const Container = styled.div `
   height: 100%;
   overflow: auto;
 `;
+//margin-left: 20px;
+//margin-right: 20px;

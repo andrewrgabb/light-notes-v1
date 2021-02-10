@@ -23,18 +23,36 @@ const Column = (props) => {
 
   // Determine whether or not the user is editing the column title.
   
-  let isEditing = (editing.columnTitle === id);
+  const isEditing = (editing.columnTitle === id);
 
-  function handleTitleChange(e) {
-    //console.log(e.target.value)
-    saveColumnTitle(id, e.target.value);
-  }
+  const stopEditing = {
+    columnTitle: '',
+    noteTitle: '',
+    noteContent: '',
+  };
 
   const newEditing = {
     columnTitle: id,
     noteTitle: '',
     noteContent: '',
   };
+
+  function handleTitleChange(e) {
+
+    const newTitle = e.target.value;
+    const n = newTitle.length;
+
+    if (newTitle.includes('\n')) {
+      console.log("hi")
+      setEditingToThis(stopEditing)
+      e.target.blur()
+
+    } else if (newTitle.length < 26) {
+      saveColumnTitle(id, newTitle);
+    }
+  }
+
+
 
   function handleEditingOnClick(event) {
 

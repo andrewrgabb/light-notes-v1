@@ -625,8 +625,6 @@ const App = () => {
 
   const saveColumnTitle = (columnId, newTitle) => {
 
-    //console.log({columnId, newTitle})
-
     const newBoard = {
       ...board,
       columns: {
