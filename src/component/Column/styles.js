@@ -64,8 +64,6 @@ export const ColumnTitle = styled.textarea`
     box-shadow: inset 0 0 0 2px #0079bf;
     border-radius: 3px;
   }
-
-  
 `
 
 export const DropdownBox = styled.div `

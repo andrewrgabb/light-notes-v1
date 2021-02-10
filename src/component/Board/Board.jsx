@@ -7,7 +7,7 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu, editing, saveColumnTitle, setEditingToThis } = props;
+  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu, editing, setEditingToThis, saveColumnTitle, saveNote } = props;
 
   const notes = useMemo(
     () =>
@@ -17,13 +17,15 @@ const InnerList = (props) => {
   
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} 
     openColumnMenu={openColumnMenu} openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
-    saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}/>;
+    setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
+    saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
+    saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>;
 }
 
 const Board = (props) => {
 
   const {onDragEnd, columnOrder, columns, notes, addNote, openColumnMenu, openNoteMenu,
-    editing, saveColumnTitle, setEditingToThis} = props;
+    editing, setEditingToThis, saveColumnTitle, saveNote} = props;
 
   if (! columnOrder) {
     return null
@@ -47,8 +49,9 @@ const Board = (props) => {
                 <InnerList key={column.id} column={column} noteMap={notes} index={index} 
                   addNote={() => addNote(columnId)} openColumnMenu={() => openColumnMenu(columnId)} 
                   openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
+                  setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
                   saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-                  setEditingToThis={(newEditing) => setEditingToThis(newEditing)}/>
+                  saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
               );
             })}
             {provided.placeholder}

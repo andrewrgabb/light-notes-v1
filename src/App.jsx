@@ -854,8 +854,9 @@ const App = () => {
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
             openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
+            setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
             saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-            setEditingToThis={(newEditing) => setEditingToThis(newEditing)} />
+            saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />

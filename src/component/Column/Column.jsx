@@ -7,14 +7,16 @@ import { Container, TopSection, EditingTarget, ColumnTitle, DropdownBox, Content
 
 const Column = (props) => {
 
-  const {notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis} = props;
+  const {notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote} = props;
 
   const {id, title} = column;
 
   const completedNotes = (
     notes.map((note, index) => {
       if (note) {
-        return <Note key={note.id} note={note} index={index} openNoteMenu={() => openNoteMenu(note.id)} />
+        return <Note key={note.id} note={note} index={index} openNoteMenu={() => openNoteMenu(note.id)} 
+          editing={editing} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
+          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
       }
       console.log("Missing Note!")
       return null
@@ -40,10 +42,9 @@ const Column = (props) => {
   function handleTitleChange(e) {
 
     const newTitle = e.target.value;
-    const n = newTitle.length;
 
     if (newTitle.includes('\n')) {
-      console.log("hi")
+
       setEditingToThis(stopEditing)
       e.target.blur()
 
@@ -80,14 +81,14 @@ const Column = (props) => {
           <Content id={`content`}>
             <Droppable droppableId={id}>
               {(provided, snapshot) => (
-              <NoteList
-                ref={provided.innerRef} 
-                {...provided.droppableProps}
-                isDraggingOver={snapshot.isDraggingOver}
-              >
-                {completedNotes}
-                {provided.placeholder}
-              </NoteList>
+                <NoteList
+                  ref={provided.innerRef} 
+                  {...provided.droppableProps}
+                  isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {completedNotes}
+                  {provided.placeholder}
+                </NoteList>
               )}
             </Droppable>
           </Content>
