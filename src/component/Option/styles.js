@@ -1,17 +1,23 @@
 import styled from 'styled-components';
 
 export const OptionBox = styled.div `
-  border: 1px solid #343434;
-  max-width: 100%;
-  height: 30px;
-  border-radius: 10px;
-  background-color: aqua;
-  opacity: 80%;
-  font-weight: bold;
-  :hover {
-    opacity: 95%;
-  }
+
   margin: 5px;
+
+  height: 20px;
+  width: 80px;
+  
+  color: black;
+  padding: 4px;
+
+  font-size: 14px;
   text-align: center;
-  padding-top: 10px;
+
+  background-color: #4094e6;
+  :hover {
+    background-color: #6FB8FF; 
+  }
+
+  border: 1px solid #343434;
+  border-radius: 10px;
 `

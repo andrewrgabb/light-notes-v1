@@ -7,7 +7,8 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu, editing, setEditingToThis, saveColumnTitle, saveNote } = props;
+  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu,
+     editing, setEditingToThis, saveColumnTitle, saveNote, closePopUps } = props;
 
   const notes = useMemo(
     () =>
@@ -19,13 +20,14 @@ const InnerList = (props) => {
     openColumnMenu={openColumnMenu} openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
     setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
     saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-    saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>;
+    saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
+    closePopUps={closePopUps} />;
 }
 
 const Board = (props) => {
 
   const {onDragEnd, columnOrder, columns, notes, addNote, openColumnMenu, openNoteMenu,
-    editing, setEditingToThis, saveColumnTitle, saveNote} = props;
+    editing, setEditingToThis, saveColumnTitle, saveNote, closePopUps} = props;
 
   if (! columnOrder) {
     return null
@@ -51,7 +53,8 @@ const Board = (props) => {
                   openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
                   setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
                   saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-                  saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
+                  saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
+                  closePopUps={closePopUps} />
               );
             })}
             {provided.placeholder}

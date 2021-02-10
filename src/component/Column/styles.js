@@ -28,7 +28,6 @@ export const TopSection = styled.div `
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
-  cursor: default;
 `
 
 export const EditingTarget = styled.div `

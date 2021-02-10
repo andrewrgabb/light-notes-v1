@@ -540,8 +540,10 @@ const App = () => {
 
   const openColumnMenu = (columnId) => {
 
+    closeEditing()
+
     if (dropdown.open && dropdown.objectId === columnId) {
-      closeDropdown()
+      closeAll()
       return
     }
 
@@ -554,7 +556,7 @@ const App = () => {
     const x = left;
     const y = bottom;
 
-    const width = 160;
+    const width = 120;
     //const height = 280;
 
     const newDropdown = {
@@ -564,7 +566,7 @@ const App = () => {
       y: y,
       width: width,
       options: [
-        {text: "Edit", function: editColumnTitle},
+        //{text: "Edit", function: editColumnTitle},
         {text: "Delete", function: removeColumn},
       ],
     };
@@ -642,8 +644,10 @@ const App = () => {
   
   const openNoteMenu = (noteId) => {
 
+    closeEditing()
+
     if (dropdown.open && dropdown.objectId === noteId) {
-      closeDropdown()
+      closeAll()
       return
     }
 
@@ -656,7 +660,7 @@ const App = () => {
     const x = left;
     const y = bottom;
 
-    const width = 160;
+    const width = 120;
     //const height = 280;
 
     const newDropdown = {
@@ -666,7 +670,7 @@ const App = () => {
       y: y,
       width: width,
       options: [
-        {text: "Edit", function: editNote},
+        //{text: "Edit", function: editNote},
         {text: "Delete", function: removeNote},
       ],
     };
@@ -806,6 +810,10 @@ const App = () => {
     closeDropdown();
     closeColumnEditor();
     closeNoteEditor();
+  }
+
+  const closeAll = () => {
+    closePopUps();
     closeEditing();
   }
 
@@ -840,7 +848,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <Structure id="structure" onClick={closePopUps}>
+      <Structure id="structure" onClick={closeAll}>
         <Header id="header">
           <Title id="title">
             Light Notes 
@@ -856,7 +864,8 @@ const App = () => {
             openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
             setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
             saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-            saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
+            saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
+            closePopUps={closePopUps}/>
         </Content>
       </Structure>
       <GreyScreen id="grey-screen" settings={greyScreen} />

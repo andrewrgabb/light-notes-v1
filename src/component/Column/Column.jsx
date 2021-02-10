@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from '../Note';
 import { getMenuIcon } from '../../images/menu.js'
@@ -7,16 +7,17 @@ import { Container, TopSection, EditingTarget, ColumnTitle, DropdownBox, Content
 
 const Column = (props) => {
 
-  const {notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote} = props;
+  const { notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote, closePopUps } = props;
 
-  const {id, title} = column;
+  const { id, title } = column;
 
   const completedNotes = (
     notes.map((note, index) => {
       if (note) {
         return <Note key={note.id} note={note} index={index} openNoteMenu={() => openNoteMenu(note.id)} 
           editing={editing} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
-          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}/>
+          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
+          closePopUps={closePopUps} />
       }
       console.log("Missing Note!")
       return null
@@ -26,6 +27,14 @@ const Column = (props) => {
   // Determine whether or not the user is editing the column title.
   
   const isEditing = (editing.columnTitle === id);
+
+  const titleRef = useRef();
+
+  if (!isEditing) {
+    if (titleRef.current) {
+      titleRef.current.blur()
+    }
+  }
 
   const stopEditing = {
     columnTitle: '',
@@ -53,9 +62,9 @@ const Column = (props) => {
     }
   }
 
-
-
   function handleEditingOnClick(event) {
+
+    closePopUps()
 
     const titleDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
@@ -72,7 +81,7 @@ const Column = (props) => {
         <Container {...provided.draggableProps} ref={provided.innerRef}>
           <TopSection {...provided.dragHandleProps} id={`top-section`} onClick={(event) => {event.stopPropagation();}}>
             <EditingTarget style={{display: `${isEditing ? "none" : "block"}`}} onClick={(event) => {handleEditingOnClick(event); event.stopPropagation();}}/>
-            <ColumnTitle id={`${id}-title`} onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
+            <ColumnTitle id={`${id}-title`} ref={titleRef} onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
             <DropdownBox id={`${id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
               {getMenuIcon()}
             </DropdownBox>

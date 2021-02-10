@@ -7,7 +7,7 @@ const Dropdown = ( props ) => {
 
   const {settings} = props;
 
-  const {objectId, open, x, y, width, options} = settings;
+  const {objectId, open, x, y, options} = settings;
 
   const optionList = (
     options.map((option, index) => {
@@ -16,7 +16,7 @@ const Dropdown = ( props ) => {
   );
 
   const dropdown = open ? 
-    <DropdownBox style={{left: `${x}px`, top: `${y}px`, width: `${width}px`}}
+    <DropdownBox style={{left: `${x}px`, top: `${y}px`}}
       onClick={(event) => {event.stopPropagation();}}>
       {optionList}
     </DropdownBox>  

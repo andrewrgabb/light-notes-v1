@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   position: relative;
 
-  border: 3px solid darkgrey;
+  border: 2px solid darkgrey;
   border-radius: 2px;
 
   margin-left: 4px;
@@ -12,6 +12,8 @@ export const Container = styled.div`
 
   background-color: ${props => (props.isDragging ? '#C4E1FF' : 'white')};
   
+  min-height: 160px;
+
   border-radius: 8px;
   color: black;
 
@@ -129,4 +131,33 @@ export const Content = styled.textarea`
     cursor: text;
     outline-width: 0;
   }
+`
+
+export const ButtonSection = styled.div `
+  margin: 4px;
+  position: relative;
+  width: calc(100% - 28px);
+  height: 28px;
+  padding: 2px;
+`
+
+export const StyledButton = styled.button `
+
+  float: right;
+  height: 28px;
+  width: 80px;
+  
+  color: black;
+  padding: 4px;
+
+  font-size: 14px;
+  text-align: center;
+
+  background-color: #4094e6;
+  :hover {
+    background-color: #6FB8FF; 
+  }
+
+  border: 1px solid #343434;
+  border-radius: 10px;
 `

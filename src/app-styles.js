@@ -6,33 +6,33 @@ export const Structure = styled.div`
 
 export const Header = styled.div`
   position: relative;
-  height: 50px;
+  min-height: 50px;
   text-align: left;
   padding-left: 10px;
+  padding-right: 5px;
+  padding-top: 10px;
   font-size: 20px;
+  display: flex;
+  justify-content: space-between
 `;
 
 export const Title = styled.h3`
-  position: absolute;
+  position: relative;
   width: 50%;
-  float: left;
-  padding-top: 10px;
-  padding-left: 20px;
+  
   color: black;
 `;
 
 export const StyledButton = styled.button `
-  position: absolute;
+  position: relative; 
   border: 2px solid;
   background-color: #FAFAFA;
   
-  width: 240px;
+  width: 16%;
+  min-width: 180px;
   height: 36px;
 
   font-size: inherit;
-
-  right: 20px;
-  margin-top: 10px;
 
   border-radius: 5px;
   color: black;
@@ -46,6 +46,7 @@ export const StyledButton = styled.button `
 export const Content = styled.div`
   background-color: inherit;
   position: absolute;
+  display: block;
   top: 50px;
   bottom: 0;
   height: calc(100% - 50px);
