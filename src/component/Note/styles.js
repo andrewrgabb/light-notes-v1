@@ -67,4 +67,6 @@ export const Content = styled.textarea`
   :focus {
     outline-width: 0;
   }
+
+  background-color: inherit;
 `

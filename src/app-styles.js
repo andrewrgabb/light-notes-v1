@@ -48,5 +48,6 @@ export const Content = styled.div`
   position: absolute;
   top: 50px;
   bottom: 0;
+  height: calc(100% - 50px);
   width: 100%; 
 `;

@@ -8,7 +8,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-  height:100%;
+  height: 100%;
 
   margin-left: 8px;
   margin-right: 8px;
@@ -23,8 +23,6 @@ export const Container = styled.div`
 
 export const TopSection = styled.div `
   background-color: #6FB8FF;
-
-  background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : '#6FB8FF')};
 
   height: 40px;
   padding: 2px;
@@ -101,10 +99,14 @@ export const Content = styled.div`
   position: relative;
   overflow-y: scroll;
   width: calc(100% - 14px);
-  margin-top: 14px;
-  margin-left: 14px;
-  margin-bottom: 70px;
-  min-height: calc(100% - (5px + 55px + 14px + 14px + 40px + 4px; ));
+
+  position: absolute;
+
+  top: calc(44px + 14px);
+  bottom: calc(60px + 14px);
+
+  left: 14px;
+
   border-left: 1px solid #E8E8E8;
 
   &::-webkit-scrollbar {
@@ -120,21 +122,22 @@ export const Content = styled.div`
     border-radius: 10px;
   }
 `
+//background-color: #0000FF;
+
 
 export const NoteList = styled.div`
+  position: relative;
   padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${props => (props.isDraggingOver ? '#8CC6FF' : 'inherit')};
   flex-grow: 1;
-  min-height: calc(100%);
+  min-height: calc(100% - 16px);
 `
 
 export const StyledButton = styled.button `
   border: 2px solid;
   background-color: #FAFAFA;
 
-  margin-left: 10px;
-  margin-bottom: 5px;
   width: calc(100% - 20px);
   height: 55px;
 
@@ -143,7 +146,8 @@ export const StyledButton = styled.button `
   font-size: 50px;
   line-height: 0px;
   position: absolute;
-  bottom: 0px;
+  bottom: 5px;
+  left: 10px;
 
   padding-bottom: 10px;
   :focus {

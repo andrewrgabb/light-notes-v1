@@ -59,7 +59,7 @@ const Column = (props) => {
             </DropdownBox>
           </TopSection>
           
-          <Content>
+          <Content id={`content`}>
             <Droppable droppableId={id}>
               {(provided, snapshot) => (
               <NoteList
