@@ -83,8 +83,10 @@ const Note = (props) => {
     const cursorPosition = (contentDom.value.length > 10000) ? contentDom.value.length : 10000;
 
     contentDom.focus()
-    contentDom.selectionStart = contentDom.selectionEnd = cursorPosition; 
-    //contentDom.select()
+    contentDom.selectionStart = contentDom.selectionEnd = cursorPosition;
+    if (contentDom.value === 'Enter details here...') {
+      contentDom.select()
+    }
     setEditingToThis(newEditingContent)
   }
 

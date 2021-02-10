@@ -5,6 +5,7 @@ export const Structure = styled.div`
 `;
 
 export const Header = styled.div`
+  background-color: inherit;
   position: relative;
   min-height: 50px;
   text-align: left;
@@ -26,7 +27,7 @@ export const Title = styled.h3`
 export const StyledButton = styled.button `
   position: relative; 
   border: 2px solid;
-  background-color: #FAFAFA;
+  background-color: #EDEDED;
   
   width: 16%;
   min-width: 180px;
@@ -34,12 +35,17 @@ export const StyledButton = styled.button `
 
   font-size: inherit;
 
-  border-radius: 5px;
+  border-radius: 10px;
   color: black;
 
-  :focus {
+  :hover {
     outline-width: 0;
     background-color: #FFFFFF;
+  }
+
+  :focus {
+    box-shadow: inset 0 0 0 2px #0079bf;
+    outline-width: 0;
   }
 `
 

@@ -55,7 +55,7 @@ export const NoteTitle = styled.textarea`
   :focus {
     background-color: white;
     box-shadow: inset 0 0 0 2px #0079bf;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: text;
     outline-width: 0;
   }
@@ -127,7 +127,7 @@ export const Content = styled.textarea`
   :focus {
     background-color: white;
     box-shadow: inset 0 0 0 2px #0079bf;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: text;
     outline-width: 0;
   }

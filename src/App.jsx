@@ -472,7 +472,7 @@ const App = () => {
     const newNote = {
       id: newNoteId,
       title: ('New Note ' + newNoteCount),
-      content: ('Enter details here... '),
+      content: ('Enter details here...'),
     };
 
     const noteToUpload = {

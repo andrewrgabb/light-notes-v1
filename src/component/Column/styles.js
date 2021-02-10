@@ -60,7 +60,8 @@ export const ColumnTitle = styled.textarea`
   :focus {
     background-color: white;
     box-shadow: inset 0 0 0 2px #0079bf;
-    border-radius: 3px;
+    border-radius: 5px;
+    cursor: text;
     outline-width: 0;
   }
 `
@@ -132,12 +133,12 @@ export const NoteList = styled.div`
 
 export const StyledButton = styled.button `
   border: 2px solid;
-  background-color: #FAFAFA;
+  background-color: #EDEDED;
 
   width: calc(100% - 20px);
   height: 55px;
 
-  border-radius: 5px;
+  border-radius: 10px;
 
   font-size: 50px;
   line-height: 0px;
@@ -146,8 +147,14 @@ export const StyledButton = styled.button `
   left: 10px;
 
   padding-bottom: 10px;
-  :focus {
+
+  :hover {
     outline-width: 0;
     background-color: #FFFFFF;
+  }
+
+  :focus {
+    box-shadow: inset 0 0 0 2px #0079bf;
+    outline-width: 0;
   }
 `
