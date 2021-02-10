@@ -3,16 +3,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import initialBoard from './initial/board';
 import initialNotes from './initial/notes';
 import intialDropdown from './initial/dropdown';
-import intialColumnEditor from './initial/column-editor';
-import intialNoteEditor from './initial/note-editor';
-import intialGreyScreen from './initial/grey-screen';
 import initialEditing from './initial/editing';
 
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
-import ColumnEditor from './component/ColumnEditor';
-import NoteEditor from './component/NoteEditor';
-import GreyScreen from './component/GreyScreen';
 
 import { Structure, Content, Header, Title, StyledButton} from './app-styles';
 
@@ -55,15 +49,6 @@ const App = () => {
   const [dropdown, setDropdown] = useState(intialDropdown);
 
   const [editing, setEditing] = useState(initialEditing);
-
-  // Column editor
-  const [columnEditor, setColumnEditor] = useState(intialColumnEditor);
-
-  // Note editor
-  const [noteEditor, setNoteEditor] = useState(intialNoteEditor);
-
-  // Grey screen
-  const [greyScreen, setGreyScreen] = useState(intialGreyScreen);
 
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
@@ -219,8 +204,6 @@ const App = () => {
   const uploadBoard = async(newBoard) => {
     try {
 
-      //console.log({sessionId})
-
       const jsonBoard = JSON.stringify(newBoard)
 
       const inputBoard = {
@@ -228,8 +211,6 @@ const App = () => {
         json: jsonBoard,
         sessionId: sessionId,
       }
-
-      //console.log({inputBoard})
   
       await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
 
@@ -242,8 +223,6 @@ const App = () => {
   const uploadNewNote = async(noteToUpload) => {
     try {
 
-      //console.log({noteToUpload})
-
       await API.graphql(graphqlOperation(createNote, {input: noteToUpload}))
 
     } catch (err) {
@@ -254,8 +233,6 @@ const App = () => {
 
   const uploadNote = async(noteToUpload) => {
     try {
-
-      //console.log({noteToUpload})
 
       await API.graphql(graphqlOperation(updateNote, {input: noteToUpload}))
 
@@ -291,8 +268,6 @@ const App = () => {
       const newNoteOrder = noteOrder.filter(noteOrderId => noteOrderId !== noteId)
 
       if (newNoteOrder.length < noteOrder.length) {
-
-        //console.log("recognides")
 
         const newColumn = {
           ...column,
@@ -337,7 +312,7 @@ const App = () => {
     const id  = uuidv4();
     const newColumn = {
       id: id,
-      title: 'Column ' + newColumnCount,
+      title: 'New Column ' + newColumnCount,
       noteOrder: [],
     };
     
@@ -496,8 +471,8 @@ const App = () => {
     const newNoteId = uuidv4();
     const newNote = {
       id: newNoteId,
-      title: ('Note ' + newNoteCount),
-      content: ('Note ' + newNoteCount),
+      title: ('New Note ' + newNoteCount),
+      content: ('Enter details here... '),
     };
 
     const noteToUpload = {
@@ -574,57 +549,6 @@ const App = () => {
     setDropdown(newDropdown)
   }
 
-  const editColumnTitle = (columnId) => {
-
-    closeDropdown()
-    showGreyScreen()
-
-    //console.log("Editing column title", {columnId});
-
-    const columnToEdit = board.columns[columnId];
-    const titleToEdit = columnToEdit.title;
-
-    const x = window.innerWidth / 2 - 120;
-    const y = window.innerHeight / 3 - 60;
-
-    const newColumnEditor = {
-      columnId: columnId,
-      open: true,
-      x: x,
-      y: y,
-      width: 240,
-      height: 120,
-      title: titleToEdit,
-      updateColumnTitle: updateColumnTitle,
-      saveColumnTitle: saveColumnTitle,
-    };
-
-    setColumnEditor(newColumnEditor)
-  }
-
-  const updateColumnTitle = (columnId, newTitle) => {
-
-    // Not sure why the settings are dissapearing here
-    //console.log({columnEditor})
-
-    const x = window.innerWidth / 2 - 120;
-    const y = window.innerHeight / 3 - 60;
-
-    const newColumnEditor = {
-      columnId: columnId,
-      open: true,
-      x: x,
-      y: y,
-      width: 240,
-      height: 120,
-      title: newTitle,
-      updateColumnTitle: updateColumnTitle,
-      saveColumnTitle: saveColumnTitle,
-    };
-
-    setColumnEditor(newColumnEditor)
-  }
-
   const saveColumnTitle = (columnId, newTitle) => {
 
     const newBoard = {
@@ -678,58 +602,6 @@ const App = () => {
     setDropdown(newDropdown)
   }
 
-  const editNote = (noteId) => {
-
-    closeDropdown()
-    showGreyScreen()
-
-    //console.log("Editing column title", {columnId});
-
-    const noteToEdit = notes[noteId];
-    
-    const title = noteToEdit.title;
-    const content = noteToEdit.content;
-
-    const x = window.innerWidth / 2 - 200;
-    const y = window.innerHeight / 3 - 180;
-
-    const newNoteEditor = {
-      noteId: noteId,
-      open: true,
-      x: x,
-      y: y,
-      width: 400,
-      height: 360,
-      title: title,
-      content: content,
-      updateNoteContent: updateNoteContent,
-      saveNote: saveNote,
-    };
-
-    setNoteEditor(newNoteEditor)
-  }
-
-  const updateNoteContent = (noteId, newTitle, newContent) => {
-
-    const x = window.innerWidth / 2 - 200;
-    const y = window.innerHeight / 3 - 180;
-
-    const newNoteEditor = {
-      noteId: noteId,
-      open: true,
-      x: x,
-      y: y,
-      width: 400,
-      height: 360,
-      title: newTitle,
-      content: newContent,
-      updateNoteContent: updateNoteContent,
-      saveNote: saveNote,
-    };
-
-    setNoteEditor(newNoteEditor)
-  }
-
   const saveNote = (noteId, newTitle, newContent) => {
 
     const newNote = {
@@ -767,74 +639,10 @@ const App = () => {
 
     setDropdown(newDropdown)
   }
-  
-  const closeColumnEditor = () => {
-
-    hideGreyScreen()
-
-    const newColumnEditor = {
-      columnId: "",
-      open: false,
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      title: "",
-      updateColumnTitle: {},
-    };
-
-    setColumnEditor(newColumnEditor)
-  }
-
-  const closeNoteEditor = () => {
-
-    hideGreyScreen()
-
-    const newNoteEditor = {
-      noteId: "",
-      open: false,
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      title: "",
-      content: "",
-      updateNote: {},
-      saveNote: {},
-    };
-
-    setNoteEditor(newNoteEditor)
-  }
-
-  const closePopUps = () => {
-    closeDropdown();
-    closeColumnEditor();
-    closeNoteEditor();
-  }
 
   const closeAll = () => {
-    closePopUps();
+    closeDropdown();
     closeEditing();
-  }
-
-  const showGreyScreen = () => {
-
-    const newGreyScreen = {
-      show: true,
-      closePopUps: closePopUps,
-    }
-
-    setGreyScreen(newGreyScreen);
-  }
-
-  const hideGreyScreen = () => {
-
-    const newGreyScreen = {
-      show: false,
-      closePopUps: {},
-    }
-
-    setGreyScreen(newGreyScreen);
   }
 
   const closeEditing = () => {
@@ -865,13 +673,10 @@ const App = () => {
             setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
             saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
             saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-            closePopUps={closePopUps}/>
+            closeDropdown={closeDropdown}/>
         </Content>
       </Structure>
-      <GreyScreen id="grey-screen" settings={greyScreen} />
       <Dropdown id="dropdown" settings={dropdown}  />
-      <ColumnEditor id="column-editor" settings={columnEditor} />
-      <NoteEditor id="note-editor" settings={noteEditor} />
     </React.Fragment>
   );
 }

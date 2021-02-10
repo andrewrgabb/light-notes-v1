@@ -8,7 +8,7 @@ import { Container } from './styles';
 
 const InnerList = (props) => {
   const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu,
-     editing, setEditingToThis, saveColumnTitle, saveNote, closePopUps } = props;
+     editing, setEditingToThis, saveColumnTitle, saveNote, closeDropdown } = props;
 
   const notes = useMemo(
     () =>
@@ -21,13 +21,13 @@ const InnerList = (props) => {
     setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
     saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
     saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-    closePopUps={closePopUps} />;
+    closeDropdown={closeDropdown} />;
 }
 
 const Board = (props) => {
 
   const {onDragEnd, columnOrder, columns, notes, addNote, openColumnMenu, openNoteMenu,
-    editing, setEditingToThis, saveColumnTitle, saveNote, closePopUps} = props;
+    editing, setEditingToThis, saveColumnTitle, saveNote, closeDropdown} = props;
 
   if (! columnOrder) {
     return null
@@ -54,7 +54,7 @@ const Board = (props) => {
                   setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
                   saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
                   saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-                  closePopUps={closePopUps} />
+                  closeDropdown={closeDropdown} />
               );
             })}
             {provided.placeholder}

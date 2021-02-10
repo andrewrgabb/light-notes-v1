@@ -9,7 +9,7 @@ const Note = (props) => {
 
   const { id, title, content } = props.note;
 
-  const { editing, setEditingToThis, saveNote, closePopUps, openNoteMenu } = props;
+  const { editing, setEditingToThis, saveNote, closeDropdown, openNoteMenu } = props;
 
   // Determine whether or not the user is editing the note title.
   const isEditingTitle = (editing.noteTitle === id);
@@ -50,7 +50,7 @@ const Note = (props) => {
 
   function handleEditingTitleOnClick(event) {
 
-    closePopUps()
+    closeDropdown()
 
     const titleDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
@@ -77,7 +77,7 @@ const Note = (props) => {
 
   function handleEditingContentOnClick(event) {
 
-    closePopUps()
+    closeDropdown()
 
     const contentDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (contentDom.value.length > 10000) ? contentDom.value.length : 10000;

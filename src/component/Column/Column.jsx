@@ -7,7 +7,7 @@ import { Container, TopSection, EditingTarget, ColumnTitle, DropdownBox, Content
 
 const Column = (props) => {
 
-  const { notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote, closePopUps } = props;
+  const { notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote, closeDropdown } = props;
 
   const { id, title } = column;
 
@@ -17,7 +17,7 @@ const Column = (props) => {
         return <Note key={note.id} note={note} index={index} openNoteMenu={() => openNoteMenu(note.id)} 
           editing={editing} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
           saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-          closePopUps={closePopUps} />
+          closeDropdown={closeDropdown} />
       }
       console.log("Missing Note!")
       return null
@@ -64,7 +64,7 @@ const Column = (props) => {
 
   function handleEditingOnClick(event) {
 
-    closePopUps()
+    closeDropdown()
 
     const titleDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
