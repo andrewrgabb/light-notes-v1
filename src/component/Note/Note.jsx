@@ -56,8 +56,12 @@ const Note = (props) => {
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
 
     titleRef.current.focus()
-    titleDom.selectionStart = titleDom.selectionEnd = cursorPosition; 
-    titleDom.select()
+    titleDom.selectionStart = titleDom.selectionEnd = cursorPosition;
+
+    if (titleDom.value.substr(0, 9) === 'New Note ') {
+      titleDom.select()
+    }
+    
     setEditingToThis(newEditingTitle)
   }
 
@@ -84,9 +88,11 @@ const Note = (props) => {
 
     contentDom.focus()
     contentDom.selectionStart = contentDom.selectionEnd = cursorPosition;
+
     if (contentDom.value === 'Enter details here...') {
       contentDom.select()
     }
+
     setEditingToThis(newEditingContent)
   }
 

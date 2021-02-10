@@ -71,7 +71,11 @@ const Column = (props) => {
 
     titleDom.focus()
     titleDom.selectionStart = titleDom.selectionEnd = cursorPosition; 
-    titleDom.select()
+
+    if (titleDom.value.substr(0, 11) === 'New Column ') {
+      titleDom.select()
+    }
+    
     setEditingToThis(newEditing)
   }
 
