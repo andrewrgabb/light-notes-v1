@@ -9,7 +9,27 @@ import { listNotes, listBoards } from '../graphql/queries'
 import { createBoard } from '../graphql/mutations'
 
 // resetDatabase
-import { deleteNote, updateBoard, /*deleteBoard*/ } from '../graphql/mutations'
+import { deleteNote, updateBoard, deleteBoard } from '../graphql/mutations'
+
+// Get the owner id from the server
+export const fetchOwner = async() => {
+  try {
+    const boardData = await API.graphql(graphqlOperation(listBoards))
+    const jsonBoard = boardData.data.listBoards.items
+    
+    if (jsonBoard.length > 0) {
+
+      const owner = jsonBoard[0].owner
+
+      return (owner)
+      
+    } else {
+
+      return (null)
+    }
+
+  } catch (err) { console.log('error retrieving owner'); console.log(err) }
+}
 
 // Download the notes from the server
 export const fetchNotes = async() => {
@@ -133,17 +153,18 @@ export const resetDatabase = async() => {
       json: jsonBoardClean,
     }
 
+    //------//
     // Maintain the same board-id, but remove the columns.
     await API.graphql(graphqlOperation(updateBoard, {input: inputBoard}))
+    //------//
 
+    //------//
     // Alternative: Delete entire board row (Used before schema updates)
-    /*
     const info = {
       id: id,
     }
-
     await API.graphql(graphqlOperation(deleteBoard, {input: info}))
-    */
+    //------//
 
   } catch (err) { console.log('error resetting App'); console.log(err)}
 }

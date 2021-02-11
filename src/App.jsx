@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createNote, updateNote, deleteNote } from './graphql/mutations'
 import { updateBoard } from './graphql/mutations'
 
-import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch' //
+import { fetchOwner, fetchNotes, fetchBoard, resetDatabase } from './util/fetch' //
 
 // Subscribe
 import { onUpdateBoard, onCreateNote, onUpdateNote } from './graphql/subscriptions'
@@ -55,23 +55,45 @@ const App = () => {
   // Fetch Notes, Columns, and ColumnOrder
   useEffect(() => {
 
-    /*reset()*/
+    //reset()
     
     const newSessionId  = uuidv4()
     setSessionId(newSessionId)
 
     fetchData(sessionId)
 
-    subscribeToBoardUpdates()
-    subscribeToNoteCreations()
-    subscribeToNoteUpdates()
+    subscribe()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const subscribeToBoardUpdates = () => {
+  const subscribe = async() => {
+
+    let tryAgain = false;
+
+    await fetchOwner().then(
+      response => 
+        {
+          const ownerId = response
+          if (ownerId === null) {
+            tryAgain = true
+          } else {
+            subscribeToBoardUpdates(ownerId)
+            subscribeToNoteCreations(ownerId)
+            subscribeToNoteUpdates(ownerId)
+          }
+        }
+    )
+    
+    // If the ownerId wasn't successfully obtained
+    if (tryAgain) {
+      subscribe()
+    }
+  }
+
+  const subscribeToBoardUpdates = (id) => {
     API.graphql(
-      graphqlOperation(onUpdateBoard)
+      graphqlOperation(onUpdateBoard, { owner: id })
     ).subscribe({
       next: ({ value }) => {
 
@@ -99,12 +121,11 @@ const App = () => {
     });
   }
 
-  const subscribeToNoteCreations = () => {
+  const subscribeToNoteCreations = (id) => {
     API.graphql(
-      graphqlOperation(onCreateNote)
+      graphqlOperation(onCreateNote, { owner: id })
     ).subscribe({
       next: ({ provider, value }) => {
-
         const data = value.data.onCreateNote;
 
         const currentSessionId =  sessionIdRef.current
@@ -133,9 +154,9 @@ const App = () => {
     });
   }
 
-  const subscribeToNoteUpdates = () => {
+  const subscribeToNoteUpdates = (id) => {
     API.graphql(
-      graphqlOperation(onUpdateNote)
+      graphqlOperation(onUpdateNote, { owner: id })
     ).subscribe({
       next: ({ provider, value }) => {
 
