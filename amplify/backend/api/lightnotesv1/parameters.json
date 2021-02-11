@@ -1,3 +1,9 @@
 {
-  "AppSyncApiName": "lightnotesv1"
+  "AppSyncApiName": "lightnotesv1",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authlightnotesv13e7f70b6",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

@@ -1,11 +1,11 @@
-type Note @model @key(fields: ["id"]) {
+type Note @model @auth(rules: [{allow: owner}]) @key(fields: ["id"]) {
   id: String!
   title: String!
   content: String!
   sessionId: String!
 }
 
-type Board @model @key(fields: ["id"]) {
+type Board @model @auth(rules: [{allow: owner}]) @key(fields: ["id"]) {
   id: String!
   json: String!
   sessionId: String!

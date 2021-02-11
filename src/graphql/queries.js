@@ -10,6 +10,7 @@ export const getNote = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -35,6 +36,7 @@ export const listNotes = /* GraphQL */ `
         sessionId
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -48,6 +50,7 @@ export const getBoard = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -72,6 +75,7 @@ export const listBoards = /* GraphQL */ `
         sessionId
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

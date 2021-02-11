@@ -13,6 +13,7 @@ export const createNote = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -28,6 +29,7 @@ export const updateNote = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -43,6 +45,7 @@ export const deleteNote = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -57,6 +60,7 @@ export const createBoard = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -71,6 +75,7 @@ export const updateBoard = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -85,6 +90,7 @@ export const deleteBoard = /* GraphQL */ `
       sessionId
       createdAt
       updatedAt
+      owner
     }
   }
 `;
