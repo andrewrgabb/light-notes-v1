@@ -1,5 +1,3 @@
 {
-  "AppSyncApiName": "lightnotesv1",
-  "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "AppSyncApiName": "lightnotesv1"
 }

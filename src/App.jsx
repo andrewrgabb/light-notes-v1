@@ -12,7 +12,6 @@ import { Structure, Content, Header, Title, StyledButton} from './app-styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import Amplify, { API, graphqlOperation } from 'aws-amplify'
 
 // Update
 import { createNote, updateNote, deleteNote } from './graphql/mutations'
@@ -22,6 +21,9 @@ import { fetchNotes, fetchBoard, resetDatabase } from './util/fetch' //
 
 // Subscribe
 import { onUpdateBoard, onCreateNote, onUpdateNote } from './graphql/subscriptions'
+
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { withAuthenticator } from '@aws-amplify/ui-react';
 
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
@@ -681,4 +683,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default withAuthenticator(App);
