@@ -11,6 +11,8 @@ export const OptionBox = styled.div `
   padding: 4px;
 
   font-size: 14px;
+  font-family: Arial, sans-serif;
+  
   text-align: center;
 
   background-color: #4094e6;

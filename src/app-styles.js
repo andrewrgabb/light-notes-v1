@@ -13,6 +13,7 @@ export const Header = styled.div`
   padding-right: 5px;
   padding-top: 10px;
   font-size: 20px;
+  font-family: Arial, sans-serif;
   display: flex;
   justify-content: space-between
 `;
@@ -34,6 +35,7 @@ export const StyledButton = styled.button `
   height: 36px;
 
   font-size: inherit;
+  font-family: Arial, sans-serif;
 
   border-radius: 10px;
   color: black;

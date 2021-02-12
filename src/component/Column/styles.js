@@ -40,6 +40,7 @@ export const EditingTarget = styled.div `
 export const ColumnTitle = styled.textarea`
   text-align: center;
   font-size: 20px;
+  font-family: Arial, sans-serif;
   color: black;
   margin-top: 6px;
   margin-bottom: 6px;
@@ -141,12 +142,14 @@ export const StyledButton = styled.button `
   border-radius: 10px;
 
   font-size: 50px;
+  font-family: Arial, sans-serif;
+  
   line-height: 0px;
   position: absolute;
   bottom: 5px;
   left: 10px;
 
-  padding-bottom: 10px;
+  padding-top: 2px;
 
   :hover {
     outline-width: 0;

@@ -35,6 +35,7 @@ export const TopSection = styled.div `
 
 export const NoteTitle = styled.textarea`
   font-size: 16px;
+  font-family: Arial, sans-serif;
   color: black;
   width: 100%;
   padding-left: 6px;
@@ -110,6 +111,8 @@ export const Content = styled.textarea`
   width: 100%;
 
   font-size: 16px;
+  font-family: Arial, sans-serif;
+  
   padding: 10px;
 
   resize: none;
