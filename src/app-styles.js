@@ -20,9 +20,28 @@ export const Header = styled.div`
 
 export const Title = styled.h3`
   position: relative;
-  width: 50%;
-  
+  width: 40%;
   color: black;
+`;
+
+export const HeaderDemo = styled.div`
+  background-color: inherit;
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  min-height: 40px;
+  padding: 0px;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+`;
+
+export const Info = styled.h4`
+  position: relative;
+  font-size: 12px;
+  color: black;
+  margin: 0px;
 `;
 
 export const StyledButton = styled.button `
@@ -58,5 +77,15 @@ export const Content = styled.div`
   top: 50px;
   bottom: 0;
   height: calc(100% - 50px);
+  width: 100%; 
+`;
+
+export const ContentDemo = styled.div`
+  background-color: inherit;
+  position: absolute;
+  display: block;
+  top: 70px;
+  bottom: 0;
+  height: calc(100% - 70px);
   width: 100%; 
 `;

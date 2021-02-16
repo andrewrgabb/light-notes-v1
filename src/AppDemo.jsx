@@ -8,7 +8,7 @@ import initialEditing from './initial/editing';
 import Board from './component/Board';
 import Dropdown from './component/Dropdown';
 
-import { Structure, Content, Header, Title, StyledButton} from './app-styles';
+import { Structure, ContentDemo, Header, Title, HeaderDemo, Info, StyledButton} from './app-styles';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -88,7 +88,7 @@ const AppDemo = () => {
     };
     
     const newColumnOrder = board.columnOrder;
-    newColumnOrder.push(id);
+    newColumnOrder.unshift(id);
 
     const newColumns = {
       ...board.columns,
@@ -395,12 +395,18 @@ const AppDemo = () => {
           <Title id="title">
             Light Notes 
           </Title>
+          
           <StyledButton id="add-column-button" onClick={addColumn}>
             Add Column
           </StyledButton>
         </Header>
+        <HeaderDemo id="header-demo">
+          <Info id="info">Go to&nbsp;
+          <a href="https://lightnotes.life/">lightnotes.life</a>
+          &nbsp;to create an account and save your notes!</Info>
+        </HeaderDemo>
         
-        <Content id="content">
+        <ContentDemo id="content">
           <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
             addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
             openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
@@ -408,7 +414,7 @@ const AppDemo = () => {
             saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
             saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
             closeDropdown={closeDropdown}/>
-        </Content>
+        </ContentDemo>
       </Structure>
       <Dropdown id="dropdown" settings={dropdown}  />
     </React.Fragment>
