@@ -11,12 +11,12 @@ const Note = (props) => {
 
   const { editing, setEditingToThis, saveNote, closeDropdown, openNoteMenu } = props;
 
+  const titleRef = useRef();
+  const contentRef = useRef();
+
   // Determine whether or not the user is editing the note title.
   const isEditingTitle = (editing.noteTitle === id);
   const isEditingContent = (editing.noteContent === id);
-
-  const titleRef = useRef();
-  const contentRef = useRef();
 
   if (!isEditingTitle) {
     if (titleRef.current) {
@@ -74,7 +74,7 @@ const Note = (props) => {
       setEditingToThis(stopEditing)
       e.target.blur()
 
-    } else if (newTitle.length < 26) {
+    } else {
       saveNote(id, newTitle, content);
     }
   }
@@ -96,34 +96,11 @@ const Note = (props) => {
     setEditingToThis(newEditingContent)
   }
 
-  const numRows = (content) => {
-
-
-    const lines = content.split('\n');
-    const n = lines.length
-
-    let rowCount = 0
-
-    for (let i = 0; i < n; i++) {
-      const line = lines[i]
-      const rows = Math.ceil(line.length / 31)
-      if (rows < 1) {
-        rowCount ++;
-      } else {
-        rowCount += rows;
-      }
-    }
-    return rowCount
-  }
-
   function handleContentChange(e) {
 
     const newContent = e.target.value;
 
-    if (numRows(newContent) < 9) {
-      
-      saveNote(id, title, newContent);
-    }
+    saveNote(id, title, newContent);
   }
 
   return (

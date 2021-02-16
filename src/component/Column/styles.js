@@ -22,38 +22,57 @@ export const Container = styled.div`
 `
 
 export const TopSection = styled.div `
-  background-color: #6FB8FF;
 
-  height: 40px;
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  display: block;
+
+
+  min-height: 24px;
+
+  background-color: #6FB8FF;
   border-radius: 5px;
 `
 
 export const EditingTarget = styled.div `
+
+  display: block;
+
   width: 100%;
   height: 100%;
   position: absolute;
   cursor: pointer;
+
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 `
 
 export const ColumnTitle = styled.textarea`
-  text-align: center;
+
+  position: static;
+  display: block;
+
+  width: 300px;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
+  
+  min-height: 24px;
+
   font-size: 20px;
+  line-height: 24px;
   font-family: Arial, sans-serif;
   color: black;
   margin-top: 6px;
   margin-bottom: 6px;
   margin-left: 16px;
-  margin-right: 40px;
-  width: 100%;
   text-align: left;
   padding-left: 10px;
-  max-height: 100%;
+  padding-top: 6px;
 
   border: none;
 
-  display: block;
   resize: none;
 
   background-color: transparent;
@@ -69,8 +88,8 @@ export const ColumnTitle = styled.textarea`
 
 export const DropdownBox = styled.div `
   position: absolute;
-  top: 3px;
-  right: 2px;
+  top: 6px;
+  right: 6px;
 
   width: 28px;
   height: 28px;
@@ -100,7 +119,6 @@ export const Content = styled.div`
 
   position: absolute;
 
-  top: calc(44px + 14px);
   bottom: calc(60px + 14px);
 
   left: 14px;
@@ -120,6 +138,7 @@ export const Content = styled.div`
     border-radius: 10px;
   }
 `
+//top: calc(44px + 14px);
 //background-color: #0000FF;
 
 

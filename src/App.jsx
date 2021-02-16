@@ -340,7 +340,7 @@ const App = () => {
     };
     
     const newColumnOrder = board.columnOrder;
-    newColumnOrder.push(id);
+    newColumnOrder.unshift(id);
 
     const newColumns = {
       ...board.columns,

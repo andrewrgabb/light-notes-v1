@@ -123,7 +123,7 @@ export const Content = styled.textarea`
 
   min-height: 142px;
 
-  overflow: hidden;
+  overflow: auto;
 
   background-color: transparent;
 

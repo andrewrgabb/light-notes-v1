@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from '../Note';
 import { getMenuIcon } from '../../images/menu.js'
@@ -10,6 +10,14 @@ const Column = (props) => {
   const { notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote, closeDropdown } = props;
 
   const { id, title } = column;
+
+  const titleRef = useRef();
+
+  useEffect(() => {
+    window.setTimeout(updateTitleHeight(), 0);
+  },[])
+
+  const [titleHeight, setTitleHeight] = useState(24);
 
   const completedNotes = (
     notes.map((note, index) => {
@@ -27,8 +35,6 @@ const Column = (props) => {
   // Determine whether or not the user is editing the column title.
   
   const isEditing = (editing.columnTitle === id);
-
-  const titleRef = useRef();
 
   if (!isEditing) {
     if (titleRef.current) {
@@ -54,12 +60,28 @@ const Column = (props) => {
 
     if (newTitle.includes('\n')) {
 
+      console.log({newTitle});
+
       setEditingToThis(stopEditing)
       e.target.blur()
 
-    } else if (newTitle.length < 26) {
+    } else {
       saveColumnTitle(id, newTitle);
+      window.setTimeout(updateTitleHeight(), 0);
     }
+  }
+
+  const updateTitleHeight = () => {
+
+    const titleDom = titleRef.current;
+
+    titleDom.style.height = 'auto';
+
+    const newHeight = titleDom.scrollHeight
+
+    titleDom.style.height = newHeight+'px';
+
+    setTitleHeight(newHeight);
   }
 
   function handleEditingOnClick(event) {
@@ -78,20 +100,20 @@ const Column = (props) => {
     
     setEditingToThis(newEditing)
   }
-
+  //style={{height: `${titleRef.current.height}px`}}
   return (
     <Draggable draggableId={id} index={props.index} >
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <TopSection {...provided.dragHandleProps} id={`top-section`} onClick={(event) => {event.stopPropagation();}}>
+          <TopSection {...provided.dragHandleProps}  id={`top-section`} onClick={(event) => {event.stopPropagation();}}>
             <EditingTarget style={{display: `${isEditing ? "none" : "block"}`}} onClick={(event) => {handleEditingOnClick(event); event.stopPropagation();}}/>
-            <ColumnTitle id={`${id}-title`} ref={titleRef} onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
+            <ColumnTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
             <DropdownBox id={`${id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
               {getMenuIcon()}
             </DropdownBox>
           </TopSection>
           
-          <Content id={`content`}>
+          <Content id={`content`} style={{top: `${titleHeight + 28}px`}} >
             <Droppable droppableId={id}>
               {(provided, snapshot) => (
                 <NoteList
