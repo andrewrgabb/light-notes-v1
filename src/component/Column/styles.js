@@ -112,18 +112,19 @@ export const DropdownBox = styled.div `
 `
 
 export const Content = styled.div`
-  position: relative;
-  overflow-y: scroll;
-  width: calc(100% - 14px);
 
   position: absolute;
 
+  left: 6px;
   bottom: calc(60px + 14px);
+  overflow-y: scroll;
 
-  left: 14px;
+  width: calc(100% - 12px);
+`
+//top: calc(44px + 14px);
+//background-color: #0000FF;
 
-  border-left: 1px solid #E8E8E8;
-
+/*
   &::-webkit-scrollbar {
     border-right: none;
     border-left: 1px solid #E8E8E8;
@@ -136,9 +137,8 @@ export const Content = styled.div`
     border: 4px solid transparent;
     border-radius: 10px;
   }
-`
-//top: calc(44px + 14px);
-//background-color: #0000FF;
+
+*/
 
 
 export const NoteList = styled.div`
