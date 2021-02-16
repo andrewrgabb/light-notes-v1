@@ -26,8 +26,7 @@ export const TopSection = styled.div `
   position: relative;
   display: block;
 
-
-  min-height: 24px;
+  min-height: 52px;
 
   background-color: #6FB8FF;
   border-radius: 5px;
@@ -88,7 +87,7 @@ export const ColumnTitle = styled.textarea`
 
 export const DropdownBox = styled.div `
   position: absolute;
-  top: 6px;
+  top: 8px;
   right: 6px;
 
   width: 28px;

@@ -60,8 +60,6 @@ const Column = (props) => {
 
     if (newTitle.includes('\n')) {
 
-      console.log({newTitle});
-
       setEditingToThis(stopEditing)
       e.target.blur()
 

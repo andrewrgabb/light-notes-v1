@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { getMenuIcon } from '../../images/menu.js'
 
@@ -13,6 +13,10 @@ const Note = (props) => {
 
   const titleRef = useRef();
   const contentRef = useRef();
+
+  useEffect(() => {
+    window.setTimeout(updateTitleHeight(), 0);
+  },[])
 
   // Determine whether or not the user is editing the note title.
   const isEditingTitle = (editing.noteTitle === id);
@@ -76,7 +80,19 @@ const Note = (props) => {
 
     } else {
       saveNote(id, newTitle, content);
+      window.setTimeout(updateTitleHeight(), 0);
     }
+  }
+
+  const updateTitleHeight = () => {
+
+    const titleDom = titleRef.current;
+
+    titleDom.style.height = 'auto';
+
+    const newHeight = titleDom.scrollHeight
+
+    titleDom.style.height = newHeight+'px';
   }
 
   function handleEditingContentOnClick(event) {
@@ -111,10 +127,10 @@ const Note = (props) => {
         {...provided.dragHandleProps}
         ref={provided.innerRef}
         isDragging={snapshot.isDragging}>
-        <TopSection>
+        <TopSection >
 
           <TitleEditingTarget style={{display: `${isEditingTitle ? "none" : "block"}`}} onClick={(event) => {handleEditingTitleOnClick(event); event.stopPropagation();}}/>
-          <NoteTitle id={`${id}-title`} ref={titleRef} onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
+          <NoteTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
 
           <DropdownBox id={`${id}-dropdown`} onClick={(event) => {openNoteMenu(); event.stopPropagation();}}>
             {getMenuIcon()}

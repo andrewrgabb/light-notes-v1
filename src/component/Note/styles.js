@@ -26,7 +26,7 @@ export const Container = styled.div`
 export const TopSection = styled.div `
   position: relative;
   background-color: #c8baff;
-  height: 40px;
+  min-height: 32px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
@@ -34,7 +34,9 @@ export const TopSection = styled.div `
 `
 
 export const NoteTitle = styled.textarea`
+
   font-size: 16px;
+  line-height: 20px;
   font-family: Arial, sans-serif;
   color: black;
   width: 100%;
@@ -45,7 +47,7 @@ export const NoteTitle = styled.textarea`
   margin-left: 6px;
   margin-right: 40px;
 
-  padding-top: 4px;
+  padding-top: 6px;
 
   border: none;
   display: block;
@@ -71,7 +73,7 @@ export const TitleEditingTarget = styled.div `
 
 export const DropdownBox = styled.div `
   position: absolute;
-  top: 3px;
+  top: 6px;
   right: 2px;
 
   width: 28px;
@@ -111,6 +113,7 @@ export const Content = styled.textarea`
   width: 100%;
 
   font-size: 16px;
+  line-height: 20px;
   font-family: Arial, sans-serif;
   
   padding: 10px;
