@@ -68,6 +68,8 @@ export const StyledButton = styled.button `
     box-shadow: inset 0 0 0 2px #0079bf;
     outline-width: 0;
   }
+
+  touch-action: none;
 `
 
 export const Content = styled.div`
