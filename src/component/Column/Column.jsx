@@ -104,7 +104,7 @@ const Column = (props) => {
             <EditingTarget style={{display: `${isEditing ? "none" : "block"}`}} onClick={(event) => {handleEditingOnClick(event); event.stopPropagation();}}/>
             <ColumnTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
             <DropdownBox id={`${id}-dropdown`} onClick={(event) => {removeColumn(); event.stopPropagation();}}>
-              <CloseIcon style={{fontSize: "28"}} />
+              <CloseIcon style={{fontSize: "24"}} />
             </DropdownBox>
           </TopSection>
           

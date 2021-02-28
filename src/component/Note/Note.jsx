@@ -134,7 +134,7 @@ const Note = (props) => {
           <NoteTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
 
           <DropdownBox id={`${id}-dropdown`} onClick={(event) => {removeNote(); event.stopPropagation();}}>
-            <CloseIcon style={{fontSize: "28"}} />
+            <CloseIcon style={{fontSize: "20"}} />
           </DropdownBox>
 
         </TopSection>

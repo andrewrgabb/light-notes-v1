@@ -90,8 +90,8 @@ export const DropdownBox = styled.div `
   top: 10px;
   right: 8px;
 
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 
   padding: 2px;
 
@@ -106,6 +106,7 @@ export const DropdownBox = styled.div `
 
   cursor: pointer;
 `
+//border: 1px solid #1873CC;
 
 export const Content = styled.div`
 
