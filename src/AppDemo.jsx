@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 
 import initialBoard from './initial/board';
 import initialNotes from './initial/notes';
-import intialDropdown from './initial/dropdown';
 import initialEditing from './initial/editing';
 
 import Board from './component/Board';
-import Dropdown from './component/Dropdown';
 
 import { Structure, ContentDemo, Header, Title, HeaderDemo, Info, StyledButton} from './app-styles';
 
@@ -29,14 +27,10 @@ const AppDemo = () => {
   const [columnCount, setColumnCount] = useState(0);
 
 
-  // Dropdown menu
-  const [dropdown, setDropdown] = useState(intialDropdown);
-
+  // Editing
   const [editing, setEditing] = useState(initialEditing);
 
   const removeNote = (noteId) => {
-
-    closeDropdown()
 
     const {
       [noteId]: removed,
@@ -106,8 +100,6 @@ const AppDemo = () => {
   }
 
   const removeColumn = (columnId) => {
-
-    closeDropdown()
 
     let newColumns = board.columns;
 
@@ -255,42 +247,6 @@ const AppDemo = () => {
     setNoteCount(newNoteCount)
   }
 
-  const openColumnMenu = (columnId) => {
-
-    closeEditing()
-
-    if (dropdown.open && dropdown.objectId === columnId) {
-      closeAll()
-      return
-    }
-
-    const dropdownDom = document.getElementById(`${columnId}-dropdown`)
-
-    const rect = dropdownDom.getBoundingClientRect()
-
-    const { bottom, left } = rect;
-
-    const x = left;
-    const y = bottom;
-
-    const width = 120;
-    //const height = 280;
-
-    const newDropdown = {
-      objectId: columnId,
-      open: true,
-      x: x,
-      y: y,
-      width: width,
-      options: [
-        //{text: "Edit", function: editColumnTitle},
-        {text: "Delete", function: removeColumn},
-      ],
-    };
-
-    setDropdown(newDropdown)
-  }
-
   const saveColumnTitle = (columnId, newTitle) => {
 
     const newBoard = {
@@ -305,42 +261,6 @@ const AppDemo = () => {
     }
 
     setBoard(newBoard);
-  }
-  
-  const openNoteMenu = (noteId) => {
-
-    closeEditing()
-
-    if (dropdown.open && dropdown.objectId === noteId) {
-      closeAll()
-      return
-    }
-
-    const dropdownDom = document.getElementById(`${noteId}-dropdown`)
-
-    const rect = dropdownDom.getBoundingClientRect()
-
-    const { bottom, left } = rect;
-
-    const x = left;
-    const y = bottom;
-
-    const width = 120;
-    //const height = 280;
-
-    const newDropdown = {
-      objectId: noteId,
-      open: true,
-      x: x,
-      y: y,
-      width: width,
-      options: [
-        //{text: "Edit", function: editNote},
-        {text: "Delete", function: removeNote},
-      ],
-    };
-
-    setDropdown(newDropdown)
   }
 
   const saveNote = (noteId, newTitle, newContent) => {
@@ -359,23 +279,7 @@ const AppDemo = () => {
     setNotes(newNotes);
   }
 
-  const closeDropdown = () => {
-
-    const newDropdown = {
-      objectId: "",
-      open: false,
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      options: [],
-    };
-
-    setDropdown(newDropdown)
-  }
-
   const closeAll = () => {
-    closeDropdown();
     closeEditing();
   }
 
@@ -389,35 +293,31 @@ const AppDemo = () => {
   }
 
   return (
-    <React.Fragment>
-      <Structure id="structure" onClick={closeAll}>
-        <Header id="header">
-          <Title id="title">
-            Light Notes 
-          </Title>
-          
-          <StyledButton id="add-column-button" onClick={addColumn}>
-            Add Column
-          </StyledButton>
-        </Header>
-        <HeaderDemo id="header-demo">
-          <Info id="info">Go to&nbsp;
-          <a href="https://lightnotes.life/">lightnotes.life</a>
-          &nbsp;to create an account and save your notes!</Info>
-        </HeaderDemo>
+    <Structure id="structure" onClick={closeAll}>
+      <Header id="header">
+        <Title id="title">
+          Light Notes 
+        </Title>
         
-        <ContentDemo id="content">
-          <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
-            addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
-            setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
-            saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-            saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-            closeDropdown={closeDropdown}/>
-        </ContentDemo>
-      </Structure>
-      <Dropdown id="dropdown" settings={dropdown}  />
-    </React.Fragment>
+        <StyledButton id="add-column-button" onClick={addColumn}>
+          Add Column
+        </StyledButton>
+      </Header>
+      <HeaderDemo id="header-demo">
+        <Info id="info">Go to&nbsp;
+        <a href="https://lightnotes.life/">lightnotes.life</a>
+        &nbsp;to create an account and save your notes!</Info>
+      </HeaderDemo>
+      
+      <ContentDemo id="content">
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
+          addNote={(columnId) => addNote(columnId)} removeColumn={(columnId) => removeColumn(columnId)} 
+          removeNote={(noteId) => removeNote(noteId)} editing={editing} 
+          setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
+          saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
+          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)} />
+      </ContentDemo>
+    </Structure>
   );
 }
 

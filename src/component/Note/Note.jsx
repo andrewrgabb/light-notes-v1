@@ -9,7 +9,7 @@ const Note = (props) => {
 
   const { id, title, content } = props.note;
 
-  const { editing, setEditingToThis, saveNote, closeDropdown, openNoteMenu } = props;
+  const { editing, setEditingToThis, saveNote, removeNote } = props;
 
 
   const showHideRef = useRef();
@@ -56,8 +56,6 @@ const Note = (props) => {
 
   function handleEditingTitleOnClick(event) {
 
-    closeDropdown()
-
     const titleDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
 
@@ -102,8 +100,6 @@ const Note = (props) => {
 
   function handleEditingContentOnClick(event) {
 
-    closeDropdown()
-
     const contentDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (contentDom.value.length > 10000) ? contentDom.value.length : 10000;
 
@@ -137,7 +133,7 @@ const Note = (props) => {
           <TitleEditingTarget style={{display: `${isEditingTitle ? "none" : "block"}`}} onClick={(event) => {handleEditingTitleOnClick(event); event.stopPropagation();}}/>
           <NoteTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
 
-          <DropdownBox id={`${id}-dropdown`} onClick={(event) => {openNoteMenu(); event.stopPropagation();}}>
+          <DropdownBox id={`${id}-dropdown`} onClick={(event) => {removeNote(); event.stopPropagation();}}>
             <CloseIcon style={{fontSize: "28"}} />
           </DropdownBox>
 

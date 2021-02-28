@@ -2,16 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import initialBoard from './initial/board';
 import initialNotes from './initial/notes';
-import intialDropdown from './initial/dropdown';
 import initialEditing from './initial/editing';
 
 import Board from './component/Board';
-import Dropdown from './component/Dropdown';
 
 import { Structure, Content, Header, Title, StyledButton} from './app-styles';
 
 import { v4 as uuidv4 } from 'uuid';
-
 
 // Update
 import { createNote, updateNote, deleteNote } from './graphql/mutations'
@@ -47,9 +44,7 @@ const App = () => {
   notesRef.current = notes
   sessionIdRef.current = sessionId
 
-  // Dropdown menu
-  const [dropdown, setDropdown] = useState(intialDropdown);
-
+  // Editing
   const [editing, setEditing] = useState(initialEditing);
 
   // Fetch Notes, Columns, and ColumnOrder
@@ -267,8 +262,6 @@ const App = () => {
 
   const removeNote = (noteId) => {
 
-    closeDropdown()
-
     removeNoteFromDatabase(noteId)
 
     const {
@@ -361,8 +354,6 @@ const App = () => {
   }
 
   const removeColumn = (columnId) => {
-
-    closeDropdown()
 
     const column = board.columns[columnId];
 
@@ -486,7 +477,6 @@ const App = () => {
     uploadBoard(newBoard)
   };
 
-
   const addNote = (columnId) => {
 
     const newNoteCount = noteCount + 1;
@@ -536,41 +526,6 @@ const App = () => {
     setNoteCount(newNoteCount)
   }
 
-  const openColumnMenu = (columnId) => {
-
-    closeEditing()
-
-    if (dropdown.open && dropdown.objectId === columnId) {
-      closeAll()
-      return
-    }
-
-    const dropdownDom = document.getElementById(`${columnId}-dropdown`)
-
-    const rect = dropdownDom.getBoundingClientRect()
-
-    const { bottom, left } = rect;
-
-    const x = left;
-    const y = bottom;
-
-    const width = 120;
-    //const height = 280;
-
-    const newDropdown = {
-      objectId: columnId,
-      open: true,
-      x: x,
-      y: y,
-      width: width,
-      options: [
-        //{text: "Edit", function: editColumnTitle},
-        {text: "Delete", function: removeColumn},
-      ],
-    };
-
-    setDropdown(newDropdown)
-  }
 
   const saveColumnTitle = (columnId, newTitle) => {
 
@@ -589,42 +544,6 @@ const App = () => {
     uploadBoard(newBoard)
   }
   
-  const openNoteMenu = (noteId) => {
-
-    closeEditing()
-
-    if (dropdown.open && dropdown.objectId === noteId) {
-      closeAll()
-      return
-    }
-
-    const dropdownDom = document.getElementById(`${noteId}-dropdown`)
-
-    const rect = dropdownDom.getBoundingClientRect()
-
-    const { bottom, left } = rect;
-
-    const x = left;
-    const y = bottom;
-
-    const width = 120;
-    //const height = 280;
-
-    const newDropdown = {
-      objectId: noteId,
-      open: true,
-      x: x,
-      y: y,
-      width: width,
-      options: [
-        //{text: "Edit", function: editNote},
-        {text: "Delete", function: removeNote},
-      ],
-    };
-
-    setDropdown(newDropdown)
-  }
-
   const saveNote = (noteId, newTitle, newContent) => {
 
     const newNote = {
@@ -648,23 +567,7 @@ const App = () => {
     uploadNote(noteToUpload)
   }
 
-  const closeDropdown = () => {
-
-    const newDropdown = {
-      objectId: "",
-      open: false,
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      options: [],
-    };
-
-    setDropdown(newDropdown)
-  }
-
   const closeAll = () => {
-    closeDropdown();
     closeEditing();
   }
 
@@ -678,29 +581,25 @@ const App = () => {
   }
 
   return (
-    <React.Fragment>
-      <Structure id="structure" onClick={closeAll}>
-        <Header id="header">
-          <Title id="title">
-            Light Notes 
-          </Title>
-          <StyledButton id="add-column-button" onClick={addColumn}>
-            Add Column
-          </StyledButton>
-        </Header>
-        
-        <Content id="content">
-          <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
-            addNote={(columnId) => addNote(columnId)} openColumnMenu={(columnId) => openColumnMenu(columnId)} 
-            openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing} 
-            setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
-            saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-            saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-            closeDropdown={closeDropdown}/>
-        </Content>
-      </Structure>
-      <Dropdown id="dropdown" settings={dropdown}  />
-    </React.Fragment>
+    <Structure id="structure" onClick={closeAll}>
+      <Header id="header">
+        <Title id="title">
+          Light Notes 
+        </Title>
+        <StyledButton id="add-column-button" onClick={addColumn}>
+          Add Column
+        </StyledButton>
+      </Header>
+      
+      <Content id="content">
+        <Board id="Board" notes={notes} columns={board.columns} columnOrder={board.columnOrder} onDragEnd={onDragEnd} 
+          addNote={(columnId) => addNote(columnId)} removeColumn={(columnId) => removeColumn(columnId)} 
+          removeNote={(noteId) => removeNote(noteId)} editing={editing} 
+          setEditingToThis={(newEditing) => setEditingToThis(newEditing)} 
+          saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
+          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)} />
+      </Content>
+    </Structure>
   );
 }
 

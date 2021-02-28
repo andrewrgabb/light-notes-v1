@@ -13,6 +13,7 @@ export const Container = styled.div`
   margin-left: 8px;
   margin-right: 8px;
 
+  border-left: 4px solid #222222;
   border-right: 4px solid #222222;
 
   border-radius: 10px;
@@ -95,13 +96,12 @@ export const DropdownBox = styled.div `
   padding: 2px;
 
   display: block;
-  
-  opacity: 100%;
 
   border-radius: 5px;
 
-  :hover {
+  :active {
     background-color: #1873CC; 
+    opacity: 1;
   }
 
   cursor: pointer;

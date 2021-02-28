@@ -7,7 +7,7 @@ import { Container, TopSection, EditingTarget, ColumnTitle, DropdownBox, Content
 
 const Column = (props) => {
 
-  const { notes, column, editing, openNoteMenu, saveColumnTitle, setEditingToThis, saveNote, closeDropdown } = props;
+  const { notes, column, editing, removeColumn, removeNote, saveColumnTitle, setEditingToThis, saveNote } = props;
 
   const { id, title } = column;
 
@@ -22,10 +22,9 @@ const Column = (props) => {
   const completedNotes = (
     notes.map((note, index) => {
       if (note) {
-        return <Note key={note.id} note={note} index={index} openNoteMenu={() => openNoteMenu(note.id)} 
+        return <Note key={note.id} note={note} index={index} removeNote={() => removeNote(note.id)} 
           editing={editing} setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
-          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-          closeDropdown={closeDropdown} />
+          saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)} />
       }
       console.log("Missing Note!")
       return null
@@ -84,8 +83,6 @@ const Column = (props) => {
 
   function handleEditingOnClick(event) {
 
-    closeDropdown()
-
     const titleDom = event.target.parentNode.childNodes[1]
     const cursorPosition = (titleDom.value.length > 10000) ? titleDom.value.length : 10000;
 
@@ -106,7 +103,7 @@ const Column = (props) => {
           <TopSection {...provided.dragHandleProps}  id={`top-section`} onClick={(event) => {event.stopPropagation();}}>
             <EditingTarget style={{display: `${isEditing ? "none" : "block"}`}} onClick={(event) => {handleEditingOnClick(event); event.stopPropagation();}}/>
             <ColumnTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
-            <DropdownBox id={`${id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
+            <DropdownBox id={`${id}-dropdown`} onClick={(event) => {removeColumn(); event.stopPropagation();}}>
               <CloseIcon style={{fontSize: "28"}} />
             </DropdownBox>
           </TopSection>

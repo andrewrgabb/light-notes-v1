@@ -90,8 +90,11 @@ export const DropdownBox = styled.div `
 
   display: block;
 
-  :hover {
-    background-color: #1873CC; 
+  opacity: 0.7;
+
+  :active {
+    background-color: #1873CC;
+    opacity: 0.85;
   }
   cursor: pointer;
 `

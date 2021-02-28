@@ -7,8 +7,8 @@ import Column from '../Column';
 import { Container } from './styles';
 
 const InnerList = (props) => {
-  const { column, noteMap, index, addNote, openColumnMenu, openNoteMenu,
-     editing, setEditingToThis, saveColumnTitle, saveNote, closeDropdown } = props;
+  const { column, noteMap, index, addNote, removeColumn, removeNote,
+     editing, setEditingToThis, saveColumnTitle, saveNote } = props;
 
   const notes = useMemo(
     () =>
@@ -17,17 +17,16 @@ const InnerList = (props) => {
   );
   
   return <Column id="Column" column={column} notes={notes} index={index} addNote={addNote} 
-    openColumnMenu={openColumnMenu} openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
+    removeColumn={removeColumn} removeNote={(noteId) => removeNote(noteId)} editing={editing}
     setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
     saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-    saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-    closeDropdown={closeDropdown} />;
+    saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)} />;
 }
 
 const Board = (props) => {
 
-  const {onDragEnd, columnOrder, columns, notes, addNote, openColumnMenu, openNoteMenu,
-    editing, setEditingToThis, saveColumnTitle, saveNote, closeDropdown} = props;
+  const {onDragEnd, columnOrder, columns, notes, addNote, removeColumn, removeNote,
+    editing, setEditingToThis, saveColumnTitle, saveNote } = props;
 
   if (! columnOrder) {
     return null
@@ -49,12 +48,11 @@ const Board = (props) => {
               const column = columns[columnId];
               return (
                 <InnerList key={column.id} column={column} noteMap={notes} index={index} 
-                  addNote={() => addNote(columnId)} openColumnMenu={() => openColumnMenu(columnId)} 
-                  openNoteMenu={(noteId) => openNoteMenu(noteId)} editing={editing}
+                  addNote={() => addNote(columnId)} removeColumn={() => removeColumn(columnId)} 
+                  removeNote={(noteId) => removeNote(noteId)} editing={editing}
                   setEditingToThis={(newEditing) => setEditingToThis(newEditing)}
                   saveColumnTitle={(columnId, newTitle) => saveColumnTitle(columnId, newTitle)} 
-                  saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)}
-                  closeDropdown={closeDropdown} />
+                  saveNote={(noteId, newTitle, newContent) => saveNote(noteId, newTitle, newContent)} />
               );
             })}
             {provided.placeholder}
