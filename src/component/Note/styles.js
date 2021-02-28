@@ -31,7 +31,7 @@ export const ShowHide = styled.div `
 export const TopSection = styled.div `
   position: relative;
   background-color: #c8baff;
-  min-height: 32px;
+  min-height: 20px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
@@ -91,6 +91,12 @@ export const DropdownBox = styled.div `
   display: block;
 
   opacity: 0.7;
+
+  :hover {
+    border: 1px solid #4f37ad;
+    top: 7px;
+    right: 5px;
+  }
 
   :active {
     background-color: #1873CC;

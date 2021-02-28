@@ -99,6 +99,12 @@ export const DropdownBox = styled.div `
 
   border-radius: 5px;
 
+  :hover {
+    border: 1px solid #0a4ea6;
+    top: 9px;
+    right: 7px;
+  }
+
   :active {
     background-color: #1873CC; 
     opacity: 1;
@@ -106,7 +112,6 @@ export const DropdownBox = styled.div `
 
   cursor: pointer;
 `
-//border: 1px solid #1873CC;
 
 export const Content = styled.div`
 
