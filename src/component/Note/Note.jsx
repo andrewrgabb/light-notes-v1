@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { getMenuIcon } from '../../images/menu.js'
+import CloseIcon from '@material-ui/icons/Close';
 
-import { Container, TopSection, TitleEditingTarget, NoteTitle, DropdownBox,
+import { Container, ShowHide, TopSection, TitleEditingTarget, NoteTitle, DropdownBox,
    ContentSection, ContentEditingTarget, Content, ButtonSection, StyledButton } from './styles';
 
 const Note = (props) => {
@@ -11,6 +11,8 @@ const Note = (props) => {
 
   const { editing, setEditingToThis, saveNote, closeDropdown, openNoteMenu } = props;
 
+
+  const showHideRef = useRef();
   const titleRef = useRef();
   const contentRef = useRef();
 
@@ -93,6 +95,9 @@ const Note = (props) => {
     const newHeight = titleDom.scrollHeight
 
     titleDom.style.height = newHeight+'px';
+
+    const showHideDom = showHideRef.current;
+    showHideDom.style.opacity = 1;
   }
 
   function handleEditingContentOnClick(event) {
@@ -127,13 +132,13 @@ const Note = (props) => {
         {...provided.dragHandleProps}
         ref={provided.innerRef}
         isDragging={snapshot.isDragging}>
-        <TopSection >
-
+        <ShowHide id="show-hide" ref={showHideRef}>
+        <TopSection>
           <TitleEditingTarget style={{display: `${isEditingTitle ? "none" : "block"}`}} onClick={(event) => {handleEditingTitleOnClick(event); event.stopPropagation();}}/>
           <NoteTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
 
           <DropdownBox id={`${id}-dropdown`} onClick={(event) => {openNoteMenu(); event.stopPropagation();}}>
-            {getMenuIcon()}
+            <CloseIcon style={{fontSize: "28"}} />
           </DropdownBox>
 
         </TopSection>
@@ -146,6 +151,7 @@ const Note = (props) => {
             Done
           </StyledButton>
         </ButtonSection>
+      </ShowHide>
       </Container>
     )}
     </Draggable>

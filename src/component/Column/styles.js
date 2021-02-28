@@ -13,7 +13,6 @@ export const Container = styled.div`
   margin-left: 8px;
   margin-right: 8px;
 
-  border-left: 4px solid #222222;
   border-right: 4px solid #222222;
 
   border-radius: 10px;
@@ -87,18 +86,15 @@ export const ColumnTitle = styled.textarea`
 
 export const DropdownBox = styled.div `
   position: absolute;
-  top: 8px;
-  right: 6px;
+  top: 10px;
+  right: 8px;
 
   width: 28px;
   height: 28px;
 
-  display: block;
+  padding: 2px;
 
-  padding-top: 4px;
-  padding-bottom: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
+  display: block;
   
   opacity: 100%;
 

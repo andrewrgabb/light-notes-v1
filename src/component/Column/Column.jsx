@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Note from '../Note';
-import { getMenuIcon } from '../../images/menu.js'
+import CloseIcon from '@material-ui/icons/Close';
 
 import { Container, TopSection, EditingTarget, ColumnTitle, DropdownBox, Content, NoteList, StyledButton } from './styles';
 
@@ -107,7 +107,7 @@ const Column = (props) => {
             <EditingTarget style={{display: `${isEditing ? "none" : "block"}`}} onClick={(event) => {handleEditingOnClick(event); event.stopPropagation();}}/>
             <ColumnTitle id={`${id}-title`} ref={titleRef} rows="1" onChange={handleTitleChange} value={title} onClick={(event) => {event.stopPropagation();}} />
             <DropdownBox id={`${id}-dropdown`} onClick={(event) => {props.openColumnMenu(); event.stopPropagation();}}>
-              {getMenuIcon()}
+              <CloseIcon style={{fontSize: "28"}} />
             </DropdownBox>
           </TopSection>
           

@@ -23,6 +23,11 @@ export const Container = styled.div`
   }
 `;
 
+export const ShowHide = styled.div `
+  opacity: 0;
+  background-color: transparent;
+`
+
 export const TopSection = styled.div `
   position: relative;
   background-color: #c8baff;
@@ -73,16 +78,13 @@ export const TitleEditingTarget = styled.div `
 
 export const DropdownBox = styled.div `
   position: absolute;
-  top: 6px;
-  right: 2px;
+  top: 8px;
+  right: 6px;
 
   width: 28px;
   height: 28px;
 
-  padding-top: 4px;
-  padding-bottom: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding: 2px;
 
   border-radius: 5px;
 
