@@ -6,6 +6,16 @@ export const Container = styled.div`
   min-width: 380px;
   width: 380px;
 
+  @media (max-width: 480px) {
+    min-width: 320px;
+    width: 320px;
+  }
+
+  @media (max-width: 360px) {
+    min-width: 260px;
+    width: 260px;
+  }
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -52,7 +62,7 @@ export const ColumnTitle = styled.textarea`
   position: static;
   display: block;
 
-  width: 300px;
+  width: calc(100% - 70px);
 
   overflow: hidden;
   overflow-wrap: break-word;

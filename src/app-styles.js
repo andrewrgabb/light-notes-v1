@@ -15,13 +15,20 @@ export const Header = styled.div`
   font-size: 20px;
   font-family: Arial, sans-serif;
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 `;
 
-export const Title = styled.h3`
+export const Title = styled.div`
   position: relative;
   width: 40%;
   color: black;
+  font-size: 28px;
+
+  @media (max-width: 380px) {
+    font-size: 20px;
+    width: 50%;
+    margin-top: 4px;
+  }
 `;
 
 export const HeaderDemo = styled.div`
@@ -29,19 +36,33 @@ export const HeaderDemo = styled.div`
   position: absolute;
   width: 100%;
   top: 50px;
-  min-height: 40px;
+  min-height: 48px;
   padding: 0px;
-  font-size: 20px;
   font-family: Arial, sans-serif;
   display: flex;
+  flex-direction row;
   justify-content: center;
+  align-items: center;
+
+  @media (max-width: 740px) {
+    min-height: 32px;
+  }
 `;
 
 export const Info = styled.h4`
   position: relative;
-  font-size: 12px;
+  font-size: 24px;
   color: black;
   margin: 0px;
+  text-align: left;
+  margin-left: 10px;
+
+  @media (max-width: 740px) {
+    font-size: 16px;
+  }
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 export const StyledButton = styled.button `
@@ -53,8 +74,15 @@ export const StyledButton = styled.button `
   min-width: 180px;
   height: 36px;
 
-  font-size: inherit;
+  font-size: 20px;
   font-family: Arial, sans-serif;
+
+  @media (max-width: 380px) {
+    font-size: 16px;
+    min-width: 120px;
+    height: 26px;
+    margin-top: 4px;
+  }
 
   border-radius: 10px;
   color: black;
@@ -79,15 +107,20 @@ export const Content = styled.div`
   top: 50px;
   bottom: 0;
   height: calc(100% - 50px);
-  width: 100%; 
+  width: 100%;
 `;
 
 export const ContentDemo = styled.div`
   background-color: inherit;
   position: absolute;
   display: block;
-  top: 70px;
+  top: calc(50px + 48px);
   bottom: 0;
-  height: calc(100% - 70px);
+  height: calc(100% - 50px - 48px);
   width: 100%; 
+
+  @media (max-width: 740px) {
+    top: calc(50px + 32px);
+    height: calc(100% - 50px - 32px);
+  }
 `;
